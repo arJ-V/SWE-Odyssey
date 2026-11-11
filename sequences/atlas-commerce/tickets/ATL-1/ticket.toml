@@ -1,0 +1,67 @@
+# ATL-1: atlas-specific ticket settings (contract: AUTHORING.md). Title, cluster and role are in
+# sequence.toml.
+
+[ticket]
+kind = "deploy"
+# This ticket is the API front door alone (queues, table and consumer are in the base).
+agent_timeout_sec = 3600
+verifier_timeout_sec = 600
+
+[reference]
+# After gold.patch is applied to /app: python3 deploy/deploy.py --component <each>
+deploy = ["orders_api"]
+
+[grading]
+# Test names as they appear in the JUnit reports (atlas_run.py). The wildcard-role guard runs
+# after pytest passes and is reported under "other".
+fail_to_pass = [
+    "test_rest_api_exists_with_post_orders",
+    "test_integration_uri_targets_fifo_queue",
+    "test_integration_credentials_role_is_set",
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_integration_sets_content_type_header",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    # Added by the validity verifier (2026-11-11): no SQS grant of the API role on "*".
+    "test_api_role_sqs_grants_name_the_queue",
+]
+pass_to_pass = [
+    "test_localstack_reachable",
+    "test_credential_isolation_and_builder_bypass_guard",
+    "test_main_fifo_queue_exists",
+    "test_dlq_fifo_queue_exists",
+    "test_ddb_table_exists",
+    "test_lambda_and_esm_exist",
+]
+
+# Known-bad variants: gold.patch-style patches against the base tree, deployed like the reference.
+[[known_bad]]
+name = "stale-stage"
+patch = "known_bad/stale-stage.patch"
+evidence = "an undeployed stage: the stage is deployed early and the integration finished afterwards without a new deployment, so dev keeps serving the draft"
+must_fail = ["test_end_to_end_post_reaches_ddb_no_dlq",
+             "test_end_to_end_fifo_group_ordering",
+             "test_end_to_end_duplicate_post_is_idempotent"]
+
+[[known_bad]]
+name = "constant-group-id"
+patch = "known_bad/constant-group-id.patch"
+evidence = "a constant MessageGroupId (one literal group for every merchant)"
+must_fail = ["test_integration_template_identifiers_are_request_derived"]
+
+[[known_bad]]
+name = "no-content-type"
+patch = "known_bad/no-content-type.patch"
+evidence = "no integration.request.header.Content-Type override on the SQS integration (the failure test_integration_sets_content_type_header diagnoses)"
+must_fail = ["test_integration_sets_content_type_header"]
+
+[[known_bad]]
+name = "api-role-star"
+patch = "known_bad/api-role-star.patch"
+evidence = "validity verifier, 2026-11-11: the reference with the API role's SQS statement on Resource '*' instead of the orders.fifo ARN; scored 1 before the resource-scope check was added"
+must_fail = ["test_api_role_sqs_grants_name_the_queue"]

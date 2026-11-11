@@ -1,0 +1,53 @@
+ok   nop    c01-af8089         ATL-1                                            rewards [0]
+ok   oracle c01-af8089         ATL-1                                            rewards [1]
+ok   nop    c02-7cd5d1         ATL-2                                            rewards [0]
+ok   oracle c02-7cd5d1         ATL-2                                            rewards [1]
+ok   nop    c03-6aca36         ATL-3                                            rewards [0]
+ok   oracle c03-6aca36         ATL-3                                            rewards [1]
+ok   nop    c04-a5460d         ATL-4                                            rewards [0]
+ok   oracle c04-a5460d         ATL-4                                            rewards [1]
+ok   nop    c05-24ba47         ATL-5                                            rewards [0]
+ok   oracle c05-24ba47         ATL-5                                            rewards [1]
+ok   nop    c06-f87cac         ATL-6                                            rewards [0]
+ok   oracle c06-f87cac         ATL-6                                            rewards [1]
+ok   nop    c07-6d5034         ATL-7                                            rewards [0]
+ok   oracle c07-6d5034         ATL-7                                            rewards [1]
+ok   nop    w01-3fec01         ATL-1,ATL-2,ATL-7,ATL-3,ATL-6,ATL-4,ATL-5        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle w01-3fec01         ATL-1,ATL-2,ATL-7,ATL-3,ATL-6,ATL-4,ATL-5        rewards [1, 1, 1, 1, 1, 1, 1]
+ok   nop    w02-be3c65         ATL-2,ATL-3,ATL-1,ATL-4,ATL-7,ATL-5,ATL-6        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle w02-be3c65         ATL-2,ATL-3,ATL-1,ATL-4,ATL-7,ATL-5,ATL-6        rewards [1, 1, 1, 1, 1, 1, 1]
+ok   nop    w03-950764         ATL-3,ATL-4,ATL-2,ATL-5,ATL-1,ATL-6,ATL-7        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle w03-950764         ATL-3,ATL-4,ATL-2,ATL-5,ATL-1,ATL-6,ATL-7        rewards [1, 1, 1, 1, 1, 1, 1]
+ok   nop    w04-62f8e1         ATL-4,ATL-5,ATL-3,ATL-6,ATL-2,ATL-7,ATL-1        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle w04-62f8e1         ATL-4,ATL-5,ATL-3,ATL-6,ATL-2,ATL-7,ATL-1        rewards [1, 1, 1, 1, 1, 1, 1]
+ok   nop    w05-f795bd         ATL-5,ATL-6,ATL-4,ATL-7,ATL-3,ATL-1,ATL-2        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle w05-f795bd         ATL-5,ATL-6,ATL-4,ATL-7,ATL-3,ATL-1,ATL-2        rewards [1, 1, 1, 1, 1, 1, 1]
+ok   nop    w06-775e68         ATL-6,ATL-7,ATL-5,ATL-1,ATL-4,ATL-2,ATL-3        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle w06-775e68         ATL-6,ATL-7,ATL-5,ATL-1,ATL-4,ATL-2,ATL-3        rewards [1, 1, 1, 1, 1, 1, 1]
+ok   nop    w07-f5e663         ATL-7,ATL-1,ATL-6,ATL-2,ATL-5,ATL-3,ATL-4        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle w07-f5e663         ATL-7,ATL-1,ATL-6,ATL-2,ATL-5,ATL-3,ATL-4        rewards [1, 1, 1, 1, 1, 1, 1]
+ok   nop    w08-4b7dbd         ATL-5,ATL-4,ATL-6,ATL-3,ATL-7,ATL-2,ATL-1        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle w08-4b7dbd         ATL-5,ATL-4,ATL-6,ATL-3,ATL-7,ATL-2,ATL-1        rewards [1, 1, 1, 1, 1, 1, 1]
+ok   nop    w09-d47d50         ATL-6,ATL-5,ATL-7,ATL-4,ATL-1,ATL-3,ATL-2        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle w09-d47d50         ATL-6,ATL-5,ATL-7,ATL-4,ATL-1,ATL-3,ATL-2        rewards [1, 1, 1, 1, 1, 1, 1]
+ok   nop    w10-b3be25         ATL-7,ATL-6,ATL-1,ATL-5,ATL-2,ATL-4,ATL-3        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle w10-b3be25         ATL-7,ATL-6,ATL-1,ATL-5,ATL-2,ATL-4,ATL-3        rewards [1, 1, 1, 1, 1, 1, 1]
+ok   nop    w11-f7aea1         ATL-1,ATL-7,ATL-2,ATL-6,ATL-3,ATL-5,ATL-4        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle w11-f7aea1         ATL-1,ATL-7,ATL-2,ATL-6,ATL-3,ATL-5,ATL-4        rewards [1, 1, 1, 1, 1, 1, 1]
+ok   nop    w12-2ca8c9         ATL-2,ATL-1,ATL-3,ATL-7,ATL-4,ATL-6,ATL-5        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle w12-2ca8c9         ATL-2,ATL-1,ATL-3,ATL-7,ATL-4,ATL-6,ATL-5        rewards [1, 1, 1, 1, 1, 1, 1]
+ok   nop    w13-b43c20         ATL-3,ATL-2,ATL-4,ATL-1,ATL-5,ATL-7,ATL-6        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle w13-b43c20         ATL-3,ATL-2,ATL-4,ATL-1,ATL-5,ATL-7,ATL-6        rewards [1, 1, 1, 1, 1, 1, 1]
+ok   nop    w14-b7a248         ATL-4,ATL-3,ATL-5,ATL-2,ATL-6,ATL-1,ATL-7        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle w14-b7a248         ATL-4,ATL-3,ATL-5,ATL-2,ATL-6,ATL-1,ATL-7        rewards [1, 1, 1, 1, 1, 1, 1]
+
+== independence: distinct start states per ticket (other tickets' references deployed) ==
+ATL-1: reference 20/64 states (29 gradings; 6/6 singles; all-others yes) | nop       20/64 states (29 gradings; 6/6 singles; all-others yes)
+ATL-2: reference 20/64 states (29 gradings; 6/6 singles; all-others yes) | nop       20/64 states (29 gradings; 6/6 singles; all-others yes)
+ATL-3: reference 20/64 states (29 gradings; 6/6 singles; all-others yes) | nop       20/64 states (29 gradings; 6/6 singles; all-others yes)
+ATL-4: reference 20/64 states (29 gradings; 6/6 singles; all-others yes) | nop       20/64 states (29 gradings; 6/6 singles; all-others yes)
+ATL-5: reference 20/64 states (29 gradings; 6/6 singles; all-others yes) | nop       20/64 states (29 gradings; 6/6 singles; all-others yes)
+ATL-6: reference 20/64 states (29 gradings; 6/6 singles; all-others yes) | nop       20/64 states (29 gradings; 6/6 singles; all-others yes)
+ATL-7: reference 20/64 states (29 gradings; 6/6 singles; all-others yes) | nop       20/64 states (29 gradings; 6/6 singles; all-others yes)
+
+PASS: 42 trials, 0 problem(s)

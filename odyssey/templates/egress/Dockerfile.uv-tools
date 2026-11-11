@@ -1,0 +1,13 @@
+# --- appended by `odyssey compile --egress allowlist --agent-cli ...` ---
+# Python agent harnesses, installed at build time for the same reason as the
+# Node CLIs above: the trial cannot reach astral.sh, GitHub or PyPI. uv and a
+# uv-managed CPython live under root's home, where Harbor's kimi-cli and
+# mini-swe-agent adapters look for them ($HOME/.local/bin); the project's own
+# python3 is untouched. The odyssey preinstalled-agent wrappers
+# (scripts/open_models/harbor_agents.py) skip Harbor's download-at-start install.
+COPY --from=@@UV_IMAGE@@ /uv /uvx /root/.local/bin/
+RUN set -eu; \
+    export PATH="/root/.local/bin:$PATH" UV_CACHE_DIR=/tmp/agent-cli-uv-cache; \
+    uv python install @@UV_PYTHON@@; \
+@@UV_TOOL_INSTALLS@@
+    rm -rf /tmp/agent-cli-uv-cache

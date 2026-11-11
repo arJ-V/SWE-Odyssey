@@ -1,0 +1,272 @@
+diff --git a/src/htscharset.c b/src/htscharset.c
+index e9264de..c36cf79 100644
+--- a/src/htscharset.c
++++ b/src/htscharset.c
+@@ -296,16 +296,41 @@ LPWSTR hts_convertUTF8StringToUCS2(const char *s, int size, int *pwsize) {
+   return hts_convertStringToUCS2(s, size, CP_UTF8, pwsize);
+ }
+ 
+-char *hts_convertUCS2StringToCP(LPWSTR woutput, int wsize, UINT cp) {
++/* WideCharToMultiByte rejects lpUsedDefaultChar on the Unicode, ISO-2022, HZ,
++   GB18030 and ISCII codepages, where a substitution stays invisible. */
++static hts_boolean cp_reports_default_char(UINT cp) {
++  if (cp == 42 /* CP_SYMBOL */ || cp == CP_UTF7 || cp == CP_UTF8 ||
++      cp == 52936 || cp == 54936 || (cp >= 50220 && cp <= 50229) ||
++      (cp >= 57002 && cp <= 57011)) {
++    return HTS_FALSE;
++  }
++  return HTS_TRUE;
++}
++
++/* When plossy is non-NULL, *plossy reports that the codepage lacked a character
++   and a substitute was emitted for it. */
++static char *hts_convertUCS2StringToCPEx(LPWSTR woutput, int wsize, UINT cp,
++                                         hts_boolean *plossy) {
+   const int usize =
+-    WideCharToMultiByte(cp, 0, woutput, wsize, NULL, 0, NULL, FALSE);
++      WideCharToMultiByte(cp, 0, woutput, wsize, NULL, 0, NULL, NULL);
++
++  if (plossy != NULL) {
++    *plossy = HTS_FALSE;
++  }
+   if (usize > 0) {
+     char *const uoutput = malloc((usize + 1) * sizeof(char));
+ 
+     if (uoutput != NULL) {
+-      if (WideCharToMultiByte
+-          (cp, 0, woutput, wsize, uoutput, usize, NULL, FALSE) == usize) {
++      BOOL usedDefault = FALSE;
++      LPBOOL const pUsedDefault =
++          plossy != NULL && cp_reports_default_char(cp) ? &usedDefault : NULL;
++
++      if (WideCharToMultiByte(cp, 0, woutput, wsize, uoutput, usize, NULL,
++                              pUsedDefault) == usize) {
+         uoutput[usize] = '\0';
++        if (plossy != NULL && usedDefault) {
++          *plossy = HTS_TRUE;
++        }
+         return uoutput;
+       } else {
+         free(uoutput);
+@@ -315,6 +340,10 @@ char *hts_convertUCS2StringToCP(LPWSTR woutput, int wsize, UINT cp) {
+   return NULL;
+ }
+ 
++char *hts_convertUCS2StringToCP(LPWSTR woutput, int wsize, UINT cp) {
++  return hts_convertUCS2StringToCPEx(woutput, wsize, cp, NULL);
++}
++
+ char *hts_convertUCS2StringToUTF8(LPWSTR woutput, int wsize) {
+   return hts_convertUCS2StringToCP(woutput, wsize, CP_UTF8);
+ }
+@@ -346,7 +375,11 @@ char *hts_convertStringCPToUTF8(const char *s, size_t size, UINT cp) {
+   return NULL;
+ }
+ 
+-char *hts_convertStringCPFromUTF8(const char *s, size_t size, UINT cp) {
++static char *hts_convertStringCPFromUTF8Ex(const char *s, size_t size, UINT cp,
++                                           hts_boolean *plossy) {
++  if (plossy != NULL) {
++    *plossy = HTS_FALSE;
++  }
+   /* Empty string ? */
+   if (size == 0) {
+     return hts_stringMemCopy(s, size);
+@@ -362,7 +395,8 @@ char *hts_convertStringCPFromUTF8(const char *s, size_t size, UINT cp) {
+     LPWSTR woutput = hts_convertStringToUCS2(s, (int) size, CP_UTF8, &wsize);
+ 
+     if (woutput != NULL) {
+-      char *const uoutput = hts_convertUCS2StringToCP(woutput, wsize, cp);
++      char *const uoutput =
++          hts_convertUCS2StringToCPEx(woutput, wsize, cp, plossy);
+ 
+       free(woutput);
+       return uoutput;
+@@ -373,6 +407,10 @@ char *hts_convertStringCPFromUTF8(const char *s, size_t size, UINT cp) {
+   return NULL;
+ }
+ 
++char *hts_convertStringCPFromUTF8(const char *s, size_t size, UINT cp) {
++  return hts_convertStringCPFromUTF8Ex(s, size, cp, NULL);
++}
++
+ HTSEXT_API char *hts_convertStringToUTF8(const char *s, size_t size,
+                                          const char *charset) {
+   const UINT cp = hts_getCodepage(charset);
+@@ -386,6 +424,19 @@ char *hts_convertStringFromUTF8(const char *s, size_t size, const char *charset)
+   return hts_convertStringCPFromUTF8(s, size, cp);
+ }
+ 
++char *hts_convertStringFromUTF8Strict(const char *s, size_t size,
++                                      const char *charset) {
++  hts_boolean lossy = HTS_FALSE;
++  char *const out =
++      hts_convertStringCPFromUTF8Ex(s, size, hts_getCodepage(charset), &lossy);
++
++  if (lossy) {
++    free(out);
++    return NULL;
++  }
++  return out;
++}
++
+ HTSEXT_API char *hts_convertStringSystemToUTF8(const char *s, size_t size) {
+   return hts_convertStringCPToUTF8(s, size, GetACP());
+ }
+@@ -590,6 +641,13 @@ char *hts_convertStringFromUTF8(const char *s, size_t size, const char *charset)
+   }
+ }
+ 
++char *hts_convertStringFromUTF8Strict(const char *s, size_t size,
++                                      const char *charset) {
++  /* No transliteration is requested of iconv, so an unrepresentable code point
++     already fails the conversion outright. */
++  return hts_convertStringFromUTF8(s, size, charset);
++}
++
+ #endif
+ 
+ #ifdef _WIN32
+diff --git a/src/htscharset.h b/src/htscharset.h
+index b162f8f..9078155 100644
+--- a/src/htscharset.h
++++ b/src/htscharset.h
+@@ -61,6 +61,15 @@ HTSEXT_API char *hts_convertStringToUTF8(const char *s, size_t size,
+ extern char *hts_convertStringFromUTF8(const char *s, size_t size,
+                                        const char *charset);
+ 
++/**
++ * Same, but refusing to lose a code point the charset can not represent:
++ * NULL is returned then, where hts_convertStringFromUTF8() may hand back a
++ * substituted string (Windows substitutes, iconv fails).
++ * Return NULL upon error.
++ **/
++extern char *hts_convertStringFromUTF8Strict(const char *s, size_t size,
++                                             const char *charset);
++
+ /**
+  * Convert an UTF-8 string to an IDNA (RFC 3492) string.
+  **/
+diff --git a/src/htsencoding.c b/src/htsencoding.c
+index d15e006..cd7ca39 100644
+--- a/src/htsencoding.c
++++ b/src/htsencoding.c
+@@ -63,6 +63,13 @@ static int get_hex_value(char c) {
+   } while (0)
+ 
+ int hts_unescapeEntitiesWithCharset(const char *src, char *dest, const size_t max, const char *charset) {
++  return hts_unescapeEntitiesWithCharsetSpecial(src, dest, max, charset, 0);
++}
++
++int hts_unescapeEntitiesWithCharsetSpecial(const char *src, char *dest,
++                                           const size_t max,
++                                           const char *charset,
++                                           const int flags) {
+   size_t i, j, ampStart, ampStartDest;
+   int uc;
+   int hex;
+@@ -120,9 +127,18 @@ int hts_unescapeEntitiesWithCharset(const char *src, char *dest, const size_t ma
+             char buffer[32];
+             len = 0;
+             if ( ( ulen = hts_writeUTF8(uc, buffer, sizeof(buffer)) ) != 0) {
++              const hts_boolean urlQuery =
++                  (flags & UNESCAPE_ENTITIES_URL_QUERY) != 0;
+               char *s;
+               buffer[ulen] = '\0';
+-              s = hts_convertStringFromUTF8(buffer, strlen(buffer), charset);
++              /* Strict for a query only: a substituted '?' must not pass for
++                 the code point the document wrote. */
++              if (urlQuery) {
++                s = hts_convertStringFromUTF8Strict(buffer, strlen(buffer),
++                                                    charset);
++              } else {
++                s = hts_convertStringFromUTF8(buffer, strlen(buffer), charset);
++              }
+               if (s != NULL) {
+                 const size_t sLen = strlen(s);
+                 if (sLen < maxOut) {
+@@ -130,7 +146,18 @@ int hts_unescapeEntitiesWithCharset(const char *src, char *dest, const size_t ma
+                   memcpy(&dest[ampStartDest], s, sLen);
+                   len = sLen;
+                 }
+-                free(s);
++                freet(s);
++              } else if (urlQuery) {
++                /* URL Standard: an unrepresentable code point is written
++                   %26%23<decimal>%3B rather than left as source text. */
++                char esc[32];
++                const int escLen =
++                    snprintf(esc, sizeof(esc), "%%26%%23%d%%3B", uc);
++
++                if (escLen > 0 && (size_t) escLen < maxOut) {
++                  memcpy(&dest[ampStartDest], esc, (size_t) escLen);
++                  len = (size_t) escLen;
++                }
+               }
+             }
+           }
+diff --git a/src/htsencoding.h b/src/htsencoding.h
+index 369cf83..3f17c02 100644
+--- a/src/htsencoding.h
++++ b/src/htsencoding.h
+@@ -69,6 +69,29 @@ extern int hts_unescapeEntitiesWithCharset(const char *src,
+                                            char *dest, const size_t max,
+                                            const char *charset);
+ 
++/**
++ * Flags for hts_unescapeEntitiesWithCharsetSpecial(). Values stay distinct from
++ * unescapeFlags above: both reach their function as a plain int.
++ **/
++typedef enum unescapeEntitiesFlags {
++  /** The destination is a URL query string: write a reference the charset can
++      not represent as %26%23<decimal>%3B (URL Standard), instead of source text
++      whose '&' and '#' would re-split the query. **/
++  UNESCAPE_ENTITIES_URL_QUERY = 2
++} unescapeEntitiesFlags;
++
++/**
++ * Unescape HTML entities into their charset equivalents, "flags" being a mask
++ * of UNESCAPE_ENTITIES_XXX constants.
++ * Note: source and destination MUST NOT be the same with a flag that may grow
++ * the string (UNESCAPE_ENTITIES_URL_QUERY).
++ * Returns 0 upon success, -1 upon overflow or error.
++ **/
++extern int hts_unescapeEntitiesWithCharsetSpecial(const char *src, char *dest,
++                                                  const size_t max,
++                                                  const char *charset,
++                                                  const int flags);
++
+ /**
+  * Unescape an URL-encoded string. The implicit charset is UTF-8.
+  * In case of UTF-8 decoding error inside URL-encoded characters, 
+diff --git a/src/htsparse.c b/src/htsparse.c
+index f057d10..97b53c3 100644
+--- a/src/htsparse.c
++++ b/src/htsparse.c
+@@ -2176,13 +2176,20 @@ int htsparse(htsmoduleStruct * str, htsmoduleStructExtended * stre) {
+                       "could not decode URI '%s' with charset '%s'", lien, charset);
+                   }
+ 
+-                  // decode query string entities with page charset
++                  // decode query entities with the page charset, out-of-place
++                  // because the escape grows it (#854)
+                   if (hasCharset) {
+-                    if (hts_unescapeEntitiesWithCharset(query, 
+-                                                        query, strlen(query) + 1,
+-                                                        charset) != 0) {
+-                        hts_log_print(opt, LOG_WARNING,
+-                          "could not decode query string '%s' with charset '%s'", query, charset);
++                    char BIGSTK decoded[sizeof(query)];
++
++                    if (hts_unescapeEntitiesWithCharsetSpecial(
++                            query, decoded, sizeof(decoded), charset,
++                            UNESCAPE_ENTITIES_URL_QUERY) == 0) {
++                      strcpybuff(query, decoded);
++                    } else {
++                      hts_log_print(opt, LOG_WARNING,
++                                    "could not decode query string '%s' with "
++                                    "charset '%s'",
++                                    query, charset);
+                     }
+                   }
+ 

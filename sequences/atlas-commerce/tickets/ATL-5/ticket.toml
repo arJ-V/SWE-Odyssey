@@ -1,0 +1,70 @@
+# ATL-5: atlas-specific ticket settings (contract: AUTHORING.md). Title, cluster and role are in
+# sequence.toml.
+
+[ticket]
+kind = "code"
+agent_timeout_sec = 2400
+# The grader alone can wait 120 s + 90 s + 5 s for convergence and 120 s for the late payment;
+# run.sh gets 80% of this.
+verifier_timeout_sec = 600
+
+[reference]
+# After gold.patch is applied to /app: python3 deploy/deploy.py --component <each>
+deploy = ["payments_ledger"]
+
+[grading]
+# Test names as they appear in the JUnit reports (atlas_run.py). The first 13 depend on the
+# `pipeline_state` fixture (a controlled payment stream and its convergence).
+fail_to_pass = [
+    "test_payment_amount_exact_fidelity",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component",
+    "test_reconciliation_holds_globally",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_no_phantom_merchants_in_rollups",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_payment_row_preserves_processor_fields",
+    "test_all_injected_payments_landed_in_ledger",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_ingest_workload_uses_lambda_role",
+]
+pass_to_pass = [
+    "test_required_resources_exist",
+    "test_scoped_builder_and_network_isolation",
+]
+
+# Known-bad variants: gold.patch-style patches against the base tree, deployed like the reference.
+[[known_bad]]
+name = "floor-per-payment"
+patch = "known_bad/floor-per-payment.patch"
+evidence = "a documented model failure: the Lambda summed floor(100*amount) per payment rather than applying the required floor after summing. must_fail is the 13 tests that trial failed"
+must_fail = [
+    "test_payment_amount_exact_fidelity",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component",
+    "test_reconciliation_holds_globally",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_no_phantom_merchants_in_rollups",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_payment_row_preserves_processor_fields",
+    "test_all_injected_payments_landed_in_ledger",
+    "test_injected_merchants_all_have_rollup_rows",
+]
+
+[[known_bad]]
+name = "float-running-total"
+patch = "known_bad/float-running-total.patch"
+evidence = "the test data's stated trap (test_outputs.py docstring): the payload parsed as floats and the merchant total kept as a float running sum, int(total * 100) (10 x 0.10 -> 99 cents)"
+must_fail = ["test_total_cents_floor_semantics_with_float_trap", "test_total_cents_correctness_per_test_merchant"]
+
+[[known_bad]]
+name = "ledger-drops-payer"
+patch = "known_bad/ledger-drops-payer.patch"
+evidence = "the ledger row keeps only the fields the rollup needs and drops the supplemental `payer` object, which the instruction says to record with the payment"
+must_fail = ["test_payment_row_preserves_processor_fields"]

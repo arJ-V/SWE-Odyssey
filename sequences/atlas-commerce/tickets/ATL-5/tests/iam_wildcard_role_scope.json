@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "task": "atlas-commerce/ATL-5",
+  "source_policy": "environment/platform/builder-policy.json",
+  "allow_role_arns": [
+    "*"
+  ],
+  "deny_role_arns": [],
+  "harness_owned_roles": []
+}

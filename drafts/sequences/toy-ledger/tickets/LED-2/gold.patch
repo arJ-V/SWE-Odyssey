@@ -1,0 +1,44 @@
+diff --git a/lib/ledgerly/money/_currency_table.py b/lib/ledgerly/money/_currency_table.py
+index 6d9b393..f774f88 100644
+--- a/lib/ledgerly/money/_currency_table.py
++++ b/lib/ledgerly/money/_currency_table.py
+@@ -3,7 +3,7 @@
+ 
+ CURRENCY_ROWS = (
+     ('AUD', 2, 'Australian dollar'),
+-    ('BHD', 2, 'Bahraini dinar'),
++    ('BHD', 3, 'Bahraini dinar'),
+     ('CAD', 2, 'Canadian dollar'),
+     ('CHF', 2, 'Swiss franc'),
+     ('CNY', 2, 'Chinese yuan'),
+@@ -14,7 +14,7 @@ CURRENCY_ROWS = (
+     ('JOD', 3, 'Jordanian dinar'),
+     ('JPY', 0, 'Japanese yen'),
+     ('KRW', 0, 'South Korean won'),
+-    ('KWD', 2, 'Kuwaiti dinar'),
++    ('KWD', 3, 'Kuwaiti dinar'),
+     ('MXN', 2, 'Mexican peso'),
+     ('NOK', 2, 'Norwegian krone'),
+     ('NZD', 2, 'New Zealand dollar'),
+diff --git a/lib/ledgerly/money/data/currencies.tsv b/lib/ledgerly/money/data/currencies.tsv
+index a75e87f..57ded2f 100644
+--- a/lib/ledgerly/money/data/currencies.tsv
++++ b/lib/ledgerly/money/data/currencies.tsv
+@@ -2,7 +2,7 @@
+ # exponent = number of digits after the decimal point in the minor unit.
+ code	exponent	name
+ AUD	2	Australian dollar
+-BHD	2	Bahraini dinar
++BHD	3	Bahraini dinar
+ CAD	2	Canadian dollar
+ CHF	2	Swiss franc
+ CNY	2	Chinese yuan
+@@ -13,7 +13,7 @@ INR	2	Indian rupee
+ JOD	3	Jordanian dinar
+ JPY	0	Japanese yen
+ KRW	0	South Korean won
+-KWD	2	Kuwaiti dinar
++KWD	3	Kuwaiti dinar
+ MXN	2	Mexican peso
+ NOK	2	Norwegian krone
+ NZD	2	New Zealand dollar

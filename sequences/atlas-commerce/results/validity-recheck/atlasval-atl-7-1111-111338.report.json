@@ -1,0 +1,97 @@
+{
+ "ticket": "ATL-7",
+ "task": "/home/ubuntu/atlas/verify-validity/validate/tasks/atlas-commerce__validate__v-atl-7-c3788a",
+ "trial": "/home/ubuntu/atlas/verify-validity/validate/jobs/atlasval-atl-7-1111-111338/atlas-commerce__validate__v-atl__5dkWpCK",
+ "harbor_exit": 0,
+ "elapsed_sec": 193.5,
+ "ok": true,
+ "steps": [
+  {
+   "step": "s01-atl-7",
+   "condition": "known-bad no-url-decode with all six",
+   "action": "known-bad:no-url-decode",
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_end_to_end_put_creates_ddb_item"
+   ],
+   "reset_sec": 6.5,
+   "setup_sec": 22.07,
+   "deploy_sec": 15.38,
+   "deployed": "orders_core fulfillment payments_core orders_api order_workflow payments_ledger",
+   "lambda_containers_removed": 0,
+   "verifier_window": [
+    "2026-11-11T11:14:16.657958Z",
+    "2026-11-11T11:15:19.939610Z"
+   ]
+  },
+  {
+   "step": "s02-atl-7",
+   "condition": "known-bad no-kms-grant with all six",
+   "action": "known-bad:no-kms-grant",
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_lambda_role_can_use_the_cmk"
+   ],
+   "reset_sec": 8.78,
+   "setup_sec": 23.53,
+   "deploy_sec": 14.62,
+   "deployed": "orders_core fulfillment payments_core orders_api order_workflow payments_ledger",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T11:15:46.806730Z",
+    "2026-11-11T11:15:50.176463Z"
+   ]
+  },
+  {
+   "step": "s03-atl-7",
+   "condition": "known-bad extra-dynamodb-actions with all six",
+   "action": "known-bad:extra-dynamodb-actions",
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_lambda_role_can_write_only_through_its_policy"
+   ],
+   "reset_sec": 8.84,
+   "setup_sec": 23.87,
+   "deploy_sec": 14.76,
+   "deployed": "orders_core fulfillment payments_core orders_api order_workflow payments_ledger",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T11:16:17.399380Z",
+    "2026-11-11T11:16:20.781633Z"
+   ]
+  }
+ ]
+}

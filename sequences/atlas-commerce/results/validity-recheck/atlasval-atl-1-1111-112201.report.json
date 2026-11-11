@@ -1,0 +1,30 @@
+{
+ "ticket": "ATL-1",
+ "task": "/home/ubuntu/atlas/verify-validity/validate/tasks/atlas-commerce__validate__v-atl-1-3dd36d",
+ "trial": "/home/ubuntu/atlas/verify-validity/validate/jobs/atlasval-atl-1-1111-112201/atlas-commerce__validate__v-atl__XNNELTi",
+ "harbor_exit": 0,
+ "elapsed_sec": 80.1,
+ "ok": true,
+ "steps": [
+  {
+   "step": "s01-atl-1",
+   "condition": "vv-api-role-star at the base (gap probe; 1 expected)",
+   "action": "known-bad:vv-api-role-star",
+   "state": [],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 6.67,
+   "setup_sec": 17.1,
+   "deploy_sec": 10.21,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 0,
+   "verifier_window": [
+    "2026-11-11T11:22:31.536111Z",
+    "2026-11-11T11:22:50.800695Z"
+   ]
+  }
+ ]
+}

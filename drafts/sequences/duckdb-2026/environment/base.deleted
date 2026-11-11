@@ -1,0 +1,4 @@
+test/optimizer/pushdown/starts_with_pushdown.test
+test/optimizer/statistics/statistics_least_greatest.test
+test/sql/optimizer/array_extract_row_group_pruning.test
+test/sql/storage/wal/wal_null_update_row_group_pruning.test

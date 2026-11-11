@@ -1,0 +1,1904 @@
+diff --git a/.github/workflows/windows-build.yml b/.github/workflows/windows-build.yml
+index 35318a5..11b6a19 100644
+--- a/.github/workflows/windows-build.yml
++++ b/.github/workflows/windows-build.yml
+@@ -274,7 +274,6 @@ jobs:
+           expected_skips="01_engine-footer-overflow.test
+           100_local-purge-longpath.test
+           114_local-update-304-leak.test
+-          120_local-proxytrack-webdav-default.test
+           143_engine-backtrace-empty.test
+           48_local-crange-memresume.test
+           71_local-crange-repaircache.test
+diff --git a/history.txt b/history.txt
+index c977232..fc83d42 100644
+--- a/history.txt
++++ b/history.txt
+@@ -10,18 +10,16 @@ This file lists all changes and fixes that have been made for HTTrack
+ + New: --sitemap and --sitemap-url ingest sitemaps, so pages nothing links to are still found (#712)
+ + New: webhttrack exposes --warc-cdx, --wacz and --warc-max-size (#862)
+ + Fixed: --update and --purge-old destroyed a good local copy when the re-fetch got no response, was aborted mid-read, or when the backup meant to protect it failed (#746, #748, #758, #775)
+-+ Fixed: an FTP re-fetch truncated the mirrored file, resumed a complete mirror with REST and spliced the old body into the new one, and a successful transfer was blanked when its backlog slot was swapped out (#771, #797, #798, #823)
+-+ Fixed: a chunked response cut at a chunk boundary was stored and cached as complete (#840)
+-+ Fixed: cache repair deleted the old cache before a rename it never checked, and the unlink-then-rename fallback could lose the destination (#779, #786, #790, #824)
+++ Fixed: an FTP re-fetch truncated the mirrored file, and resumed a complete mirror with REST, splicing the old body into the new one (#771, #798)
+++ Fixed: the unlink-then-rename fallback could lose the destination (#779, #790)
+ + Fixed: several backward scans from strlen(s) - 1 read before their buffer on an empty string (#730, #768, #770, #814, #821)
+ + Fixed: a URL could be saved onto the engine's own temporary files, and the final path segment was never clamped (#774, #842, #852)
+-+ Fixed: a query-string character reference the page charset cannot represent was left unescaped, changing how the query parses (#854)
+ + Fixed: a second --update pass overwrote the previous WARC and regenerated a page-less WACZ (#759)
+-+ Fixed: WARC output dropped URLs of 1005 bytes or more, archived nothing for a 304 revisit, and marked an engine-forced not-modified as one the server sent (#778, #785, #826, #838, #839)
+-+ Fixed: ProxyTrack overflowed its .arc header block, walked past the end of an .ndx buffer, trusted an unparsed offset, and crashed on a PROPFIND or on an entry with no usable Last-Modified (#793, #820, #825, #828)
+++ Fixed: WARC output dropped URLs of 1005 bytes or more, and archived nothing for a 304 revisit (#778, #785, #826)
+++ Fixed: ProxyTrack overflowed its .arc header block, and crashed on an entry with no usable Last-Modified (#820)
+ + Fixed: webhttrack leaked the session id into crawled pages, overflowed its command line so a quoted value could inject flags, let a posted project path repoint the served root, and built its redirect Location in a 256-byte stack buffer (#700, #706, #707, #710)
+ + Fixed: in the web GUI, options ticked on by default could not be un-ticked, "max site size" set a per-file cap instead of the HTML one, and the mirror link on the finished page could not be followed (#708, #709, #725)
+-+ Fixed: htsserver labelled every PNG as image/gif and offered JPEG as a download, and an unauthenticated GET of a directory spun the server forever (#724, #875)
+++ Fixed: an unauthenticated GET of a directory spun htsserver forever (#724)
+ + Fixed: webhttrack hung at exit when no mirror had been launched (#753)
+ + Fixed: oversized cache and header fields aborted the engine or overflowed a neighbouring field instead of being clipped (#701, #715, #717, #722, #732)
+ + Fixed: a -%S rules file of 4 GB or more overran the heap (#702)
+diff --git a/src/htsback.c b/src/htsback.c
+index 77e2ec6..1bbd588 100644
+--- a/src/htsback.c
++++ b/src/htsback.c
+@@ -391,56 +391,6 @@ int back_selftest_slot_swap(void) {
+   CHECK(0, "the dummy test slot");
+ #undef CHECK
+ 
+-  /* The swap round-trip must not lose the size of a slot whose body is already
+-     at url_sav, or the link writer blanks the file (#797). */
+-  {
+-    static const char body[] = "swapped body";
+-    int c;
+-
+-    for (c = 0; c < 2; c++) {
+-      const hts_boolean inmemory = c == 0 ? HTS_TRUE : HTS_FALSE;
+-      FILE *const fp = tmpfile();
+-      lien_back *copy = NULL;
+-
+-      memset(&back, 0, sizeof(back));
+-      back.status = STATUS_READY;
+-      strcpybuff(back.url_sav, "/tmp/httrack-selftest.bin");
+-      back.r.size = (LLint) sizeof(body) - 1;
+-      if (inmemory) {
+-        back.r.adr = strdupt(body);
+-      }
+-      if (fp == NULL || back_serialize(fp, &back) != 0 ||
+-          fseek(fp, 0, SEEK_SET) != 0 || back_unserialize(fp, &copy) != 0) {
+-        fprintf(stderr, "backswap: round-trip failed for a %s slot\n",
+-                inmemory ? "buffered" : "direct-to-disk");
+-        err = 1;
+-      } else {
+-        if (copy->r.size != back.r.size) {
+-          fprintf(stderr,
+-                  "backswap: %s slot came back with size " LLintP
+-                  ", expected " LLintP "\n",
+-                  inmemory ? "buffered" : "direct-to-disk", copy->r.size,
+-                  back.r.size);
+-          err = 1;
+-        }
+-        if (inmemory && (copy->r.adr == NULL ||
+-                         memcmp(copy->r.adr, body, sizeof(body) - 1) != 0)) {
+-          fprintf(stderr, "backswap: buffered slot lost its body\n");
+-          err = 1;
+-        }
+-        if (!inmemory && copy->r.adr != NULL) {
+-          fprintf(stderr, "backswap: direct-to-disk slot gained a body\n");
+-          err = 1;
+-        }
+-        back_clear_entry(copy);
+-        freet(copy);
+-      }
+-      if (fp != NULL)
+-        fclose(fp);
+-      freet(back.r.adr);
+-    }
+-  }
+-
+   printf("backswap self-test: %s\n", err ? "FAIL" : "OK");
+   return err;
+ }
+@@ -813,12 +763,6 @@ hts_boolean back_finalize_backup(httrackp *opt, lien_back *const back,
+   return commit == wanted ? HTS_TRUE : HTS_FALSE;
+ }
+ 
+-/* A chunked body is framed by its terminating zero-length chunk (#840);
+-   chunk_blocksize is reset per response and reaches -1 only once it is seen. */
+-static hts_boolean back_chunked_unterminated(const lien_back *const back) {
+-  return back->is_chunk && back->chunk_blocksize != -1 ? HTS_TRUE : HTS_FALSE;
+-}
+-
+ // objet (lien) téléchargé ou transféré depuis le cache
+ //
+ // fermer les paramètres de transfert,
+@@ -838,22 +782,9 @@ int back_finalize(httrackp * opt, cache_back * cache, struct_back * sback,
+     /* Don't store broken files. Note: check is done before compression.
+        If the file is partial, the next run will attempt to continue it with compression too.
+      */
+-    const hts_boolean cut_chunked = back_chunked_unterminated(&back[p]);
+-    const hts_boolean short_body =
+-        back[p].r.totalsize >= 0 && back[p].r.size != back[p].r.totalsize
+-            ? HTS_TRUE
+-            : HTS_FALSE;
+-
+-    if ((short_body || cut_chunked) && back[p].r.statuscode > 0 &&
+-        !opt->tolerant) {
+-      if (cut_chunked) {
+-        hts_log_print(
+-            opt, LOG_WARNING,
+-            "truncated chunked transfer (terminating chunk missing, got " LLintP
+-            " bytes): file not cached, will be retried on the next"
+-            " update (use -%%B to cache anyway): %s%s",
+-            back[p].r.size, back[p].url_adr, back[p].url_fil);
+-      } else if (back[p].status == STATUS_READY) {
++    if (back[p].r.totalsize >= 0 && back[p].r.statuscode > 0
++        && back[p].r.size != back[p].r.totalsize && !opt->tolerant) {
++      if (back[p].status == STATUS_READY) {
+         hts_log_print(opt, LOG_WARNING,
+                       "incomplete transfer (expected " LLintP
+                       " bytes, got " LLintP
+@@ -1324,7 +1255,6 @@ void back_connxfr(htsblk * src, htsblk * dst) {
+   src->keep_alive_t = 0;
+   dst->debugid = src->debugid;
+   src->debugid = 0;
+-  dst->address = src->address; // peer IP survives the cache-entry swap (#838)
+ }
+ 
+ /* Release the buffers a response owns. The connection members are left alone:
+@@ -1427,10 +1357,7 @@ int back_unserialize(FILE * fp, lien_back ** dst) {
+     (*dst)->r.ssl_con = NULL;
+ #endif
+     if (back_data_unserialize(fp, (void **) &(*dst)->r.adr, &size) == 0) {
+-      /* A bodyless slot already wrote its bytes to url_sav (FTP, direct to
+-         disk); zeroing r.size makes the writer blank that file (#797). */
+-      if ((*dst)->r.adr != NULL)
+-        (*dst)->r.size = size;
++      (*dst)->r.size = size;
+       (*dst)->r.headers = NULL;
+       if (back_string_unserialize(fp, &(*dst)->r.headers) == 0)
+         return 0;               /* ok */
+@@ -2180,8 +2107,6 @@ int back_add(struct_back *sback, httrackp *opt, cache_back *cache,
+                             back[p].url_adr, back[p].url_fil);
+             }
+             back[p].r.notmodified = 1;  // fichier non modifié
+-            // no request was sent at all, so this is never a server 304 (#839)
+-            back[p].r.warc_forced_notmodified = HTS_TRUE;
+             back[p].status = STATUS_READY; // OK prêt
+             back_set_finished(sback, p);
+ 
+@@ -3577,26 +3502,6 @@ void back_wait(struct_back * sback, httrackp * opt, cache_back * cache,
+               back_finalize(opt, cache, sback, i);
+             }
+ 
+-            /* Same treatment for an unterminated chunked stream: the byte count
+-               agrees with the chunks that arrived, the framing does not. */
+-            if (back[i].r.statuscode > 0 &&
+-                back_chunked_unterminated(&back[i])) {
+-              if (!opt->tolerant) {
+-                deleteaddr(&back[i].r);
+-                back[i].r.statuscode = STATUSCODE_CONNERROR; // recatch
+-                htsblk_failf(&back[i].r,
+-                             "Truncated chunked transfer (" LLintP
+-                             " Bytes, terminating chunk missing)",
+-                             (LLint) back[i].r.size);
+-              } else {
+-                hts_log_print(opt, LOG_WARNING,
+-                              "Truncated chunked transfer (" LLintP
+-                              " Bytes, terminating chunk missing) for %s%s",
+-                              (LLint) back[i].r.size, back[i].url_adr,
+-                              back[i].url_fil);
+-              }
+-            }
+-
+             if (back[i].r.totalsize >= 0) { // tester totalsize
+               if (back[i].r.totalsize != back[i].r.size) {      // pas la même!
+                 if (!opt->tolerant) {
+@@ -3656,22 +3561,10 @@ void back_wait(struct_back * sback, httrackp * opt, cache_back * cache,
+                   if (back[i].r.totalsize < 0)
+                     back[i].r.totalsize = 0;    // initialiser à 0 (-1 == unknown)
+                   if (back[i].status == STATUS_CHUNK_WAIT) {    // "real" chunk
+-                    /* The chunk-size line is hostile input, so parse it wide
+-                       and unsigned and drop anything an int cannot hold: sscanf
+-                       "%x" lands 80000000 on INT_MIN, which sign-extends into a
+-                       16EB realloc below and drives totalsize negative. */
+-                    char *chunk_end = NULL;
+-                    const unsigned long long chunk_value =
+-                        strtoull(chunk_data, &chunk_end, 16);
+-
+-                    if (chunk_end != chunk_data && *chunk_end == '\0' &&
+-                        chunk_value <= (unsigned long long) INT32_MAX) {
+-                      chunk_size = (int) chunk_value;
++                    if (sscanf(chunk_data, "%x", &chunk_size) == 1) {
+                       if (chunk_size > 0)
+                         back[i].chunk_blocksize = chunk_size;   /* the data block chunk size */
+-                      /* only a real 0 ends the stream; the bound above keeps a
+-                         negative from ever claiming the sentinel (#840) */
+-                      else if (chunk_size == 0)
++                      else
+                         back[i].chunk_blocksize = -1;   /* ending */
+                       back[i].r.totalsize += chunk_size;        // noter taille
+                       if (back[i].r.adr != NULL || !back[i].r.is_write) {       // Not to disk
+@@ -4260,9 +4153,6 @@ void back_wait(struct_back * sback, httrackp * opt, cache_back * cache,
+                       back[i].status = STATUS_READY;    // OK prêt
+                       back_set_finished(sback, i);
+                       back[i].r.notmodified = 1;        // NON modifié!
+-                      // WARC must not claim a 304 the server never sent (#839)
+-                      back[i].r.warc_forced_notmodified =
+-                          server_sent_304 ? HTS_FALSE : HTS_TRUE;
+                       hts_log_print(opt, LOG_DEBUG,
+                                     "File loaded after test from cache: %s%s",
+                                     back[i].url_adr, back[i].url_fil);
+diff --git a/src/htscache.c b/src/htscache.c
+index 9e16a4b..819baee 100644
+--- a/src/htscache.c
++++ b/src/htscache.c
+@@ -962,35 +962,6 @@ htsblk *cache_header(httrackp * opt, cache_back * cache, const char *adr,
+     return NULL;
+ }
+ 
+-const char *cache_repair(httrackp *opt, const char *name,
+-                         unsigned long *entries, unsigned long *bytes) {
+-  char BIGSTK repairname[HTS_URLMAXSIZE * 2];
+-  unzFile zip;
+-
+-  *entries = 0;
+-  *bytes = 0;
+-  if (!slprintfbuff(repairname, sizeof(repairname), "%s%s",
+-                    StringBuff(opt->path_log), "hts-cache/repair.zip"))
+-    return "the repair path is too long";
+-  if (unzRepair(name, repairname,
+-                fconcat(OPT_GET_BUFF(opt), OPT_GET_BUFF_SIZE(opt),
+-                        StringBuff(opt->path_log), "hts-cache/repair.tmp"),
+-                entries, bytes) != Z_OK)
+-    return "could not repair the cache";
+-  /* unzRepair writes an end-of-central-directory record whatever it found, so
+-     an input holding no local file header at all yields a valid empty archive
+-     and a short write yields a truncated one. Only an archive that holds
+-     something and opens may replace the cache (#824). */
+-  if (*entries == 0)
+-    return "the repaired cache holds no entry, keeping the damaged one";
+-  if ((zip = hts_unzOpen_utf8(repairname)) == NULL)
+-    return "the repaired cache does not open, keeping the damaged one";
+-  unzClose(zip);
+-  if (!hts_rename_over(opt, repairname, name))
+-    return "could not put the repaired cache in place";
+-  return NULL;
+-}
+-
+ // Initialisation du cache: créer nouveau, renomer ancien, charger..
+ void cache_init(cache_back * cache, httrackp * opt) {
+   // ---
+@@ -1060,9 +1031,8 @@ void cache_init(cache_back * cache, httrackp * opt) {
+       // Corrupted ZIP file ? Try to repair!
+       if (cache->zipInput == NULL && !cache->ro) {
+         char *name;
+-        const char *why;
+-        unsigned long repaired = 0;
+-        unsigned long repairedBytes = 0;
++        uLong repaired = 0;
++        uLong repairedBytes = 0;
+ 
+         if (!cache->ro) {
+           name =
+@@ -1075,16 +1045,25 @@ void cache_init(cache_back * cache, httrackp * opt) {
+         }
+         hts_log_print(opt, LOG_WARNING,
+                       "Cache: damaged cache, trying to repair");
+-        why = cache_repair(opt, name, &repaired, &repairedBytes);
+-        if (why != NULL) {
+-          hts_log_print(opt, LOG_WARNING | LOG_ERRNO, "Cache: %s", why);
+-        } else if ((cache->zipInput = hts_unzOpen_utf8(name)) != NULL) {
++        /* mztools has no UTF-8 hook, so repairing a corrupt cache under a
++           non-ASCII path_log fails cleanly (re-crawl), never forks a twin. */
++        if (unzRepair
++            (name,
++             fconcat(OPT_GET_BUFF(opt), OPT_GET_BUFF_SIZE(opt), StringBuff(opt->path_log),
++                     "hts-cache/repair.zip"), fconcat(OPT_GET_BUFF(opt), OPT_GET_BUFF_SIZE(opt),
++                                                      StringBuff(opt->path_log),
++                                                      "hts-cache/repair.tmp"),
++             &repaired, &repairedBytes) == Z_OK) {
++          UNLINK(name);
++          RENAME(fconcat(OPT_GET_BUFF(opt), OPT_GET_BUFF_SIZE(opt),
++                         StringBuff(opt->path_log), "hts-cache/repair.zip"),
++                 name);
++          cache->zipInput = hts_unzOpen_utf8(name);
+           hts_log_print(opt, LOG_WARNING,
+                         "Cache: %d bytes successfully recovered in %d entries",
+                         (int) repairedBytes, (int) repaired);
+         } else {
+-          hts_log_print(opt, LOG_WARNING,
+-                        "Cache: the repaired cache could not be reopened");
++          hts_log_print(opt, LOG_WARNING, "Cache: could not repair the cache");
+         }
+       }
+       // Opened ?
+diff --git a/src/htscache.h b/src/htscache.h
+index d8f5e3d..6d8c98a 100644
+--- a/src/htscache.h
++++ b/src/htscache.h
+@@ -80,14 +80,6 @@ htsblk *cache_header(httrackp * opt, cache_back * cache, const char *adr,
+                      const char *fil, htsblk * r);
+ void cache_init(cache_back * cache, httrackp * opt);
+ 
+-/* Recover the damaged cache at name into hts-cache/repair.zip and move it over
+-   name, storing what was recovered in *entries and *bytes. Returns NULL on
+-   success, else a reason the caller reports: a recovery that is empty or does
+-   not open never replaces the cache, and neither does one that cannot be moved
+-   into place (#786, #824). Note: utf-8. */
+-const char *cache_repair(httrackp *opt, const char *name,
+-                         unsigned long *entries, unsigned long *bytes);
+-
+ /* Which hts-cache/ generation (new.* vs old.*) is authoritative. */
+ typedef enum {
+   CACHE_RECONCILE_PROMOTE,     /* no new cache: promote the old generation */
+diff --git a/src/htscharset.c b/src/htscharset.c
+index c36cf79..e9264de 100644
+--- a/src/htscharset.c
++++ b/src/htscharset.c
+@@ -296,41 +296,16 @@ LPWSTR hts_convertUTF8StringToUCS2(const char *s, int size, int *pwsize) {
+   return hts_convertStringToUCS2(s, size, CP_UTF8, pwsize);
+ }
+ 
+-/* WideCharToMultiByte rejects lpUsedDefaultChar on the Unicode, ISO-2022, HZ,
+-   GB18030 and ISCII codepages, where a substitution stays invisible. */
+-static hts_boolean cp_reports_default_char(UINT cp) {
+-  if (cp == 42 /* CP_SYMBOL */ || cp == CP_UTF7 || cp == CP_UTF8 ||
+-      cp == 52936 || cp == 54936 || (cp >= 50220 && cp <= 50229) ||
+-      (cp >= 57002 && cp <= 57011)) {
+-    return HTS_FALSE;
+-  }
+-  return HTS_TRUE;
+-}
+-
+-/* When plossy is non-NULL, *plossy reports that the codepage lacked a character
+-   and a substitute was emitted for it. */
+-static char *hts_convertUCS2StringToCPEx(LPWSTR woutput, int wsize, UINT cp,
+-                                         hts_boolean *plossy) {
++char *hts_convertUCS2StringToCP(LPWSTR woutput, int wsize, UINT cp) {
+   const int usize =
+-      WideCharToMultiByte(cp, 0, woutput, wsize, NULL, 0, NULL, NULL);
+-
+-  if (plossy != NULL) {
+-    *plossy = HTS_FALSE;
+-  }
++    WideCharToMultiByte(cp, 0, woutput, wsize, NULL, 0, NULL, FALSE);
+   if (usize > 0) {
+     char *const uoutput = malloc((usize + 1) * sizeof(char));
+ 
+     if (uoutput != NULL) {
+-      BOOL usedDefault = FALSE;
+-      LPBOOL const pUsedDefault =
+-          plossy != NULL && cp_reports_default_char(cp) ? &usedDefault : NULL;
+-
+-      if (WideCharToMultiByte(cp, 0, woutput, wsize, uoutput, usize, NULL,
+-                              pUsedDefault) == usize) {
++      if (WideCharToMultiByte
++          (cp, 0, woutput, wsize, uoutput, usize, NULL, FALSE) == usize) {
+         uoutput[usize] = '\0';
+-        if (plossy != NULL && usedDefault) {
+-          *plossy = HTS_TRUE;
+-        }
+         return uoutput;
+       } else {
+         free(uoutput);
+@@ -340,10 +315,6 @@ static char *hts_convertUCS2StringToCPEx(LPWSTR woutput, int wsize, UINT cp,
+   return NULL;
+ }
+ 
+-char *hts_convertUCS2StringToCP(LPWSTR woutput, int wsize, UINT cp) {
+-  return hts_convertUCS2StringToCPEx(woutput, wsize, cp, NULL);
+-}
+-
+ char *hts_convertUCS2StringToUTF8(LPWSTR woutput, int wsize) {
+   return hts_convertUCS2StringToCP(woutput, wsize, CP_UTF8);
+ }
+@@ -375,11 +346,7 @@ char *hts_convertStringCPToUTF8(const char *s, size_t size, UINT cp) {
+   return NULL;
+ }
+ 
+-static char *hts_convertStringCPFromUTF8Ex(const char *s, size_t size, UINT cp,
+-                                           hts_boolean *plossy) {
+-  if (plossy != NULL) {
+-    *plossy = HTS_FALSE;
+-  }
++char *hts_convertStringCPFromUTF8(const char *s, size_t size, UINT cp) {
+   /* Empty string ? */
+   if (size == 0) {
+     return hts_stringMemCopy(s, size);
+@@ -395,8 +362,7 @@ static char *hts_convertStringCPFromUTF8Ex(const char *s, size_t size, UINT cp,
+     LPWSTR woutput = hts_convertStringToUCS2(s, (int) size, CP_UTF8, &wsize);
+ 
+     if (woutput != NULL) {
+-      char *const uoutput =
+-          hts_convertUCS2StringToCPEx(woutput, wsize, cp, plossy);
++      char *const uoutput = hts_convertUCS2StringToCP(woutput, wsize, cp);
+ 
+       free(woutput);
+       return uoutput;
+@@ -407,10 +373,6 @@ static char *hts_convertStringCPFromUTF8Ex(const char *s, size_t size, UINT cp,
+   return NULL;
+ }
+ 
+-char *hts_convertStringCPFromUTF8(const char *s, size_t size, UINT cp) {
+-  return hts_convertStringCPFromUTF8Ex(s, size, cp, NULL);
+-}
+-
+ HTSEXT_API char *hts_convertStringToUTF8(const char *s, size_t size,
+                                          const char *charset) {
+   const UINT cp = hts_getCodepage(charset);
+@@ -424,19 +386,6 @@ char *hts_convertStringFromUTF8(const char *s, size_t size, const char *charset)
+   return hts_convertStringCPFromUTF8(s, size, cp);
+ }
+ 
+-char *hts_convertStringFromUTF8Strict(const char *s, size_t size,
+-                                      const char *charset) {
+-  hts_boolean lossy = HTS_FALSE;
+-  char *const out =
+-      hts_convertStringCPFromUTF8Ex(s, size, hts_getCodepage(charset), &lossy);
+-
+-  if (lossy) {
+-    free(out);
+-    return NULL;
+-  }
+-  return out;
+-}
+-
+ HTSEXT_API char *hts_convertStringSystemToUTF8(const char *s, size_t size) {
+   return hts_convertStringCPToUTF8(s, size, GetACP());
+ }
+@@ -641,13 +590,6 @@ char *hts_convertStringFromUTF8(const char *s, size_t size, const char *charset)
+   }
+ }
+ 
+-char *hts_convertStringFromUTF8Strict(const char *s, size_t size,
+-                                      const char *charset) {
+-  /* No transliteration is requested of iconv, so an unrepresentable code point
+-     already fails the conversion outright. */
+-  return hts_convertStringFromUTF8(s, size, charset);
+-}
+-
+ #endif
+ 
+ #ifdef _WIN32
+diff --git a/src/htscharset.h b/src/htscharset.h
+index 9078155..b162f8f 100644
+--- a/src/htscharset.h
++++ b/src/htscharset.h
+@@ -61,15 +61,6 @@ HTSEXT_API char *hts_convertStringToUTF8(const char *s, size_t size,
+ extern char *hts_convertStringFromUTF8(const char *s, size_t size,
+                                        const char *charset);
+ 
+-/**
+- * Same, but refusing to lose a code point the charset can not represent:
+- * NULL is returned then, where hts_convertStringFromUTF8() may hand back a
+- * substituted string (Windows substitutes, iconv fails).
+- * Return NULL upon error.
+- **/
+-extern char *hts_convertStringFromUTF8Strict(const char *s, size_t size,
+-                                             const char *charset);
+-
+ /**
+  * Convert an UTF-8 string to an IDNA (RFC 3492) string.
+  **/
+diff --git a/src/htscoremain.c b/src/htscoremain.c
+index 55b78a3..d90089f 100644
+--- a/src/htscoremain.c
++++ b/src/htscoremain.c
+@@ -2171,9 +2171,8 @@ static int hts_main_internal(int argc, char **argv, httrackp * opt) {
+               case 'R':
+                 {
+                   char *name;
+-                  const char *why;
+-                  unsigned long repaired = 0;
+-                  unsigned long repairedBytes = 0;
++                  uLong repaired = 0;
++                  uLong repairedBytes = 0;
+ 
+                   if (fexist_utf8(fconcat(
+                           OPT_GET_BUFF(opt), OPT_GET_BUFF_SIZE(opt),
+@@ -2196,15 +2195,24 @@ static int hts_main_internal(int argc, char **argv, httrackp * opt) {
+                     return 1;
+                   }
+                   fprintf(stderr, "Cache: trying to repair %s\n", name);
+-                  why = cache_repair(opt, name, &repaired, &repairedBytes);
+-                  if (why != NULL) {
+-                    fprintf(stderr, "Cache: %s\n", why);
+-                    return 1;
++                  if (unzRepair
++                      (name,
++                       fconcat(OPT_GET_BUFF(opt), OPT_GET_BUFF_SIZE(opt), StringBuff(opt->path_log),
++                               "hts-cache/repair.zip"),
++                       fconcat(OPT_GET_BUFF(opt), OPT_GET_BUFF_SIZE(opt), StringBuff(opt->path_log),
++                               "hts-cache/repair.tmp"), &repaired,
++                       &repairedBytes) == Z_OK) {
++                    UNLINK(name);
++                    RENAME(fconcat(OPT_GET_BUFF(opt), OPT_GET_BUFF_SIZE(opt),
++                                   StringBuff(opt->path_log),
++                                   "hts-cache/repair.zip"),
++                           name);
++                    fprintf(stderr,
++                            "Cache: %d bytes successfully recovered in %d entries\n",
++                            (int) repairedBytes, (int) repaired);
++                  } else {
++                    fprintf(stderr, "Cache: could not repair the cache\n");
+                   }
+-                  fprintf(
+-                      stderr,
+-                      "Cache: %d bytes successfully recovered in %d entries\n",
+-                      (int) repairedBytes, (int) repaired);
+                 }
+                 return 0;
+                 break;
+diff --git a/src/htsencoding.c b/src/htsencoding.c
+index cd7ca39..d15e006 100644
+--- a/src/htsencoding.c
++++ b/src/htsencoding.c
+@@ -63,13 +63,6 @@ static int get_hex_value(char c) {
+   } while (0)
+ 
+ int hts_unescapeEntitiesWithCharset(const char *src, char *dest, const size_t max, const char *charset) {
+-  return hts_unescapeEntitiesWithCharsetSpecial(src, dest, max, charset, 0);
+-}
+-
+-int hts_unescapeEntitiesWithCharsetSpecial(const char *src, char *dest,
+-                                           const size_t max,
+-                                           const char *charset,
+-                                           const int flags) {
+   size_t i, j, ampStart, ampStartDest;
+   int uc;
+   int hex;
+@@ -127,18 +120,9 @@ int hts_unescapeEntitiesWithCharsetSpecial(const char *src, char *dest,
+             char buffer[32];
+             len = 0;
+             if ( ( ulen = hts_writeUTF8(uc, buffer, sizeof(buffer)) ) != 0) {
+-              const hts_boolean urlQuery =
+-                  (flags & UNESCAPE_ENTITIES_URL_QUERY) != 0;
+               char *s;
+               buffer[ulen] = '\0';
+-              /* Strict for a query only: a substituted '?' must not pass for
+-                 the code point the document wrote. */
+-              if (urlQuery) {
+-                s = hts_convertStringFromUTF8Strict(buffer, strlen(buffer),
+-                                                    charset);
+-              } else {
+-                s = hts_convertStringFromUTF8(buffer, strlen(buffer), charset);
+-              }
++              s = hts_convertStringFromUTF8(buffer, strlen(buffer), charset);
+               if (s != NULL) {
+                 const size_t sLen = strlen(s);
+                 if (sLen < maxOut) {
+@@ -146,18 +130,7 @@ int hts_unescapeEntitiesWithCharsetSpecial(const char *src, char *dest,
+                   memcpy(&dest[ampStartDest], s, sLen);
+                   len = sLen;
+                 }
+-                freet(s);
+-              } else if (urlQuery) {
+-                /* URL Standard: an unrepresentable code point is written
+-                   %26%23<decimal>%3B rather than left as source text. */
+-                char esc[32];
+-                const int escLen =
+-                    snprintf(esc, sizeof(esc), "%%26%%23%d%%3B", uc);
+-
+-                if (escLen > 0 && (size_t) escLen < maxOut) {
+-                  memcpy(&dest[ampStartDest], esc, (size_t) escLen);
+-                  len = (size_t) escLen;
+-                }
++                free(s);
+               }
+             }
+           }
+diff --git a/src/htsencoding.h b/src/htsencoding.h
+index 3f17c02..369cf83 100644
+--- a/src/htsencoding.h
++++ b/src/htsencoding.h
+@@ -69,29 +69,6 @@ extern int hts_unescapeEntitiesWithCharset(const char *src,
+                                            char *dest, const size_t max,
+                                            const char *charset);
+ 
+-/**
+- * Flags for hts_unescapeEntitiesWithCharsetSpecial(). Values stay distinct from
+- * unescapeFlags above: both reach their function as a plain int.
+- **/
+-typedef enum unescapeEntitiesFlags {
+-  /** The destination is a URL query string: write a reference the charset can
+-      not represent as %26%23<decimal>%3B (URL Standard), instead of source text
+-      whose '&' and '#' would re-split the query. **/
+-  UNESCAPE_ENTITIES_URL_QUERY = 2
+-} unescapeEntitiesFlags;
+-
+-/**
+- * Unescape HTML entities into their charset equivalents, "flags" being a mask
+- * of UNESCAPE_ENTITIES_XXX constants.
+- * Note: source and destination MUST NOT be the same with a flag that may grow
+- * the string (UNESCAPE_ENTITIES_URL_QUERY).
+- * Returns 0 upon success, -1 upon overflow or error.
+- **/
+-extern int hts_unescapeEntitiesWithCharsetSpecial(const char *src, char *dest,
+-                                                  const size_t max,
+-                                                  const char *charset,
+-                                                  const int flags);
+-
+ /**
+  * Unescape an URL-encoded string. The implicit charset is UTF-8.
+  * In case of UTF-8 decoding error inside URL-encoded characters, 
+diff --git a/src/htsftp.c b/src/htsftp.c
+index 14572c2..830abc1 100644
+--- a/src/htsftp.c
++++ b/src/htsftp.c
+@@ -149,61 +149,6 @@ void ftp_split_userpass(const char *src, const char *end, char *user,
+   }
+ }
+ 
+-/* Build "<verb> <path>", quoting a path the server could not parse bare. */
+-static void ftp_command(char *line, size_t line_size, const char *verb,
+-                        const char *path) {
+-  if (strchr(path, ' ') != NULL || strchr(path, '\"') != NULL ||
+-      strchr(path, '\'') != NULL)
+-    snprintf(line, line_size, "%s \"%s\"", verb, path);
+-  else
+-    snprintf(line, line_size, "%s %s", verb, path);
+-}
+-
+-/* MDTM reply "213 YYYYMMDDHHMMSS[.frac]" (RFC 3659, UTC) into tm_time. */
+-static hts_boolean ftp_parse_mdtm(const char *line, struct tm *tm_time) {
+-  int year, mon, mday, hour, min, sec;
+-
+-  if (sscanf(line, "213 %4d%2d%2d%2d%2d%2d", &year, &mon, &mday, &hour, &min,
+-             &sec) != 6)
+-    return HTS_FALSE;
+-  if (year < 1900 || mon < 1 || mon > 12 || mday < 1 || mday > 31 || hour < 0 ||
+-      hour > 23 || min < 0 || min > 59 || sec < 0 || sec > 60)
+-    return HTS_FALSE;
+-  memset(tm_time, 0, sizeof(*tm_time));
+-  tm_time->tm_year = year - 1900;
+-  tm_time->tm_mon = mon - 1;
+-  tm_time->tm_mday = mday;
+-  tm_time->tm_hour = hour;
+-  tm_time->tm_min = min;
+-  tm_time->tm_sec = sec;
+-  tm_time->tm_isdst = 0;
+-  return HTS_TRUE;
+-}
+-
+-/* Whether the local copy can still be a prefix of the remote file. FTP has no
+-   conditional fetch, so an unprovable answer has to be no (#823). */
+-static hts_boolean ftp_may_resume(httrackp *opt, const lien_back *back,
+-                                  time_t remote_mtime) {
+-  const time_t local_mtime = get_filetime(back->url_sav);
+-
+-  if (back->r.totalsize <= back->range_req_size) {
+-    hts_log_print(opt, LOG_DEBUG,
+-                  "FTP: not resuming %s%s, the local copy is not shorter",
+-                  back->url_adr, back->url_fil);
+-    return HTS_FALSE;
+-  }
+-  /* Equality, not ordering: a copy this code did not stamp carries a local
+-     clock time newer than any MDTM, which "not newer" would wave through. */
+-  if (remote_mtime == (time_t) -1 || local_mtime == (time_t) -1 ||
+-      remote_mtime != local_mtime) {
+-    hts_log_print(opt, LOG_DEBUG,
+-                  "FTP: not resuming %s%s, the copy is not dated as the remote",
+-                  back->url_adr, back->url_fil);
+-    return HTS_FALSE;
+-  }
+-  return HTS_TRUE;
+-}
+-
+ // la véritable fonction une fois lancées les routines thread/fork
+ int run_launch_ftp(FTPDownloadStruct * pStruct) {
+   lien_back *back = pStruct->pBack;
+@@ -239,7 +184,6 @@ int run_launch_ftp(FTPDownloadStruct * pStruct) {
+   strcpybuff(back->r.msg, "");
+   back->r.statuscode = 0;
+   back->r.size = 0;
+-  back->r.lastmodified[0] = '\0'; // a retry must not stamp the previous MDTM
+ 
+   // récupérer user et pass si présents, et sauter user:id@ dans adr
+   real_adr = strchr(back->url_adr, ':');
+@@ -514,7 +458,14 @@ int run_launch_ftp(FTPDownloadStruct * pStruct) {
+               char catbuff[CATBUFF_SIZE];
+               char *ua = unescape_http(catbuff, sizeof(catbuff), ftp_filename);
+ 
+-              ftp_command(line, sizeof(line), "SIZE", ua);
++              if ((strchr(ua, ' '))
++                  || (strchr(ua, '\"'))
++                  || (strchr(ua, '\''))
++                ) {
++                snprintf(line, sizeof(line), "SIZE \"%s\"", ua);
++              } else {
++                snprintf(line, sizeof(line), "SIZE %s", ua);
++              }
+ 
+               // SIZE?
+               strcpybuff(back->info, "size");
+@@ -523,8 +474,6 @@ int run_launch_ftp(FTPDownloadStruct * pStruct) {
+               _CHECK_HALT_FTP;
+               if (line[0] == '2') {     // SIZE compris, ALORS tester REST (sinon pas tester: cf probleme des txt.gz decompresses a la volee)
+                 char *szstr = strchr(line, ' ');
+-                time_t remote_mtime = (time_t) -1;
+-                struct tm remote_tm;
+ 
+                 if (szstr) {
+                   LLint size = 0;
+@@ -534,31 +483,10 @@ int run_launch_ftp(FTPDownloadStruct * pStruct) {
+                     back->r.totalsize = size;
+                   }
+                 }
+-
+-                // MDTM?
+-                ftp_command(line, sizeof(line), "MDTM", ua);
+-                strcpybuff(back->info, "mdtm");
+-                send_line(soc_ctl, line);
+-                get_ftp_line(soc_ctl, line, sizeof(line), timeout);
+-                _CHECK_HALT_FTP;
+-                if (ftp_parse_mdtm(line, &remote_tm)) {
+-                  char date[256];
+-
+-                  time_rfc822(date, &remote_tm);
+-                  /* Stamp the mirror as the HTTP path does, so a later pass
+-                     compares server-clock times instead of crossing clocks. */
+-                  back->r.lastmodified[0] = '\0';
+-                  strlncatbuff(back->r.lastmodified, date,
+-                               sizeof(back->r.lastmodified),
+-                               sizeof(back->r.lastmodified) - 1);
+-                  remote_mtime = timegm(&remote_tm);
+-                }
+-
+                 /* Only over a copy back_add() judged partial: on --update every
+                    mirrored file exists, and resuming a complete one splices the
+                    old body into the new (#798). */
+-                if (back->range_req_size > 0 && (transfer_list == 0) &&
+-                    ftp_may_resume(opt, back, remote_mtime)) {
++                if (back->range_req_size > 0 && (transfer_list == 0)) {
+                   strcpybuff(back->info, "rest");
+                   snprintf(line, sizeof(line), "REST " LLintP,
+                            (LLint) back->range_req_size);
+@@ -767,10 +695,6 @@ int run_launch_ftp(FTPDownloadStruct * pStruct) {
+               fclose(back->r.fp);
+               back->r.fp = NULL;
+             }
+-            /* back_flush_output() stamps only r.is_write transfers, which FTP
+-               never is; a partial needs the remote's date too (#823). */
+-            if (strnotempty(back->r.lastmodified))
+-              set_filetime_rfc822(back->url_sav, back->r.lastmodified);
+           } else {
+             strcpybuff(back->r.msg, "Unable to write file");
+             back->r.statuscode = STATUSCODE_INVALID;
+diff --git a/src/htslib.c b/src/htslib.c
+index 0b4191b..ffc49ee 100644
+--- a/src/htslib.c
++++ b/src/htslib.c
+@@ -2846,15 +2846,6 @@ int set_filetime_rfc822(const char *file, const char *date) {
+     return -1;
+ }
+ 
+-/* Note: utf-8 */
+-time_t get_filetime(const char *file) {
+-  STRUCT_STAT buf;
+-
+-  if (STAT(file, &buf) != 0)
+-    return (time_t) -1;
+-  return (time_t) buf.st_mtime;
+-}
+-
+ /* Note: utf-8 */
+ int get_filetime_rfc822(const char *file, char *date) {
+   STRUCT_STAT buf;
+diff --git a/src/htslib.h b/src/htslib.h
+index cc778b2..3bb0959 100644
+--- a/src/htslib.h
++++ b/src/htslib.h
+@@ -289,8 +289,6 @@ void hts_now_iso8601(char out[32]);
+ struct tm *convert_time_rfc822(struct tm *buffer, const char *s);
+ int set_filetime(const char *file, struct tm *tm_time);
+ int set_filetime_rfc822(const char *file, const char *date);
+-/* File mtime as a UTC time_t, or (time_t) -1 if it can not be read. */
+-time_t get_filetime(const char *file);
+ int get_filetime_rfc822(const char *file, char *date);
+ HTS_INLINE void time_rfc822(char *s, struct tm *A);
+ HTS_INLINE void time_rfc822_local(char *s, struct tm *A);
+diff --git a/src/htsopt.h b/src/htsopt.h
+index a4d9653..365a77b 100644
+--- a/src/htsopt.h
++++ b/src/htsopt.h
+@@ -695,9 +695,6 @@ struct htsblk {
+   char *warc_rawpath; /**< verbatim WARC: spooled compressed body path, or NULL
+                            (owns the file; unlinked on free). Tail: ABI */
+   LLint warc_rawsize; /**< byte length of warc_rawpath. Tail: ABI */
+-  /** notmodified came from an engine hack, not a server 304 (#839).
+-      Tail: ABI */
+-  hts_boolean warc_forced_notmodified;
+   /*char digest[32+2];   // md5 digest generated by the engine ("" if none) */
+ };
+ 
+diff --git a/src/htsparse.c b/src/htsparse.c
+index 97b53c3..f057d10 100644
+--- a/src/htsparse.c
++++ b/src/htsparse.c
+@@ -2176,20 +2176,13 @@ int htsparse(htsmoduleStruct * str, htsmoduleStructExtended * stre) {
+                       "could not decode URI '%s' with charset '%s'", lien, charset);
+                   }
+ 
+-                  // decode query entities with the page charset, out-of-place
+-                  // because the escape grows it (#854)
++                  // decode query string entities with page charset
+                   if (hasCharset) {
+-                    char BIGSTK decoded[sizeof(query)];
+-
+-                    if (hts_unescapeEntitiesWithCharsetSpecial(
+-                            query, decoded, sizeof(decoded), charset,
+-                            UNESCAPE_ENTITIES_URL_QUERY) == 0) {
+-                      strcpybuff(query, decoded);
+-                    } else {
+-                      hts_log_print(opt, LOG_WARNING,
+-                                    "could not decode query string '%s' with "
+-                                    "charset '%s'",
+-                                    query, charset);
++                    if (hts_unescapeEntitiesWithCharset(query, 
++                                                        query, strlen(query) + 1,
++                                                        charset) != 0) {
++                        hts_log_print(opt, LOG_WARNING,
++                          "could not decode query string '%s' with charset '%s'", query, charset);
+                     }
+                   }
+ 
+diff --git a/src/htsserver.c b/src/htsserver.c
+index 4f8bcc5..3f09c56 100644
+--- a/src/htsserver.c
++++ b/src/htsserver.c
+@@ -101,53 +101,21 @@ extern void webhttrack_main(char *cmd);
+ extern void webhttrack_lock(void);
+ extern void webhttrack_release(void);
+ 
+-/* Content types for the GUI tree and the mirror it serves. Not the engine's
+-   get_httptype_sized(): it needs an httrackp the server has none of yet, and
+-   would apply the user's --assume rules to the GUI's own pages. */
+-static const struct {
+-  const char *ext;
+-  const char *type;
+-} server_mime_types[] = {
+-    {"html", "text/html"},
+-    {"htm", "text/html"},
+-    {"css", "text/css"},
+-    {"js", "text/javascript"},
+-    {"txt", "text/plain"},
+-    {"xml", "application/xml"},
+-    {"gif", "image/gif"},
+-    {"png", "image/png"},
+-    {"jpg", "image/jpeg"},
+-    {"jpeg", "image/jpeg"},
+-    {"webp", "image/webp"},
+-    {"avif", "image/avif"},
+-    {"svg", "image/svg+xml"},
+-    /* x-icon, not the registered vnd.microsoft.icon: what browsers send. */
+-    {"ico", "image/x-icon"},
+-    {NULL, NULL},
+-};
+-
+-/* Content type of file, NULL if its extension is unlisted. Matched on the last
+-   segment's whole extension, never on a substring of the path. */
+-static const char *server_content_type(const char *file) {
+-  const char *const slash = strrchr(file, '/');
+-  const char *const dot = strrchr(slash != NULL ? slash : file, '.');
+-  int i;
+-
+-  if (dot == NULL) {
+-    return NULL;
+-  }
+-  for (i = 0; server_mime_types[i].ext != NULL; i++) {
+-    if (strfield2(dot + 1, server_mime_types[i].ext)) {
+-      return server_mime_types[i].type;
+-    }
+-  }
+-  return NULL;
++static int is_image(const char *file) {
++  return strstr(file, ".gif") != NULL
++         || strstr(file, ".png") != NULL;
++}
++static int is_text(const char *file) {
++  return ((strstr(file, ".txt") != NULL));
+ }
+-
+ static int is_html(const char *file) {
+-  const char *const type = server_content_type(file);
+-
+-  return type != NULL && strcmp(type, "text/html") == 0;
++  return ((strstr(file, ".htm") != NULL));
++}
++static int is_css(const char *file) {
++  return ((strstr(file, ".css") != NULL));
++}
++static int is_js(const char *file) {
++  return ((strstr(file, ".js") != NULL));
+ }
+ 
+ static void sig_brpipe(int code) {
+@@ -1021,10 +989,21 @@ int smallserver(T_SOC soc, char *url, char *method, char *data, char *path) {
+               "Server: httrack-small-server\r\n" "Content-type: text/html\r\n"
+               "Cache-Control: no-cache, must-revalidate, private\r\n"
+               "Pragma: no-cache\r\n";
+-            char ok_other[] = "HTTP/1.0 200 OK\r\n"
+-                              "Connection: close\r\n"
+-                              "Server: httrack small server\r\n"
+-                              "Content-type: ";
++            char ok_img[] =
++              "HTTP/1.0 200 OK\r\n" "Connection: close\r\n"
++              "Server: httrack small server\r\n" "Content-type: image/gif\r\n";
++            char ok_js[] =
++              "HTTP/1.0 200 OK\r\n" "Connection: close\r\n"
++              "Server: httrack small server\r\n" "Content-type: text/javascript\r\n";
++            char ok_css[] =
++              "HTTP/1.0 200 OK\r\n" "Connection: close\r\n"
++              "Server: httrack small server\r\n" "Content-type: text/css\r\n";
++            char ok_text[] =
++              "HTTP/1.0 200 OK\r\n" "Connection: close\r\n"
++              "Server: httrack small server\r\n" "Content-type: text/plain\r\n";
++            char ok_unknown[] =
++              "HTTP/1.0 200 OK\r\n" "Connection: close\r\n"
++              "Server: httrack small server\r\n" "Content-type: application/octet-stream\r\n";
+ 
+             /* register current page */
+             coucal_write(NewLangList, "thisfile", (intptr_t) strdup(file));
+@@ -1480,13 +1459,16 @@ int smallserver(T_SOC soc, char *url, char *method, char *data, char *path) {
+             } else {
+               if (is_html(file)) {
+                 StringMemcat(headers, ok, sizeof(ok) - 1);
++              } else if (is_text(file)) {
++                StringMemcat(headers, ok_text, sizeof(ok_text) - 1);
++              } else if (is_js(file)) {
++                StringMemcat(headers, ok_js, sizeof(ok_js) - 1);
++              } else if (is_css(file)) {
++                StringMemcat(headers, ok_css, sizeof(ok_css) - 1);
++              } else if (is_image(file)) {
++                StringMemcat(headers, ok_img, sizeof(ok_img) - 1);
+               } else {
+-                const char *const type = server_content_type(file);
+-
+-                StringMemcat(headers, ok_other, sizeof(ok_other) - 1);
+-                StringCat(headers,
+-                          type != NULL ? type : "application/octet-stream");
+-                StringCat(headers, "\r\n");
++                StringMemcat(headers, ok_unknown, sizeof(ok_unknown) - 1);
+               }
+               while(!feof(fp)) {
+                 int n = (int) fread(line, 1, sizeof(line) - 2, fp);
+diff --git a/src/htswarc.c b/src/htswarc.c
+index 8a1a586..3b02f5b 100644
+--- a/src/htswarc.c
++++ b/src/htswarc.c
+@@ -94,8 +94,7 @@ struct warc_writer {
+   hts_boolean protect_prev;   /* previous archive present: build in a temp */
+   hts_boolean opened;         /* open completed; a failed one swaps nothing */
+   hts_boolean failed;         /* a record or segment was lost: swap nothing */
+-  uint64_t unbacked_revisits; /* URLs this pass didn't capture here: an
+-                                  unbacked revisit, or nothing written at all */
++  uint64_t unbacked_revisits; /* revisits whose payload no file here holds */
+   char **page_lines; /* one JSON page line per 200 text/html response, owned */
+   size_t page_count;
+   size_t page_cap;
+@@ -1613,7 +1612,7 @@ static hts_boolean warc_commit(warc_writer *w) {
+     hts_log_print(
+         w->opt, LOG_ERROR,
+         "WARC: this pass revisited %llu URL(s) without re-downloading them, so "
+-        "this archive doesn't hold their current content; kept the previous %s "
++        "its archive would name bodies no file holds; kept the previous %s "
+         "(re-run with -C0, or --warc-file with a name of its own)",
+         (unsigned long long) w->unbacked_revisits,
+         warc_seg_path(w, 0, finalbuf, sizeof(finalbuf)));
+@@ -1679,7 +1678,7 @@ int warc_write_transaction(warc_writer *w, const char *target_uri,
+                            const char *resp_hdr, const char *body,
+                            size_t body_len, const char *body_path,
+                            const char *content_type, int statuscode,
+-                           int unchanged_kind, int truncated) {
++                           int is_update_unchanged, int truncated) {
+   wbuf http;
+   char resp_id[64];
+   char pdig[33];
+@@ -1708,13 +1707,13 @@ int warc_write_transaction(warc_writer *w, const char *target_uri,
+ 
+   /* A payload exists (for digesting) unless this is a bodyless 304. */
+   has_payload = (body_len > 0 && (body != NULL || body_path != NULL) &&
+-                 unchanged_kind != WARC_UNCHANGED_SERVER_304);
++                 !is_update_unchanged);
+ 
+   /* Payload digest drives identical-payload-digest dedup (OpenSSL only). */
+   have_pdig =
+       has_payload ? payload_digest_b32(body, body_len, body_path, pdig) : 0;
+ 
+-  if (unchanged_kind == WARC_UNCHANGED_SERVER_304) {
++  if (is_update_unchanged) {
+     is_revisit = 1;
+     profile = "http://netpreserve.org/warc/1.1/revisit/server-not-modified";
+     /* Replay resolves a revisit by this field alone, and a 304 stands in for
+@@ -1723,22 +1722,6 @@ int warc_write_transaction(warc_writer *w, const char *target_uri,
+     refers_uri = target_uri;
+     /* Served from cache: the payload sits in the previous archive, not here. */
+     w->unbacked_revisits++;
+-  } else if (unchanged_kind == WARC_UNCHANGED_ENGINE_FORCED) {
+-    /* has_payload requires body_len>0, so a genuinely empty body looks
+-       digest-less too; it still has a well-defined digest (sha1 of nothing),
+-       so compute it here rather than treat it as a missing-crypto case. */
+-    if (!have_pdig && body_len == 0 && (body != NULL || body_path != NULL))
+-      have_pdig = payload_digest_b32(body, body_len, body_path, pdig);
+-    /* Served from cache with no exchange either way: still unbacked. */
+-    w->unbacked_revisits++;
+-    /* No digest (no OpenSSL) means nothing to point a revisit at, and there
+-       was no real exchange to record as a response; write nothing (#839). */
+-    if (!have_pdig)
+-      return 0;
+-    is_revisit = 1;
+-    profile =
+-        "http://netpreserve.org/warc/1.1/revisit/identical-payload-digest";
+-    refers_uri = target_uri;
+   } else if (have_pdig && w->seen != NULL) {
+     void *prev = NULL;
+     if (coucal_read_pvoid(w->seen, pdig, &prev) && prev != NULL) {
+@@ -1848,7 +1831,7 @@ void warc_write_backtransaction(httrackp *opt, lien_back *back) {
+   const char *body_path;
+   const char *resp_hdr;
+   char synth[512];
+-  int unchanged_kind;
++  int is_unchanged;
+   int is_ftp;
+ 
+   if (opt->state.warc == WARC_DISABLED)
+@@ -1909,12 +1892,7 @@ void warc_write_backtransaction(httrackp *opt, lien_back *back) {
+     body_len = (size_t) back->r.warc_rawsize;
+   }
+ 
+-  if (!back->r.notmodified || !opt->is_update)
+-    unchanged_kind = WARC_UNCHANGED_NONE;
+-  else if (back->r.warc_forced_notmodified)
+-    unchanged_kind = WARC_UNCHANGED_ENGINE_FORCED;
+-  else
+-    unchanged_kind = WARC_UNCHANGED_SERVER_304;
++  is_unchanged = (back->r.notmodified && opt->is_update) ? 1 : 0;
+ 
+   /* Prefer the stashed raw headers; synthesize a minimal status line for the
+      header-less (HTTP/0.9-style) responses that never carried a header block.
+@@ -1930,6 +1908,6 @@ void warc_write_backtransaction(httrackp *opt, lien_back *back) {
+ 
+   warc_write_transaction(w, uri, ip, back->r.warc_reqhdr, resp_hdr, body,
+                          body_len, body_path, back->r.contenttype,
+-                         back->r.statuscode, unchanged_kind,
++                         back->r.statuscode, is_unchanged,
+                          back->r.warc_truncated);
+ }
+diff --git a/src/htswarc.h b/src/htswarc.h
+index a5fe963..b913ba8 100644
+--- a/src/htswarc.h
++++ b/src/htswarc.h
+@@ -101,12 +101,6 @@ void warc_close(warc_writer *w);
+    success, -1 on error or truncation. Exposed for the -#test=warc-surt test. */
+ int warc_surt(const char *url, char *out, size_t outsz);
+ 
+-/* unchanged_kind for warc_write_transaction. */
+-#define WARC_UNCHANGED_NONE 0       /* a fresh exchange: a full response */
+-#define WARC_UNCHANGED_SERVER_304 1 /* the server itself answered 304 */
+-#define WARC_UNCHANGED_ENGINE_FORCED                                           \
+-  2 /* the engine, not the server, decided nothing changed (#839) */
+-
+ /* Write one transaction's request + response (or revisit) records.
+    target_uri:  absolute URL fetched.
+    ip:          numeric peer IP, or NULL/"" to omit.
+@@ -116,9 +110,7 @@ int warc_surt(const char *url, char *out, size_t outsz);
+    body_path:   file re-read for the body when body==NULL (may be NULL).
+    content_type: CDXJ mime when resp_hdr declares none, as a 304 does; NULL
+                 to leave the index line without one.
+-   unchanged_kind: WARC_UNCHANGED_*; SERVER_304 writes a server-not-modified
+-                revisit, ENGINE_FORCED a self-referencing identical-payload-
+-                digest one (no 304 to claim), both unbacked (#839).
++   is_update_unchanged: nonzero for a 304 server-not-modified revisit.
+    truncated: a WARC_TRUNC_* reason to tag a cap-truncated body, else 0.
+    The body is stored verbatim: Content-Encoding is kept and Content-Length set
+    to body_len, so body/body_len must be the as-received (coded) bytes.
+@@ -128,7 +120,7 @@ int warc_write_transaction(warc_writer *w, const char *target_uri,
+                            const char *resp_hdr, const char *body,
+                            size_t body_len, const char *body_path,
+                            const char *content_type, int statuscode,
+-                           int unchanged_kind, int truncated);
++                           int is_update_unchanged, int truncated);
+ 
+ /* Write one non-HTTP capture as a single WARC 'resource' record: the block is
+    the raw payload (no HTTP envelope), Content-Type is the payload's own MIME.
+diff --git a/src/proxy/proxytrack.c b/src/proxy/proxytrack.c
+index e74fedd..c34afbf 100644
+--- a/src/proxy/proxytrack.c
++++ b/src/proxy/proxytrack.c
+@@ -748,8 +748,7 @@ static PT_Element proxytrack_process_DAV_Request(PT_Indexes indexes,
+             const char *thisUrl = list[i];
+             const char *mimeType = "application/octet-stream";
+             unsigned int thisUrlLen = (unsigned int) strlen(thisUrl);
+-            /* the folder's default document is enumerated as an empty name */
+-            int thisIsDir = (hts_lastchar(thisUrl) == '/') ? 1 : 0;
++            int thisIsDir = (thisUrl[thisUrlLen - 1] == '/') ? 1 : 0;
+ 
+             /* Item URL */
+             StringRoom(itemUrl,
+@@ -854,7 +853,8 @@ static PT_Element proxytrack_process_HTTP_List(PT_Indexes indexes,
+     for(isDir = 1; isDir >= 0; isDir--) {
+       for(i = 0; list[i] != NULL; i++) {
+         char *thisUrl = list[i];
+-        int thisIsDir = (hts_lastchar(thisUrl) == '/') ? 1 : 0;
++        unsigned int thisUrlLen = (unsigned int) strlen(thisUrl);
++        int thisIsDir = (thisUrl[thisUrlLen - 1] == '/') ? 1 : 0;
+ 
+         if (thisIsDir == isDir) {
+           if (isDir)
+diff --git a/src/proxy/store.c b/src/proxy/store.c
+index 60ea3f7..a07db73 100644
+--- a/src/proxy/store.c
++++ b/src/proxy/store.c
+@@ -259,6 +259,7 @@ static int binput(char *buff, char *s, int max) {
+   int count = 0;
+   int destCount = 0;
+ 
++  // Note: \0 will return 1
+   while(destCount < max && buff[count] != '\0' && buff[count] != '\n') {
+     if (buff[count] != '\r') {
+       s[destCount++] = buff[count];
+@@ -267,9 +268,8 @@ static int binput(char *buff, char *s, int max) {
+   }
+   s[destCount] = '\0';
+ 
+-  /* only step over a real separator: past the terminating NUL leaves the
+-     caller's buffer, past a truncated field's next byte silently eats it */
+-  return buff[count] == '\n' ? count + 1 : count;
++  // then return the supplemental jump offset
++  return count + 1;
+ }
+ 
+ static time_t file_timestamp(const char *file) {
+@@ -888,31 +888,6 @@ static PT_Element PT_ReadCache__New(PT_Index index, const char *url, int flags)
+ 	} \
+ } while(0)
+ 
+-/* Set path (capacity size) to filename's parent directory, separator included,
+-   from an absolute filename. Empty when there is none, or when it would not
+-   fit: a truncated prefix names a different directory. */
+-static void index_base_path(char *path, size_t size, const char *filename) {
+-  const char *abpath;
+-  int slashes;
+-
+-  for (slashes = 2, abpath = hts_lastcharptr(filename);
+-       abpath > filename &&
+-       ((*abpath != '/' && *abpath != '\\') || --slashes > 0);
+-       abpath--)
+-    ;
+-  path[0] = '\0';
+-  if (slashes == 0 && *abpath != 0 && (size_t) (abpath - filename) < size - 1) {
+-    int i;
+-
+-    strlncatbuff(path, filename, size, (size_t) (abpath - filename) + 1);
+-    for (i = 0; path[i] != 0; i++) {
+-      if (path[i] == '\\') {
+-        path[i] = '/';
+-      }
+-    }
+-  }
+-}
+-
+ int PT_LoadCache__New(PT_Index index_, const char *filename) {
+   if (index_ != NULL && filename != NULL) {
+     PT_Index__New index = &index_->slots.formatNew;
+@@ -923,9 +898,27 @@ int PT_LoadCache__New(PT_Index index_, const char *filename) {
+ 
+     // Opened ?
+     if (zFile != NULL) {
++      const char *abpath;
++      int slashes;
+       coucal hashtable = index->hash;
+ 
+-      index_base_path(index->path, sizeof(index->path), filename);
++      /* Compute base path for this index - the filename MUST be absolute! */
++      for (slashes = 2, abpath = hts_lastcharptr(filename);
++           abpath > filename &&
++           ((*abpath != '/' && *abpath != '\\') || --slashes > 0);
++           abpath--)
++        ;
++      index->path[0] = '\0';
++      if (slashes == 0 && *abpath != 0) {
++        int i;
++
++        strncat(index->path, filename, (int) (abpath - filename) + 1);
++        for(i = 0; index->path[i] != 0; i++) {
++          if (index->path[i] == '\\') {
++            index->path[i] = '/';
++          }
++        }
++      }
+ 
+       /* Ready directory entries */
+       if (unzGoToFirstFile(zFile) == Z_OK) {
+@@ -1390,10 +1383,11 @@ static int cache_brstr(char *adr, char *s, size_t s_size) {
+   char buff[256 + 4];
+ 
+   off = binput(adr, buff, 256);
+-  /* no length-prefixed value follows a field the terminating NUL stopped */
+-  if (adr[off] == '\0') {
++  /* binput stops at adr's terminating NUL; a value only follows a real line
++     terminator, so never step past end-of-buffer. */
++  if (adr[off - 1] == '\0') {
+     s[0] = '\0';
+-    return off;
++    return off - 1;
+   }
+   /* an empty/non-numeric field leaves i unset: treat as length 0 */
+   if (sscanf(buff, "%d", &i) != 1 || i < 0 || i > 32768)
+@@ -1497,23 +1491,42 @@ static int PT_LoadCache__Old(PT_Index index_, const char *filename) {
+ 
+     cache->filenameDat[0] = '\0';
+     cache->filenameNdx[0] = '\0';
+-
+-    index_base_path(cache->path, sizeof(cache->path), filename);
++    cache->path[0] = '\0';
++
++    {
++      PT_Index__Old index = cache;
++      const char *abpath;
++      int slashes;
++
++      /* -------------------- COPY OF THE __New() CODE -------------------- */
++      /* Compute base path for this index - the filename MUST be absolute! */
++      for (slashes = 2, abpath = hts_lastcharptr(filename);
++           abpath > filename &&
++           ((*abpath != '/' && *abpath != '\\') || --slashes > 0);
++           abpath--)
++        ;
++      index->path[0] = '\0';
++      if (slashes == 0 && *abpath != 0) {
++        int i;
++
++        strncat(index->path, filename, (int) (abpath - filename) + 1);
++        for(i = 0; index->path[i] != 0; i++) {
++          if (index->path[i] == '\\') {
++            index->path[i] = '/';
++          }
++        }
++      }
++      /* -------------------- END OF COPY OF THE __New() CODE -------------------- */
++    }
+ 
+     /* Index/data filenames */
+     if (pos != NULL) {
+-      const size_t nLen = (size_t) (pos - filename);
++      int nLen = (int) (pos - filename);
+ 
+-      /* a base clipped to fit would name a different pair of files */
+-      if (nLen > sizeof(cache->filenameDat) - sizeof(".dat")) {
+-        return 0;
+-      }
+-      strlncatbuff(cache->filenameDat, filename, sizeof(cache->filenameDat),
+-                   nLen);
+-      strlncatbuff(cache->filenameNdx, filename, sizeof(cache->filenameNdx),
+-                   nLen);
+-      strcatbuff(cache->filenameDat, ".dat");
+-      strcatbuff(cache->filenameNdx, ".ndx");
++      strncat(cache->filenameDat, filename, nLen);
++      strncat(cache->filenameNdx, filename, nLen);
++      strcat(cache->filenameDat, ".dat");
++      strcat(cache->filenameNdx, ".ndx");
+     }
+     ndxSize = filesize(cache->filenameNdx);
+     cache->timestamp = file_timestamp(cache->filenameDat);
+@@ -1576,10 +1589,7 @@ static int PT_LoadCache__Old(PT_Index index_, const char *filename) {
+               }
+               /* read position */
+               a += binput(a, linepos, 200);
+-              /* an unparseable field must not carry the previous entry's
+-                 offset over, nor read the stack on the first one */
+-              if (sscanf(linepos, "%d", &pos) != 1)
+-                pos = 0;
++              sscanf(linepos, "%d", &pos);
+ 
+               /* Add entry */
+               coucal_add(cache->hash, line, pos);
+diff --git a/tests/ftp-server.py b/tests/ftp-server.py
+index 9cb1017..9c1d0ff 100644
+--- a/tests/ftp-server.py
++++ b/tests/ftp-server.py
+@@ -9,7 +9,6 @@ directory). Each line is "<path> <mode>...", path "*" matching everything:
+   truncate  send a prefix of the body, then drop the data connection
+   empty     open the data connection and send nothing
+   norest    answer REST with 500, so the client re-fetches from scratch
+-  nomdtm    answer MDTM with 500, like a server predating RFC 3659
+ """
+ 
+ import argparse
+@@ -17,7 +16,6 @@ import os
+ import socket
+ import sys
+ import threading
+-import time
+ 
+ 
+ def reply(conn, text):
+@@ -150,15 +148,6 @@ class Session(threading.Thread):
+                 reply(conn, "213 %d" % os.path.getsize(path))
+             else:
+                 reply(conn, "550 no such file")
+-        elif verb == "MDTM":
+-            path = self.resolve(arg)
+-            if "nomdtm" in self.modes():
+-                reply(conn, "500 MDTM not understood")
+-            elif path and os.path.isfile(path):
+-                stamp = time.gmtime(os.path.getmtime(path))
+-                reply(conn, "213 " + time.strftime("%Y%m%d%H%M%S", stamp))
+-            else:
+-                reply(conn, "550 no such file")
+         elif verb == "REST":
+             if "norest" in self.modes():
+                 reply(conn, "500 REST not understood")
+diff --git a/tests/local-crawl.sh b/tests/local-crawl.sh
+index 4aee9e1..1e9059f 100755
+--- a/tests/local-crawl.sh
++++ b/tests/local-crawl.sh
+@@ -17,7 +17,6 @@
+ #       --errors N --errors-content N --files N --found PATH ... --directory PATH ... \
+ #       --log-found REGEX ... --log-not-found REGEX ... \
+ #       --file-matches PATH REGEX ... --file-not-matches PATH REGEX ... \
+-#       --cache-found URLTAIL ... --cache-not-found URLTAIL ... \
+ #       --file-min-bytes PATH N --file-mode PATH OCTAL --max-mirror-bytes N \
+ #       httrack BASEURL/some/path [httrack-args...]
+ # --errors counts every "Error:" log line; --errors-content drops transient
+@@ -26,9 +25,6 @@
+ # --max/--min-mirror-bytes bound the mirrored content bytes (host root).
+ # --file-matches/--file-not-matches grep (ERE) a mirrored file (PATH under the
+ # host root), to assert rewritten link/content survived the crawl.
+-# --cache-found/--cache-not-found assert whether hts-cache/new.zip holds an
+-# entry whose URL ends with URLTAIL, e.g. /dir/page.html; being mirrored and
+-# being cached are separate outcomes (#840).
+ # --file-min-bytes asserts a mirrored file (PATH) is at least N bytes.
+ # --file-mode asserts its octal permissions (e.g. 644); POSIX hosts only.
+ # --rerun-args runs a second pass (same server and mirror dir) with the given
+@@ -116,25 +112,6 @@ function find_hostroot {
+     die "could not find host root under $out"
+ }
+ 
+-# Does the cache hold an entry whose URL ends with $1? An unreadable index is a
+-# hard failure, else --cache-not-found would pass on a cache that never existed.
+-# Suffix match over the whole key, so a URL with a query string needs the query
+-# spelled out; a bare path would silently match nothing.
+-function cache_has {
+-    local rc
+-    "$python" -c '
+-import sys, zipfile
+-try:
+-    names = zipfile.ZipFile(sys.argv[1]).namelist()
+-except Exception:
+-    sys.exit(2)
+-sys.exit(0 if any(n.endswith(sys.argv[2]) for n in names) else 1)
+-' "${logroot}/hts-cache/new.zip" "$1"
+-    rc=$?
+-    test "$rc" -le 1 || die "cannot read cache index ${logroot}/hts-cache/new.zip"
+-    return "$rc"
+-}
+-
+ function assert_equals {
+     info "$1"
+     if test ! "$2" == "$3"; then
+@@ -223,7 +200,7 @@ while test "$pos" -lt "$nargs"; do
+         audit+=("${args[$pos]}" "${args[$((pos + 1))]}")
+         pos=$((pos + 1))
+         ;;
+-    --found | --not-found | --directory | --log-found | --log-not-found | --max-mirror-bytes | --min-mirror-bytes | --cache-found | --cache-not-found)
++    --found | --not-found | --directory | --log-found | --log-not-found | --max-mirror-bytes | --min-mirror-bytes)
+         audit+=("${args[$pos]}" "${args[$((pos + 1))]}")
+         pos=$((pos + 1))
+         ;;
+@@ -486,11 +463,6 @@ debug "host root: $hostroot"
+ # --- optional WARC validation (stdlib validator, no warcio) ------------------
+ # WARC_VALIDATE_BODY="URLSUB=HEX" byte-checks a fresh-crawl response body;
+ # WARC_VALIDATE_NORESP="URLSUB..." asserts those assets are revisits post-update;
+-# WARC_VALIDATE_NORECORD="URLSUB..." asserts those assets have no record at all;
+-# WARC_VALIDATE_IP="URLSUB=IP..." asserts the exact WARC-IP-Address on the record;
+-# WARC_VALIDATE_PROFILE="URLSUB=SUBSTR..." asserts a revisit's WARC-Profile;
+-# WARC_VALIDATE_NO_REVISIT=1 skips the "at least one revisit" requirement (a
+-# no-OpenSSL leg where the only unchanged assets end up with no record at all);
+ # WARC_VALIDATE_EXCHANGE=1 asserts each revisit carries its 304 request/response.
+ if test -n "$warc_validate"; then
+     validator=$(nativepath "${testdir}/warc-validate.py")
+@@ -522,20 +494,10 @@ if test -n "$warc_validate"; then
+     if test -n "${WARC_VALIDATE_UPDATE:-}"; then
+         upd=$(find "$mirrorroot" -maxdepth 2 -name "$WARC_VALIDATE_UPDATE" 2>/dev/null | head -n1)
+         test -n "$upd" || die "no $WARC_VALIDATE_UPDATE produced under $mirrorroot"
+-        declare -a revargs=()
+-        test -z "${WARC_VALIDATE_NO_REVISIT:-}" && revargs+=(--expect-revisit)
++        declare -a revargs=(--expect-revisit)
+         for sub in ${WARC_VALIDATE_NORESP:-}; do
+             revargs+=(--no-response-for "$sub")
+         done
+-        for sub in ${WARC_VALIDATE_NORECORD:-}; do
+-            revargs+=(--no-record-for "$sub")
+-        done
+-        for spec in ${WARC_VALIDATE_IP:-}; do
+-            revargs+=(--expect-ip "$spec")
+-        done
+-        for spec in ${WARC_VALIDATE_PROFILE:-}; do
+-            revargs+=(--expect-revisit-profile "$spec")
+-        done
+         test -n "${WARC_VALIDATE_EXCHANGE:-}" && revargs+=(--revisit-exchange)
+         info "validating update WARC (revisits)"
+         "$python" "$validator" "$(nativepath "$upd")" "${revargs[@]}" >&2 ||
+@@ -629,22 +591,6 @@ while test "$i" -lt "${#audit[@]}"; do
+             exit 1
+         fi
+         ;;
+-    --cache-found)
+-        i=$((i + 1))
+-        info "checking cache holds ${audit[$i]}"
+-        if cache_has "${audit[$i]}"; then result "OK"; else
+-            result "not cached"
+-            exit 1
+-        fi
+-        ;;
+-    --cache-not-found)
+-        i=$((i + 1))
+-        info "checking cache lacks ${audit[$i]}"
+-        if cache_has "${audit[$i]}"; then
+-            result "cached"
+-            exit 1
+-        else result "OK"; fi
+-        ;;
+     --found)
+         i=$((i + 1))
+         info "checking for ${audit[$i]}"
+diff --git a/tests/local-server.py b/tests/local-server.py
+index 0815649..3676cfa 100755
+--- a/tests/local-server.py
++++ b/tests/local-server.py
+@@ -19,8 +19,6 @@ import gzip
+ import hashlib
+ import os
+ import re
+-import socket
+-import struct
+ import sys
+ import time
+ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+@@ -1198,45 +1196,6 @@ class Handler(SimpleHTTPRequestHandler):
+         self.send_header("Content-Length", "0")
+         self.end_headers()
+ 
+-    # Character references in a query string (#854). CHARREF_LOG collects the
+-    # request-target the origin saw, plus the parameter count it parses out of
+-    # it. Per page: a reference the declared charset represents (é, あ) and one
+-    # it does not (€).
+-    CHARREF_QUERY = "?a=&euro;&b=&#8364;&c=&eacute;&d=x"
+-    CHARREF_MB_QUERY = "?a=&#12354;&c=&#12316;&b=&euro;&d=x"
+-    CHARREF_PAGES = {
+-        "none": ("text/html", CHARREF_QUERY),
+-        "utf8": ("text/html; charset=utf-8", CHARREF_QUERY),
+-        "sjis": ("text/html; charset=shift_jis", CHARREF_MB_QUERY),
+-        "jis": ("text/html; charset=iso-2022-jp", CHARREF_MB_QUERY),
+-    }
+-
+-    def record_charref(self):
+-        log = os.environ.get("CHARREF_LOG")
+-        if log:
+-            fields = [f for f in urlsplit(self.path).query.split("&") if f]
+-            with open(log, "a") as fp:
+-                fp.write("%s\t%d\n" % (self.path, len(fields)))
+-
+-    def route_charref(self):
+-        name = urlsplit(self.path).path[len("/charref/") :]
+-        variant = name[: -len(".html")] if name.endswith(".html") else ""
+-        if variant == "index":
+-            body = "".join(
+-                '<a href="%s.html">%s</a>' % (v, v) for v in self.CHARREF_PAGES
+-            )
+-            self.send_raw(("<html><body>%s</body></html>" % body).encode(), "text/html")
+-        elif variant in self.CHARREF_PAGES:
+-            ctype, query = self.CHARREF_PAGES[variant]
+-            body = '<a href="q%s.html%s">q</a>' % (variant, query)
+-            self.send_raw(("<html><body>%s</body></html>" % body).encode(), ctype)
+-        elif variant[1:] in self.CHARREF_PAGES:
+-            self.send_raw(b"<html><body>q</body></html>", "text/html")
+-        else:
+-            self.send_response(404)
+-            self.send_header("Content-Length", "0")
+-            self.end_headers()
+-
+     # variant -> (Content-Type, title bytes, body bytes); the gb2312 and l1decl
+     # titles are valid UTF-8 as bytes, so only the declared charset decodes them
+     TITLEENC_PAGES = {
+@@ -1601,120 +1560,6 @@ class Handler(SimpleHTTPRequestHandler):
+             self.wfile.write(b"%X\r\n" % len(piece) + piece + b"\r\n")
+         self.wfile.write(b"0\r\n\r\n")
+ 
+-    # #840: a chunked stream cut before its terminating zero-length chunk.
+-    CHUNKTRUNC_V1 = b"<html><body><p>CHUNKTRUNC-PAGE-V1</p></body></html>"
+-    CHUNKTRUNC_V2 = b"<html><body><p>CHUNKTRUNC-PAGE-V2</p></body></html>"
+-
+-    CHUNKTRUNC_BIN_V1 = b"CHUNKTRUNC-BIN-V1\n" + b"\x07\x08\x09\xfe" * 8192
+-    CHUNKTRUNC_BIN_V2 = b"CHUNKTRUNC-BIN-V2\n" + b"\x17\x18\x19\xee" * 8192
+-
+-    def route_chunktrunc_index(self):
+-        self.send_html(
+-            '\t<a href="page.html">page</a>\n'
+-            '\t<a href="always.html">always</a>\n'
+-            '\t<a href="stay.html">stay</a>\n'
+-            '\t<a href="file.bin">file</a>\n'
+-            '\t<a href="always.bin">alwaysbin</a>\n'
+-            '\t<a href="hostile.html">hostile</a>\n'
+-            '\t<a href="reset.bin">reset</a>\n'
+-        )
+-
+-    def send_chunked(self, body, terminate, ctype="text/html; charset=utf-8"):
+-        self.protocol_version = "HTTP/1.1"
+-        self.send_response(200)
+-        self.send_header("Content-Type", ctype)
+-        self.send_header("Transfer-Encoding", "chunked")
+-        self.send_header("Connection", "close")
+-        self.end_headers()
+-        if self.command == "HEAD":
+-            return
+-        try:
+-            self.wfile.write(b"%X\r\n" % len(body) + body + b"\r\n")
+-            if terminate:
+-                self.wfile.write(b"0\r\n\r\n")
+-            self.wfile.flush()
+-        except OSError:
+-            pass
+-        self.close_connection = True
+-
+-    def route_chunktrunc_page(self):
+-        if self.refetch_pass() == 1:
+-            self.send_chunked(self.CHUNKTRUNC_V1, True)
+-        else:
+-            self.send_chunked(self.CHUNKTRUNC_V2, False)
+-
+-    # Same over the direct-to-disk path: the update pass delivers half the new
+-    # body and never terminates it.
+-    def route_chunktrunc_file(self):
+-        octet = "application/octet-stream"
+-        if self.refetch_pass() == 1:
+-            self.send_chunked(self.CHUNKTRUNC_BIN_V1, True, octet)
+-        else:
+-            half = self.CHUNKTRUNC_BIN_V2[: len(self.CHUNKTRUNC_BIN_V2) // 2]
+-            self.send_chunked(half, False, octet)
+-
+-    # Truncated on every pass, so a first crawl has nothing good to fall back on.
+-    def route_chunktrunc_always(self):
+-        self.send_chunked(b"<html><body><p>CHUNKTRUNC-ALWAYS</p></body></html>", False)
+-
+-    def route_chunktrunc_alwaysbin(self):
+-        self.send_chunked(
+-            b"CHUNKTRUNC-ALWAYSBIN\n" + b"\x27\x28\x29\xde" * 1000,
+-            False,
+-            "application/octet-stream",
+-        )
+-
+-    # Control: terminated on both passes, so a normal --update still lands.
+-    def route_chunktrunc_stay(self):
+-        v = 1 if self.refetch_pass() == 1 else 2
+-        self.send_chunked(b"<html><body><p>CHUNKSTAY-V%d</p></body></html>" % v, True)
+-
+-    # The update pass declares a chunk of 0x80000000, which sscanf("%x") lands in
+-    # an int as INT_MIN: it must not read as the terminating chunk, and the sum
+-    # it drives negative must not read as a complete body either.
+-    def route_chunktrunc_hostile(self):
+-        if self.refetch_pass() == 1:
+-            self.send_chunked(b"<html><body><p>CHUNKHOSTILE-V1</p></body></html>", True)
+-            return
+-        self.protocol_version = "HTTP/1.1"
+-        self.send_response(200)
+-        self.send_header("Content-Type", "text/html; charset=utf-8")
+-        self.send_header("Transfer-Encoding", "chunked")
+-        self.send_header("Connection", "close")
+-        self.end_headers()
+-        if self.command == "HEAD":
+-            return
+-        try:
+-            self.wfile.write(b"80000000\r\n")
+-            self.wfile.flush()
+-        except OSError:
+-            pass
+-        self.close_connection = True
+-
+-    # Aborts the chunked body with an RST, so the read fails rather than seeing a
+-    # clean EOF and the transfer is already in error before the framing check.
+-    def route_chunktrunc_reset(self):
+-        self.protocol_version = "HTTP/1.1"
+-        self.send_response(200)
+-        self.send_header("Content-Type", "application/octet-stream")
+-        self.send_header("Transfer-Encoding", "chunked")
+-        self.send_header("Connection", "close")
+-        self.end_headers()
+-        if self.command == "HEAD":
+-            return
+-        try:
+-            body = b"CHUNKRESET\n" + b"\x31\x32\x33\xcd" * 4096
+-            self.wfile.write(b"%X\r\n" % len(body) + body + b"\r\n")
+-            self.wfile.flush()
+-            time.sleep(0.5)  # let the client consume the chunk first
+-            self.connection.setsockopt(
+-                socket.SOL_SOCKET, socket.SO_LINGER, struct.pack("ii", 1, 0)
+-            )
+-            self.connection.close()
+-        except OSError:
+-            pass
+-        self.close_connection = True
+-
+     # Content-Disposition naming: the attachment filename replaces the
+     # URL-derived name; path components in it are stripped (RFC 2616).
+     CDISPO_NAMES = {
+@@ -1770,7 +1615,8 @@ class Handler(SimpleHTTPRequestHandler):
+ 
+     def route_bakname_index(self):
+         self.send_html(
+-            '\t<a href="a.bin">a</a>\n' '\t<a href="hts-tmp/a.bin.bak">bak</a>\n'
++            '\t<a href="a.bin">a</a>\n'
++            '\t<a href="hts-tmp/a.bin.bak">bak</a>\n'
+         )
+ 
+     def route_bakname_main(self):
+@@ -1809,9 +1655,7 @@ class Handler(SimpleHTTPRequestHandler):
+     ERRMASK_ERR = b"<html><body>error 403</body></html>\n"
+ 
+     def route_errmask_index(self):
+-        self.send_html(
+-            '\t<a href="keep.dat">keep</a>\n\t<a href="empty.dat">empty</a>\n'
+-        )
++        self.send_html('\t<a href="keep.dat">keep</a>\n')
+ 
+     def route_errmask_keep(self):
+         # First crawl (no validator) gets the 1024 B body + Last-Modified; the
+@@ -1832,24 +1676,6 @@ class Handler(SimpleHTTPRequestHandler):
+         if self.command != "HEAD":
+             self.wfile.write(self.ERRMASK_GOOD)
+ 
+-    def route_errmask_empty(self):
+-        # Same masking shape as keep.dat, but a genuinely zero-length body: an
+-        # engine-forced revisit must still digest and archive it, not treat
+-        # it as a missing-crypto case (#839).
+-        if self.headers.get("If-Modified-Since") or self.headers.get("If-None-Match"):
+-            self.send_response(403, "Forbidden")
+-            self.send_header("Content-Type", "text/html")
+-            self.send_header("Content-Length", str(len(self.ERRMASK_ERR)))
+-            self.end_headers()
+-            if self.command != "HEAD":
+-                self.wfile.write(self.ERRMASK_ERR)
+-            return
+-        self.send_response(200)
+-        self.send_header("Content-Type", "application/octet-stream")
+-        self.send_header("Last-Modified", BIG_LASTMOD)
+-        self.send_header("Content-Length", "0")
+-        self.end_headers()
+-
+     # --- delayed-type degenerate paths (issues #5/#107) --------------------
+     def route_delayed_index(self):
+         self.send_html(
+@@ -2329,14 +2155,6 @@ class Handler(SimpleHTTPRequestHandler):
+         "/size/oversize.bin": route_size_oversize,
+         "/chunked/index.html": route_chunked_index,
+         "/chunked/page.html": route_chunked_page,
+-        "/chunktrunc/index.html": route_chunktrunc_index,
+-        "/chunktrunc/page.html": route_chunktrunc_page,
+-        "/chunktrunc/always.html": route_chunktrunc_always,
+-        "/chunktrunc/file.bin": route_chunktrunc_file,
+-        "/chunktrunc/always.bin": route_chunktrunc_alwaysbin,
+-        "/chunktrunc/stay.html": route_chunktrunc_stay,
+-        "/chunktrunc/hostile.html": route_chunktrunc_hostile,
+-        "/chunktrunc/reset.bin": route_chunktrunc_reset,
+         "/errpage/index.html": route_errpage_index,
+         "/errpage/good.html": route_errpage_good,
+         "/errpage/missing.html": route_errpage_missing,
+@@ -2422,7 +2240,6 @@ class Handler(SimpleHTTPRequestHandler):
+         "/mini304/page.html": route_mini304_page,
+         "/errmask/index.html": route_errmask_index,
+         "/errmask/keep.dat": route_errmask_keep,
+-        "/errmask/empty.dat": route_errmask_empty,
+         "/maxrecv/index.html": route_maxrecv_index,
+         "/maxrecv/r0.bin": route_maxrecv_404,
+         "/maxrecv/r1.bin": route_maxrecv_404,
+@@ -2610,9 +2427,6 @@ class Handler(SimpleHTTPRequestHandler):
+         if path.startswith("/charset/"):
+             self.route_charset()
+             return True
+-        if path.startswith("/charref/"):
+-            self.route_charref()
+-            return True
+         if path.startswith("/titleenc/"):
+             self.route_titleenc()
+             return True
+@@ -2631,9 +2445,6 @@ class Handler(SimpleHTTPRequestHandler):
+         return False
+ 
+     def do_GET(self):
+-        # Before reject_fragment(), so an unescaped '#' still shows up recorded.
+-        if self.path.startswith("/charref/"):
+-            self.record_charref()
+         if self.reject_fragment():
+             return
+         if not self.dispatch():
+diff --git a/tests/renamefail.c b/tests/renamefail.c
+index f9f4827..ae35e7c 100644
+--- a/tests/renamefail.c
++++ b/tests/renamefail.c
+@@ -1,10 +1,9 @@
+-/* Borrows Windows' rename() for the tests POSIX cannot otherwise reach:
+-   hts_rename_over()'s aside fallback needs an existing target refused with
++/* Borrows Windows' rename() for 01_engine-renameover.test, since POSIX cannot
++   reach hts_rename_over()'s aside fallback: an existing target is refused with
+    EEXIST, and RENAMEFAIL_MODE=locked reports EACCES instead, as the CRT does
+-   for a source another process holds. =repair and =repair-eexist narrow the
+-   refusal to the cache-repair move (#786), the latter through the fallback so
+-   the retry inside it is the failing one. RENAMEFAIL_ASIDE_FAILS=N refuses the
+-   first N moves back out of a parked ".hts-old" name (#790). */
++   for a source another process holds. RENAMEFAIL_ASIDE_FAILS=N refuses the
++   first N moves back out of the parked ".hts-old" name, which is the only way
++   to reach hts_rename_over()'s restore retry (#790). */
+ 
+ #define _GNU_SOURCE
+ #include <dlfcn.h>
+@@ -24,29 +23,20 @@ SHIM_EXPORT int rename(const char *oldpath, const char *newpath) {
+   static int aside_failures = 0;
+   const char *const mode = getenv("RENAMEFAIL_MODE");
+   const char *const aside_fails = getenv("RENAMEFAIL_ASIDE_FAILS");
+-  const char *const slash = strrchr(oldpath, '/');
+-  const char *const base = slash != NULL ? slash + 1 : oldpath;
+-  const int repaired = strcmp(base, "repair.zip") == 0;
++  const int locked = mode != NULL && strcmp(mode, "locked") == 0;
+   struct stat st;
+ 
+-  if (mode != NULL && (strcmp(mode, "locked") == 0 ||
+-                       (repaired && strcmp(mode, "repair") == 0))) {
++  if (locked) {
+     errno = EACCES;
+     return -1;
+   }
+-  if (repaired && mode != NULL && strcmp(mode, "repair-eexist") == 0) {
+-    errno = stat(newpath, &st) == 0 ? EEXIST : EACCES;
+-    return -1;
+-  }
+-  if (aside_fails != NULL && strstr(base, ".hts-old") != NULL &&
++  if (aside_fails != NULL && strstr(oldpath, ".hts-old") != NULL &&
+       aside_failures < atoi(aside_fails)) {
+     aside_failures++;
+     errno = EACCES;
+     return -1;
+   }
+-  /* Only the bare shim emulates Windows for every rename; a narrowed mode
+-     leaves the rest of the run on plain POSIX semantics. */
+-  if (mode == NULL && aside_fails == NULL && stat(newpath, &st) == 0) {
++  if (aside_fails == NULL && stat(newpath, &st) == 0) {
+     errno = EEXIST;
+     return -1;
+   }
+diff --git a/tests/tests-list.mk b/tests/tests-list.mk
+index 888c641..735f094 100644
+--- a/tests/tests-list.mk
++++ b/tests/tests-list.mk
+@@ -91,16 +91,12 @@ TESTS += 102_local-ftp-refetch.test
+ TESTS += 103_teardown-status.test
+ TESTS += 104_engine-warc-longurl.test
+ TESTS += 105_suite-timeout.test
+-TESTS += 106_engine-repair-rename.test
+ TESTS += 10_crawl-simple.test
+-TESTS += 110_local-ftp-parallel.test
+ TESTS += 111_local-ftp-update-rest.test
+ TESTS += 113_engine-threadattr-leak.test
+ TESTS += 112_local-single-file-fragment.test
+ TESTS += 114_local-update-304-leak.test
+ TESTS += 116_engine-rtrim.test
+-TESTS += 117_local-proxytrack-ndx-cursor.test
+-TESTS += 121_local-ftp-nocache-splice.test
+ TESTS += 11_crawl-cookies.test
+ TESTS += 11_crawl-idna.test
+ TESTS += 11_crawl-international.test
+@@ -195,23 +191,15 @@ TESTS += 96_local-refetch-keep.test
+ TESTS += 97_local-warc-update-keep.test
+ TESTS += 98_local-warc-segments.test
+ TESTS += 99_local-robots-error.test
+-TESTS += 120_local-proxytrack-webdav-default.test
+ TESTS += 107_local-bak-collision.test
+ TESTS += 108_engine-refetch-backup.test
+ TESTS += 122_local-warc-revisit-headers.test
+ TESTS += 131_local-savename-reserved.test
+ TESTS += 132_local-bak-space-collision.test
+-TESTS += 119_local-proxytrack-ndx-fields2.test
+ TESTS += 118_local-proxytrack-arcwrite.test
+-TESTS += 130_local-chunked-truncated.test
+-TESTS += 134_local-warc-revisit-ip.test
+-TESTS += 135_local-warc-forced-notmodified.test
+-TESTS += 136_local-warc-cache-priority.test
+ TESTS += 137_local-charsetless-encoding.test
+ TESTS += 138_local-spool-name-overflow.test
+ TESTS += 133_engine-reentrant-time.test
+-TESTS += 139_local-query-charref.test
+ TESTS += 140_crash-handler.test
+ TESTS += 141_webhttrack-warc-options.test
+-TESTS += 142_webhttrack-content-type.test
+ TESTS += 143_engine-backtrace-empty.test
+diff --git a/tests/warc-validate.py b/tests/warc-validate.py
+index 62d4bf8..fe42403 100755
+--- a/tests/warc-validate.py
++++ b/tests/warc-validate.py
+@@ -11,12 +11,6 @@
+ #                             WARC-Payload-Digest matching sha1(body) when present
+ #   --no-response-for SUB     the asset containing SUB must be a revisit: no
+ #                             response may target it, and a revisit must
+-#   --no-record-for SUB       no record of any type (response/revisit/resource)
+-#                             may target an asset containing SUB
+-#   --expect-ip SUB=IP        a response or revisit targeting SUB must carry
+-#                             WARC-IP-Address: IP exactly
+-#   --expect-revisit-profile SUB=SUBSTR  a revisit targeting SUB must carry a
+-#                             WARC-Profile containing SUBSTR
+ #   --revisit-exchange        every server-not-modified revisit carries the 304
+ #                             exchange it stands for: a 304 status line in its
+ #                             block, and a concurrent request record holding the
+@@ -115,11 +109,6 @@ def main():
+     verbatim = "--verbatim" in argv
+     body_specs = [s.split("=", 1) for s in opt_values(argv, "--expect-body-hex")]
+     no_resp = opt_values(argv, "--no-response-for")
+-    no_record = opt_values(argv, "--no-record-for")
+-    ip_specs = [s.split("=", 1) for s in opt_values(argv, "--expect-ip")]
+-    profile_specs = [
+-        s.split("=", 1) for s in opt_values(argv, "--expect-revisit-profile")
+-    ]
+     path = [a for a in argv if not a.startswith("--") and "=" not in a][0]
+     data = open(path, "rb").read()
+ 
+@@ -132,8 +121,6 @@ def main():
+     total = revisits = responses = infos = 0
+     body_hits = {sub: False for sub, _ in body_specs}
+     revisit_hits = {sub: False for sub in no_resp}
+-    ip_hits = {sub: False for sub, _ in ip_specs}
+-    profile_hits = {sub: False for sub, _ in profile_specs}
+     requests = {}  # WARC-Concurrent-To -> request block
+     exchanges = []  # (shown uri, record id) of the server-not-modified revisits
+     for rec in records(data):
+@@ -158,23 +145,6 @@ def main():
+             sys.exit("record %d: missing \\r\\n\\r\\n trailer" % total)
+         wtype = field(header, b"WARC-Type")
+         uri = field(header, b"WARC-Target-URI") or b""
+-        if wtype in (b"response", b"revisit", b"resource"):
+-            for sub in no_record:
+-                if sub.encode() in uri:
+-                    sys.exit(
+-                        "unexpected %s record for %s (want no record)"
+-                        % (wtype.decode(), sub)
+-                    )
+-        if wtype in (b"response", b"revisit"):
+-            for sub, want_ip in ip_specs:
+-                if sub.encode() in uri:
+-                    got = field(header, b"WARC-IP-Address") or b""
+-                    if got.decode("ascii", "replace") != want_ip:
+-                        sys.exit(
+-                            "%s for %s: WARC-IP-Address %r != %r"
+-                            % (wtype.decode(), sub, got, want_ip)
+-                        )
+-                    ip_hits[sub] = True
+         if wtype == b"warcinfo":
+             infos += 1
+         elif wtype == b"response":
+@@ -213,14 +183,6 @@ def main():
+             for sub in no_resp:
+                 if sub.encode() in uri:
+                     revisit_hits[sub] = True
+-            for sub, want_sub in profile_specs:
+-                if sub.encode() in uri:
+-                    if want_sub.encode() not in profile:
+-                        sys.exit(
+-                            "revisit for %s: WARC-Profile %r lacks %r"
+-                            % (shown, profile, want_sub)
+-                        )
+-                    profile_hits[sub] = True
+             if revisit_exchange and b"server-not-modified" in profile:
+                 block = rec[hdr_end : hdr_end + block_len]
+                 status = block.split(b"\r\n", 1)[0].split()
+@@ -254,12 +216,6 @@ def main():
+     for sub, hit in revisit_hits.items():
+         if not hit:
+             sys.exit("no revisit record found for unchanged asset %s" % sub)
+-    for sub, hit in ip_hits.items():
+-        if not hit:
+-            sys.exit("no response/revisit record found for --expect-ip %s" % sub)
+-    for sub, hit in profile_hits.items():
+-        if not hit:
+-            sys.exit("no revisit record found for --expect-revisit-profile %s" % sub)
+     print(
+         "warc-validate: %d records OK (%d response, %d revisit)"
+         % (total, responses, revisits)

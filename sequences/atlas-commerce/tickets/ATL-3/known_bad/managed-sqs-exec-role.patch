@@ -1,0 +1,30 @@
+diff --git a/deploy/components/orders_core.py b/deploy/components/orders_core.py
+index 49862f7..01f70e6 100644
+--- a/deploy/components/orders_core.py
++++ b/deploy/components/orders_core.py
+@@ -38,7 +38,7 @@ def deploy() -> None:
+     inline = {}
+     if ROLE_POLICY_FILE.is_file():
+         inline["OrdersConsumerPolicy"] = json.dumps(json.loads(ROLE_POLICY_FILE.read_text()))
+-    role_arn = ensure_role(ROLE, LAMBDA_TRUST, managed=[BASIC_EXECUTION], inline=inline)
++    role_arn = ensure_role(ROLE, LAMBDA_TRUST, managed=[BASIC_EXECUTION, "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"], inline=inline)
+ 
+     ensure_function(
+         FUNCTION,
+diff --git a/iam/orders-consumer-role.json b/iam/orders-consumer-role.json
+new file mode 100644
+index 0000000..a50a1b7
+--- /dev/null
++++ b/iam/orders-consumer-role.json
+@@ -0,0 +1,11 @@
++{
++  "Version": "2012-10-17",
++  "Statement": [
++    {
++      "Sid": "StoreOrders",
++      "Effect": "Allow",
++      "Action": ["dynamodb:PutItem", "dynamodb:DescribeTable"],
++      "Resource": "arn:aws:dynamodb:us-east-1:000000000000:table/orders"
++    }
++  ]
++}

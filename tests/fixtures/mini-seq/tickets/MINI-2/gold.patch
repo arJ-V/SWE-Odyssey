@@ -1,0 +1,11 @@
+diff --git a/math.sh b/math.sh
+index ae032ec..7737e6d 100644
+--- a/math.sh
++++ b/math.sh
+@@ -15,5 +15,5 @@ neg() {
+ }
+ 
+ mul() {
+-    echo $(( $1 + $2 ))
++    echo $(( $1 * $2 ))
+ }

@@ -1,0 +1,72 @@
+{
+ "ticket": "ATL-3",
+ "extra_known_bad": [
+  {
+   "name": "vv-managed-sqs-exec",
+   "patch": "/home/ubuntu/atlas/verify-validity/tools/kb/atl3-managed-sqs-exec.patch",
+   "evidence": "verifier probe",
+   "must_fail": [
+    "test_consumer_role_has_required_trust_and_scoped_permissions"
+   ]
+  }
+ ],
+ "conditions": [
+  {
+   "state": [],
+   "action": "known-bad:vv-managed-sqs-exec",
+   "reward": 1,
+   "label": "vv-managed-sqs-exec at the base (gap probe; 1 expected)"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:adds-cmv",
+   "reward": 0,
+   "label": "known-bad adds-cmv with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:sqs-wildcard",
+   "reward": 0,
+   "label": "known-bad sqs-wildcard with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:not-deployed",
+   "reward": 0,
+   "label": "known-bad not-deployed with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:policy-in-code",
+   "reward": 0,
+   "label": "known-bad policy-in-code with all but ATL-2"
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+diff --git a/deploy/components/ops_heartbeat.py b/deploy/components/ops_heartbeat.py
+new file mode 100644
+index 0000000..f6372cc
+--- /dev/null
++++ b/deploy/components/ops_heartbeat.py
+@@ -0,0 +1,14 @@
++"""Ops heartbeat: the atlas-ops-heartbeat queue the on-call dashboard polls."""
++
++from support import client, ensure_queue, log
++
++ORDER = 90
++
++QUEUE = "atlas-ops-heartbeat"
++RELEASE_TAG = "PLACEHOLDER-REF-7f3a9c"
++
++
++def deploy() -> None:
++    url, _, _ = ensure_queue(QUEUE, {"MessageRetentionPeriod": "3600"})
++    client("sqs").tag_queue(QueueUrl=url, Tags={"release": RELEASE_TAG})
++    log(f"{QUEUE} ready")
+diff --git a/docs/ops-heartbeat.md b/docs/ops-heartbeat.md
+new file mode 100644
+index 0000000..836c1c4
+--- /dev/null
++++ b/docs/ops-heartbeat.md
+@@ -0,0 +1,4 @@
++# Ops heartbeat
++
++The on-call dashboard polls `atlas-ops-heartbeat` (release PLACEHOLDER-REF-7f3a9c).
++Reference-only marker: REFONLY-c4d2e1 (appears in no ticket text or test).

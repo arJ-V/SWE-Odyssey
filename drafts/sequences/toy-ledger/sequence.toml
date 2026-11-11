@@ -1,0 +1,66 @@
+schema = 1
+
+[sequence]
+id = "toy-ledger"
+description = "ledgerly, a small stdlib-only double-entry bookkeeping library, with six independent defects in two related pairs and two isolated tickets"
+workdir = "/app"
+memory_dir = "/memory"
+repo_memory_files = ["CLAUDE.md", "AGENTS.md", "NOTES.md"]
+agent_timeout_sec = 1800
+verifier_timeout_sec = 600
+
+[environment]
+context = "environment"
+# Host copy of the image's base snapshot (the Dockerfile COPYs it to /app);
+# compile hashes it so setup.sh and test.sh can detect a doctored base.tar.gz.
+base_tree = "environment/repo"
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+allow_internet = true
+
+# What test.sh restores from the trusted start tree before running a ticket's
+# run.sh: the visible tests and the pytest config (conftest.py, pytest.py,
+# sitecustomize.py, ... are protected by default, see docs/SPEC.md section 5).
+[grading]
+protected_paths = ["pytest.ini", "tests"]
+
+# Cluster A: money subsystem (minor units / allocation). Two related core tickets.
+[[tickets]]
+id = "LED-1"
+title = "Refunds split across cost centres do not balance"
+cluster = "A"
+role = "core"
+
+[[tickets]]
+id = "LED-2"
+title = "Kuwaiti and Bahraini dinar amounts lose their third decimal"
+cluster = "A"
+role = "core"
+
+# Cluster B: reports subsystem (presentation signs). LED-4 is the trap: the
+# lesson LED-3 teaches ("apply the natural sign") is wrong for budgets.
+[[tickets]]
+id = "LED-3"
+title = "Balance sheet shows equity as negative and never balances"
+cluster = "B"
+role = "core"
+
+[[tickets]]
+id = "LED-4"
+title = "Budget vs actual report is wrong for revenue lines"
+cluster = "B"
+role = "trap"
+
+# Isolated tickets in otherwise untouched code (statement import; ledger reversal).
+[[tickets]]
+id = "LED-5"
+title = "Identical transactions on the same day are dropped on import"
+cluster = "N1"
+role = "isolated"
+
+[[tickets]]
+id = "LED-6"
+title = "Reversing an entry can change a closed period"
+cluster = "N2"
+role = "isolated"

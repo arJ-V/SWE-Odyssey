@@ -1,0 +1,1 @@
+224 segment rows checked against 224 rows in /home/ubuntu/atlas/integrate/out/segments.csv; 0 problem(s)

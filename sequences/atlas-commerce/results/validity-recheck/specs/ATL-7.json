@@ -1,0 +1,44 @@
+{
+ "ticket": "ATL-7",
+ "conditions": [
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6"
+   ],
+   "action": "known-bad:no-url-decode",
+   "reward": 0,
+   "label": "known-bad no-url-decode with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6"
+   ],
+   "action": "known-bad:no-kms-grant",
+   "reward": 0,
+   "label": "known-bad no-kms-grant with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6"
+   ],
+   "action": "known-bad:extra-dynamodb-actions",
+   "reward": 0,
+   "label": "known-bad extra-dynamodb-actions with all six"
+  }
+ ]
+}

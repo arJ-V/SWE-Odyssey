@@ -1,0 +1,62 @@
+445 steps in 53 trials
+
+== reset and setup (all steps, seconds) ==
+reset_total                min     5.5  median     8.7  max     9.6  (n=445)
+localstack_restart         min     2.2  median     5.4  max     5.4  (n=445)
+proxy_guard_restart        min     2.4  median     2.5  max     2.7  (n=445)
+bootstrap                  min     0.6  median     0.6  max     0.7  (n=445)
+setup_reset                min     5.6  median     8.9  max     9.9  (n=445)
+tree                       min     0.0  median     0.0  max     0.1  (n=445)
+deploy                     min     9.7  median    12.4  max    17.2  (n=445)
+setup_total                min    15.8  median    21.3  max    26.4  (n=445)
+lambda_containers_removed  min     0.0  median     2.0  max     8.0  (n=445)
+
+== setup by start state (merged references = position - 1) ==
+merged 0: deploy min     9.7  median    10.2  max    10.3  (n=83)
+          setup  min    15.8  median    17.1  max    19.1  (n=83)
+merged 1: deploy min     9.7  median    10.0  max    13.8  (n=114)
+          setup  min    17.8  median    19.0  max    23.3  (n=114)
+merged 2: deploy min     9.7  median    10.9  max    15.8  (n=30)
+          setup  min    17.7  median    20.0  max    25.0  (n=30)
+merged 3: deploy min     9.8  median    12.4  max    16.9  (n=30)
+          setup  min    18.7  median    21.3  max    25.9  (n=30)
+merged 4: deploy min     9.9  median    14.5  max    17.1  (n=30)
+          setup  min    17.8  median    23.6  max    26.2  (n=30)
+merged 5: deploy min    10.9  median    15.2  max    17.1  (n=114)
+          setup  min    19.8  median    23.8  max    26.2  (n=114)
+merged 6: deploy min    13.4  median    16.9  max    17.2  (n=44)
+          setup  min    22.4  median    25.8  max    26.4  (n=44)
+
+== grader (Harbor verifier phase) per ticket ==
+ATL-1    reward 1: min    19.0  median    23.1  max    33.3  (n=29)
+ATL-1    reward 0: min     2.5  median     2.7  max   125.6  (n=34)
+ATL-2    reward 1: min    21.2  median    21.6  max    25.6  (n=29)
+ATL-2    reward 0: min    15.1  median    21.2  max    29.1  (n=35)
+ATL-3    reward 1: min     2.5  median     2.8  max     3.0  (n=29)
+ATL-3    reward 0: min     2.0  median     2.3  max     2.4  (n=35)
+ATL-4    reward 1: min    39.6  median    43.6  max    53.7  (n=29)
+ATL-4    reward 0: min    37.0  median    45.0  max    93.5  (n=35)
+ATL-5    reward 1: min    17.3  median    20.2  max    26.7  (n=29)
+ATL-5    reward 0: min    17.2  median   122.9  max   123.1  (n=34)
+ATL-6    reward 1: min    18.7  median    18.9  max    19.1  (n=29)
+ATL-6    reward 0: min     2.4  median     3.6  max   138.2  (n=35)
+ATL-7    reward 1: min     3.8  median     4.0  max     5.2  (n=29)
+ATL-7    reward 0: min     2.6  median     2.9  max    63.3  (n=34)
+
+== oracle agent phase (apply the reference + deploy its components) per ticket ==
+ATL-1    min     0.5  median     0.5  max     0.5  (n=29)
+ATL-2    min     1.6  median     1.6  max     2.6  (n=29)
+ATL-3    min     1.6  median     1.6  max     2.6  (n=29)
+ATL-4    min     5.9  median     5.9  max     8.9  (n=29)
+ATL-5    min     1.5  median     1.5  max     1.6  (n=29)
+ATL-6    min     3.6  median     4.0  max     4.2  (n=29)
+ATL-7    min     2.7  median     3.0  max     3.1  (n=29)
+
+== whole trials (ordering tasks only) ==
+atlas-resume-probe 7 step(s): min   405.8  median   422.5  max   439.2  (n=2)
+claude-code    0 step(s): min    45.9  median    45.9  max    45.9  (n=1)
+codex          0 step(s): min    53.9  median    53.9  max    53.9  (n=1)
+nop            1 step(s): min    58.8  median    61.3  max   180.2  (n=7)
+nop            7 step(s): min   376.3  median   393.9  max   419.8  (n=14)
+oracle         1 step(s): min    61.0  median    79.8  max   108.1  (n=7)
+oracle         7 step(s): min   328.4  median   343.7  max   372.1  (n=14)

@@ -1,0 +1,31 @@
+# secrets: never commit
+.env
+.env.*
+!.env.example
+
+# run outputs (can contain model trajectories and large logs)
+/jobs/
+/runs/
+/results/raw/
+*.log
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# os / editor
+.DS_Store
+.idea/
+.vscode/
+
+# cloud scratch (ssh key, remote logs)
+/.cloud/
+
+# local-only working material, never published
+/.private/

@@ -1,0 +1,25 @@
+diff --git a/lib/ledgerly/money/allocation.py b/lib/ledgerly/money/allocation.py
+index 74d13fe..9b3f083 100644
+--- a/lib/ledgerly/money/allocation.py
++++ b/lib/ledgerly/money/allocation.py
+@@ -25,7 +25,10 @@ def allocate(total: Money, ratios: Sequence[int | Decimal | str]) -> list[Money]
+     """
+     weights = _weights(ratios)
+     weight_sum = sum(weights)
+-    units = total.minor_units
++    # Allocate the magnitude and re-apply the sign at the end, so a refund is
++    # split as the exact mirror image of the charge it refunds.
++    sign = -1 if total.is_negative() else 1
++    units = abs(total.minor_units)
+ 
+     exact = [Decimal(units) * w / weight_sum for w in weights]
+     shares = [int(claim) for claim in exact]
+@@ -39,7 +42,7 @@ def allocate(total: Money, ratios: Sequence[int | Decimal | str]) -> list[Money]
+     for i in by_claim[:leftover]:
+         shares[i] += 1
+ 
+-    return [Money.from_minor(share, total.currency) for share in shares]
++    return [Money.from_minor(sign * share, total.currency) for share in shares]
+ 
+ 
+ def split_evenly(total: Money, parts: int) -> list[Money]:

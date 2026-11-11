@@ -1,0 +1,13 @@
+ok   nop    xd50044            ATL-4,ATL-1,ATL-2,ATL-6,ATL-3,ATL-7,ATL-5        rewards [0, 0, 0, 0, 0, 0, 0]
+ok   oracle xd50044            ATL-4,ATL-1,ATL-2,ATL-6,ATL-3,ATL-7,ATL-5        rewards [1, 1, 1, 1, 1, 1, 1]
+
+== independence: distinct start states per ticket (other tickets' references deployed) ==
+ATL-1: reference  1/64 states (1 gradings; 1/6 singles; all-others no) | nop        1/64 states (1 gradings; 1/6 singles; all-others no)
+ATL-2: reference  1/64 states (1 gradings; 0/6 singles; all-others no) | nop        1/64 states (1 gradings; 0/6 singles; all-others no)
+ATL-3: reference  1/64 states (1 gradings; 0/6 singles; all-others no) | nop        1/64 states (1 gradings; 0/6 singles; all-others no)
+ATL-4: reference  1/64 states (1 gradings; 0/6 singles; all-others no) | nop        1/64 states (1 gradings; 0/6 singles; all-others no)
+ATL-5: reference  1/64 states (1 gradings; 0/6 singles; all-others yes) | nop        1/64 states (1 gradings; 0/6 singles; all-others yes)
+ATL-6: reference  1/64 states (1 gradings; 0/6 singles; all-others no) | nop        1/64 states (1 gradings; 0/6 singles; all-others no)
+ATL-7: reference  1/64 states (1 gradings; 0/6 singles; all-others no) | nop        1/64 states (1 gradings; 0/6 singles; all-others no)
+
+PASS: 2 trials, 0 problem(s)

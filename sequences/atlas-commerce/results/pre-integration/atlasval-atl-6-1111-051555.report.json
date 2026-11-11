@@ -1,0 +1,338 @@
+{
+ "ticket": "ATL-6",
+ "task": "/home/ubuntu/atlas/workflow-index/validate/tasks/atlas-commerce__validate-offline__v-atl-6-058521",
+ "trial": "/home/ubuntu/atlas/workflow-index/validate/jobs/atlasval-atl-6-1111-051555/atlas-commerce__validate-offline__6rLhxsz",
+ "harbor_exit": 0,
+ "elapsed_sec": 641.1,
+ "ok": true,
+ "steps": [
+  {
+   "step": "s01-atl-6",
+   "condition": "nop at the base",
+   "action": "nothing",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_credential_isolation_and_service_roles",
+    "test_dynamodb_table_exists",
+    "test_e2e_pipeline",
+    "test_eventbridge_rule",
+    "test_iam_gate[eventbridgestepfunctionsrole-deletestatemachine-denied]",
+    "test_iam_gate[eventbridgestepfunctionsrole-startexecution-allowed]",
+    "test_iam_gate[eventbridgestepfunctionsrole-startexecution-out-of-scope-denied]",
+    "test_messaging_infrastructure",
+    "test_review_alert_arrives_in_standard_sns_envelope",
+    "test_step_function_asl"
+   ],
+   "reset_sec": 6.61,
+   "setup_sec": 17.17,
+   "deploy_sec": 10.29,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 0,
+   "verifier_window": [
+    "2026-11-11T05:16:25.059645Z",
+    "2026-11-11T05:16:29.067657Z"
+   ]
+  },
+  {
+   "step": "s02-atl-6",
+   "condition": "reference at the base",
+   "action": "reference",
+   "state": [],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.84,
+   "setup_sec": 19.14,
+   "deploy_sec": 10.04,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:16:52.758600Z",
+    "2026-11-11T05:17:11.644189Z"
+   ]
+  },
+  {
+   "step": "s03-atl-6",
+   "condition": "reference at the base",
+   "action": "reference",
+   "state": [],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 9.19,
+   "setup_sec": 19.37,
+   "deploy_sec": 10.07,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 8,
+   "verifier_window": [
+    "2026-11-11T05:17:35.592849Z",
+    "2026-11-11T05:17:54.508464Z"
+   ]
+  },
+  {
+   "step": "s04-atl-6",
+   "condition": "known-bad raw-message-delivery at the base",
+   "action": "known-bad:raw-message-delivery",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_review_alert_arrives_in_standard_sns_envelope"
+   ],
+   "reset_sec": 8.02,
+   "setup_sec": 18.0,
+   "deploy_sec": 9.71,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 8,
+   "verifier_window": [
+    "2026-11-11T05:18:16.922431Z",
+    "2026-11-11T05:18:35.124521Z"
+   ]
+  },
+  {
+   "step": "s05-atl-6",
+   "condition": "known-bad events-role-states-star at the base",
+   "action": "known-bad:events-role-states-star",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_iam_gate[eventbridgestepfunctionsrole-deletestatemachine-denied]",
+    "test_iam_gate[eventbridgestepfunctionsrole-startexecution-out-of-scope-denied]"
+   ],
+   "reset_sec": 9.06,
+   "setup_sec": 19.09,
+   "deploy_sec": 9.78,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 8,
+   "verifier_window": [
+    "2026-11-11T05:18:58.762782Z",
+    "2026-11-11T05:19:17.180426Z"
+   ]
+  },
+  {
+   "step": "s06-atl-6",
+   "condition": "known-bad target-input-path at the base",
+   "action": "known-bad:target-input-path",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_e2e_pipeline",
+    "test_review_alert_arrives_in_standard_sns_envelope"
+   ],
+   "reset_sec": 9.12,
+   "setup_sec": 19.2,
+   "deploy_sec": 9.9,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 8,
+   "verifier_window": [
+    "2026-11-11T05:19:40.851682Z",
+    "2026-11-11T05:21:59.207092Z"
+   ]
+  },
+  {
+   "step": "s07-atl-6",
+   "condition": "known-bad always-default-price at the base",
+   "action": "known-bad:always-default-price",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_e2e_pipeline"
+   ],
+   "reset_sec": 7.81,
+   "setup_sec": 18.05,
+   "deploy_sec": 9.96,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:22:21.806407Z",
+    "2026-11-11T05:22:40.197948Z"
+   ]
+  },
+  {
+   "step": "s08-atl-6",
+   "condition": "nop with ATL-2",
+   "action": "nothing",
+   "state": [
+    "ATL-2"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_credential_isolation_and_service_roles",
+    "test_dynamodb_table_exists",
+    "test_e2e_pipeline",
+    "test_eventbridge_rule",
+    "test_iam_gate[eventbridgestepfunctionsrole-deletestatemachine-denied]",
+    "test_iam_gate[eventbridgestepfunctionsrole-startexecution-allowed]",
+    "test_iam_gate[eventbridgestepfunctionsrole-startexecution-out-of-scope-denied]",
+    "test_messaging_infrastructure",
+    "test_review_alert_arrives_in_standard_sns_envelope",
+    "test_step_function_asl"
+   ],
+   "reset_sec": 9.21,
+   "setup_sec": 19.44,
+   "deploy_sec": 9.94,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 8,
+   "verifier_window": [
+    "2026-11-11T05:23:00.401865Z",
+    "2026-11-11T05:23:04.019908Z"
+   ]
+  },
+  {
+   "step": "s09-atl-6",
+   "condition": "reference with ATL-2",
+   "action": "reference",
+   "state": [
+    "ATL-2"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.8,
+   "setup_sec": 18.76,
+   "deploy_sec": 9.86,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:23:27.193856Z",
+    "2026-11-11T05:23:45.995029Z"
+   ]
+  },
+  {
+   "step": "s10-atl-6",
+   "condition": "nop with ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_credential_isolation_and_service_roles",
+    "test_dynamodb_table_exists",
+    "test_e2e_pipeline",
+    "test_eventbridge_rule",
+    "test_iam_gate[eventbridgestepfunctionsrole-deletestatemachine-denied]",
+    "test_iam_gate[eventbridgestepfunctionsrole-startexecution-allowed]",
+    "test_iam_gate[eventbridgestepfunctionsrole-startexecution-out-of-scope-denied]",
+    "test_messaging_infrastructure",
+    "test_review_alert_arrives_in_standard_sns_envelope",
+    "test_step_function_asl"
+   ],
+   "reset_sec": 9.02,
+   "setup_sec": 21.71,
+   "deploy_sec": 12.4,
+   "deployed": "orders_core fulfillment payments_core document_index",
+   "lambda_containers_removed": 8,
+   "verifier_window": [
+    "2026-11-11T05:24:08.456971Z",
+    "2026-11-11T05:24:11.812666Z"
+   ]
+  },
+  {
+   "step": "s11-atl-6",
+   "condition": "reference with ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 7.69,
+   "setup_sec": 20.13,
+   "deploy_sec": 12.24,
+   "deployed": "orders_core fulfillment payments_core document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:24:36.144379Z",
+    "2026-11-11T05:24:54.995233Z"
+   ]
+  },
+  {
+   "step": "s12-atl-6",
+   "condition": "nop with ATL-2+ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-2",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_credential_isolation_and_service_roles",
+    "test_dynamodb_table_exists",
+    "test_e2e_pipeline",
+    "test_eventbridge_rule",
+    "test_iam_gate[eventbridgestepfunctionsrole-deletestatemachine-denied]",
+    "test_iam_gate[eventbridgestepfunctionsrole-startexecution-allowed]",
+    "test_iam_gate[eventbridgestepfunctionsrole-startexecution-out-of-scope-denied]",
+    "test_messaging_infrastructure",
+    "test_review_alert_arrives_in_standard_sns_envelope",
+    "test_step_function_asl"
+   ],
+   "reset_sec": 9.11,
+   "setup_sec": 22.1,
+   "deploy_sec": 12.6,
+   "deployed": "orders_core fulfillment payments_core document_index",
+   "lambda_containers_removed": 8,
+   "verifier_window": [
+    "2026-11-11T05:25:17.849635Z",
+    "2026-11-11T05:25:21.232800Z"
+   ]
+  },
+  {
+   "step": "s13-atl-6",
+   "condition": "reference with ATL-2+ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-2",
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 7.81,
+   "setup_sec": 20.44,
+   "deploy_sec": 12.34,
+   "deployed": "orders_core fulfillment payments_core document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:25:45.966870Z",
+    "2026-11-11T05:26:04.916778Z"
+   ]
+  }
+ ]
+}

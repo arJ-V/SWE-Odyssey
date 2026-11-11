@@ -1,0 +1,54 @@
+diff --git a/services/fulfillment/processor.py b/services/fulfillment/processor.py
+index a36598d..556d093 100644
+--- a/services/fulfillment/processor.py
++++ b/services/fulfillment/processor.py
+@@ -3,6 +3,7 @@ import boto3
+ import os
+ import logging
+ import time
++from boto3.dynamodb.types import TypeSerializer
+ 
+ logger = logging.getLogger()
+ logger.setLevel(os.environ.get('LOG_LEVEL', 'INFO'))
+@@ -11,6 +12,7 @@ TABLE_NAME = os.environ.get('FULFILLMENT_TABLE', 'FulfillmentTable')
+ SERVICE_NAME = 'processor-service'
+ MAX_RETRIES = 3
+ RETRY_BASE_DELAY = 0.5
++SERIALIZER = TypeSerializer()
+ 
+ 
+ def write_order(dynamo_client, order):
+@@ -24,11 +26,18 @@ def write_order(dynamo_client, order):
+ 
+     for attempt in range(MAX_RETRIES):
+         try:
++            fields = {k: v for k, v in order.items() if k not in ('order_id', 'processing_count')}
++            names = {f'#f{i}': k for i, k in enumerate(fields)}
++            values = {f':f{i}': SERIALIZER.serialize(v) for i, v in enumerate(fields.values())}
++            values[':inc'] = {'N': '1'}
++            sets = ', '.join(f'#f{i} = :f{i}' for i in range(len(fields)))
++            extra = {'ExpressionAttributeNames': names} if names else {}
+             dynamo_client.update_item(
+                 TableName=TABLE_NAME,
+                 Key={'order_id': {'S': str(order_id)}},
+-                UpdateExpression='ADD processing_count :inc',
+-                ExpressionAttributeValues={':inc': {'N': '1'}}
++                UpdateExpression=(f'SET {sets} ' if sets else '') + 'ADD processing_count :inc',
++                ExpressionAttributeValues=values,
++                **extra
+             )
+             logger.info(f"[{SERVICE_NAME}] Order {order_id} persisted to {TABLE_NAME}")
+             return True
+diff --git a/services/fulfillment/splitter.py b/services/fulfillment/splitter.py
+index ff76bab..50ce603 100644
+--- a/services/fulfillment/splitter.py
++++ b/services/fulfillment/splitter.py
+@@ -67,7 +67,7 @@ def handler(event, context):
+ 
+                         sqs.send_message(
+                             QueueUrl=queue_url,
+-                            MessageBody=json.dumps(json.dumps(order)),
++                            MessageBody=json.dumps(order),
+                             MessageGroupId=MESSAGE_GROUP,
+                             MessageDeduplicationId=dedup_id
+                         )

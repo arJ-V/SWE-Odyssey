@@ -1,0 +1,11 @@
+diff --git a/text.sh b/text.sh
+index bea8f86..e5c5443 100644
+--- a/text.sh
++++ b/text.sh
+@@ -2,5 +2,5 @@
+ # Tiny text helpers used by the mini-seq fixture.
+ 
+ shout() {
+-    printf '%s\n' "$1"
++    printf '%s\n' "$1" | tr '[:lower:]' '[:upper:]'
+ }

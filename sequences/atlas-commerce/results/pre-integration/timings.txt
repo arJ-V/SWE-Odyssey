@@ -1,0 +1,10 @@
+35 steps
+reset_total                min    5.34  median    8.67  max    8.79  (n=35)
+localstack_restart         min    2.12  median    5.34  max    5.37  (n=35)
+proxy_guard_restart        min    2.44  median    2.47  max    2.57  (n=35)
+bootstrap                  min    0.57  median    0.58  max    0.62  (n=35)
+setup_reset                min    5.64  median    8.86  max    9.06  (n=35)
+tree                       min    0.02  median    0.03  max    0.03  (n=35)
+deploy                     min    9.67  median    9.84  max   20.72  (n=35)
+setup_total                min   15.81  median   18.73  max   27.41  (n=35)
+lambda_containers_removed  min    0.00  median    2.00  max    3.00  (n=35)

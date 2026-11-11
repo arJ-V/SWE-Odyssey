@@ -1,0 +1,44 @@
+{
+ "ticket": "ATL-5",
+ "conditions": [
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:floor-per-payment",
+   "reward": 0,
+   "label": "known-bad floor-per-payment with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:float-running-total",
+   "reward": 0,
+   "label": "known-bad float-running-total with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:ledger-drops-payer",
+   "reward": 0,
+   "label": "known-bad ledger-drops-payer with all six"
+  }
+ ]
+}

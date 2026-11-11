@@ -1,0 +1,46 @@
+diff --git a/lib/ledgerly/io/dedupe.py b/lib/ledgerly/io/dedupe.py
+index 43c81a9..14438a3 100644
+--- a/lib/ledgerly/io/dedupe.py
++++ b/lib/ledgerly/io/dedupe.py
+@@ -10,6 +10,7 @@ keep it next to their books.
+ from __future__ import annotations
+ 
+ import json
++from collections import Counter
+ from typing import Iterable
+ 
+ from .base import FeedRow
+@@ -38,18 +39,29 @@ class SeenRows:
+         return cls(json.loads(text))
+ 
+ 
+-def fingerprint(row: FeedRow) -> str:
+-    """A stable identity for a statement row."""
++def fingerprint(row: FeedRow, occurrence: int = 1) -> str:
++    """A stable identity for a statement row.
++
++    Without a bank reference, two rows can be genuinely identical (two coffees
++    on the same day). ``occurrence`` numbers such twins in file order, so the
++    n-th twin of one export matches the n-th twin of an overlapping export.
++    """
+     if row.reference:
+         return f"ref|{row.reference}"
+-    return f"{row.date.isoformat()}|{row.amount.amount}|{row.amount.currency.code}"
++    return (
++        f"{row.date.isoformat()}|{row.amount.amount}|{row.amount.currency.code}"
++        f"|{row.description.strip().lower()}|{occurrence}"
++    )
+ 
+ 
+ def filter_new(rows: Iterable[FeedRow], seen: SeenRows) -> list[FeedRow]:
+     """Rows whose fingerprint is not in ``seen``; records the new ones in ``seen``."""
+     fresh = []
++    occurrences: Counter[str] = Counter()
+     for row in rows:
+-        key = fingerprint(row)
++        twin_group = fingerprint(row)
++        occurrences[twin_group] += 1
++        key = fingerprint(row, occurrences[twin_group])
+         if key in seen:
+             continue
+         seen.add(key)

@@ -1,0 +1,29 @@
+# Text placed above the ticket in each step's instruction.md.
+# Edit here and recompile; `odyssey compile` fills the {placeholders}.
+# The ticket text itself is always appended verbatim after a "---" line.
+
+# --framing informed, sequences longer than one ticket.
+informed = """
+You will work through {total} tickets in this repository, one at a time. This is ticket {position} of {total}.
+{tree_policy}
+{memory}
+"""
+
+# How the working tree changes between tickets, by --code-state (informed framing only).
+[tree_policy]
+forward-merge = "Between tickets the working tree is reset: fixes for earlier tickets are merged by the maintainers and your other changes are discarded."
+all-defects = "Between tickets the working tree is reset to the original snapshot; your changes are discarded."
+single-defect = "Between tickets the working tree is reset to a fresh snapshot; your changes are discarded."
+carry = "Your changes to the working tree carry over from one ticket to the next."
+
+# Where memory persists (informed framing only).
+[memory]
+with_files = "Anything you write under {memory_dir}/ or to the repository files {memory_files} is kept across tickets."
+dir_only = "Anything you write under {memory_dir}/ is kept across tickets."
+
+# Added under any framing.
+[pointers]
+# --feedback binary, from the second ticket on.
+feedback = "Whether each earlier ticket was accepted is recorded in {feedback_dir}/<ticket number>.txt (accepted or rejected)."
+# --seed-notes, every ticket.
+notes = "Onboarding notes for this codebase are in {notes_path}."

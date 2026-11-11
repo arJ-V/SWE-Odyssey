@@ -1,0 +1,60 @@
+# ATL-6: atlas-specific ticket settings (contract: AUTHORING.md). Title, cluster and role belong in
+# sequence.toml; they are repeated here so the ticket also loads with --extra-tickets.
+
+[ticket]
+title = "Order workflow: NewOrderRule starts OrderProcessor"
+cluster = "order-workflow"
+role = "core"
+kind = "deploy"
+# The agent builds the pipeline, lands it in the repository as a deploy component and ships it
+# with deploy/deploy.py; whether this timeout is right is an open question.
+agent_timeout_sec = 1800
+# Includes a check with a 90 s delivery deadline.
+verifier_timeout_sec = 600
+
+[reference]
+# After gold.patch is applied to /app: python3 deploy/deploy.py --component <each>
+deploy = ["order_workflow"]
+
+[grading]
+# iam_gate.py and test_final_state.py, plus the envelope check in test_atl6.py.
+fail_to_pass = [
+    "test_iam_gate[eventbridgestepfunctionsrole-startexecution-allowed]",
+    "test_iam_gate[eventbridgestepfunctionsrole-deletestatemachine-denied]",
+    "test_iam_gate[eventbridgestepfunctionsrole-startexecution-out-of-scope-denied]",
+    "test_credential_isolation_and_service_roles",
+    "test_dynamodb_table_exists",
+    "test_messaging_infrastructure",
+    "test_eventbridge_rule",
+    "test_step_function_asl",
+    "test_e2e_pipeline",
+    "test_review_alert_arrives_in_standard_sns_envelope",
+]
+pass_to_pass = [
+    "test_iam_gate_toolchain_ready",
+]
+
+[[known_bad]]
+name = "raw-message-delivery"
+patch = "known_bad/raw-message-delivery.patch"
+evidence = "a documented model failure: the agent enabled RawMessageDelivery, so AlertsQueue received a raw REVIEW body rather than the required ordinary SNS JSON envelope; the reference with RawMessageDelivery=true on the AlertsQueue subscription"
+must_fail = ["test_review_alert_arrives_in_standard_sns_envelope"]
+
+[[known_bad]]
+name = "events-role-states-star"
+patch = "known_bad/events-role-states-star.patch"
+evidence = "an EventBridge role with states:* on * (the gate's out-of-scope probe)"
+must_fail = ["test_iam_gate[eventbridgestepfunctionsrole-deletestatemachine-denied]",
+             "test_iam_gate[eventbridgestepfunctionsrole-startexecution-out-of-scope-denied]"]
+
+[[known_bad]]
+name = "target-input-path"
+patch = "known_bad/target-input-path.patch"
+evidence = "InputPath $.detail on the rule target while the workflow also extracts $.detail, so every EventBridge-started execution fails"
+must_fail = ["test_e2e_pipeline", "test_review_alert_arrives_in_standard_sns_envelope"]
+
+[[known_bad]]
+name = "always-default-price"
+patch = "known_bad/always-default-price.patch"
+evidence = "enrichment that ignores the product cache (always 99.99, always written): the 'always-default enrichment routes it incorrectly' case of test_e2e_pipeline"
+must_fail = ["test_e2e_pipeline"]

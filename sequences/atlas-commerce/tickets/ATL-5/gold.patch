@@ -1,0 +1,194 @@
+diff --git a/deploy/components/payments_ledger.py b/deploy/components/payments_ledger.py
+new file mode 100644
+index 0000000..0934732
+--- /dev/null
++++ b/deploy/components/payments_ledger.py
+@@ -0,0 +1,49 @@
++"""Payments ledger: payments-ingest consumes payments-inbound, records each payment in payments and keeps merchant_rollups to the cent."""
++
++from support import (BASIC_EXECUTION, FUNCTION_ENDPOINT, LAMBDA_TRUST, REPO, client, ensure_function, ensure_role,
++                     ensure_sqs_mapping, log, package_dir, queue_arn)
++
++ORDER = 60
++
++SOURCE = REPO / "services" / "payments"
++FUNCTION = "payments-ingest"
++ROLE = "payments-ingest-role"
++INBOUND_QUEUE = "payments-inbound"
++LEDGER_TABLE = "payments"
++ROLLUP_TABLE = "merchant_rollups"
++
++
++def _policy(inbound_arn: str, ledger_arn: str, rollup_arn: str) -> dict:
++    return {
++        "Version": "2012-10-17",
++        "Statement": [
++            {"Effect": "Allow", "Action": ["sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes",
++                                           "sqs:ChangeMessageVisibility"], "Resource": inbound_arn},
++            {"Effect": "Allow", "Action": ["dynamodb:PutItem", "dynamodb:GetItem"], "Resource": ledger_arn},
++            {"Effect": "Allow", "Action": ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem"],
++             "Resource": rollup_arn},
++        ],
++    }
++
++
++def deploy() -> None:
++    # The queue and both tables belong to payments_core (deployed first).
++    inbound_arn = queue_arn(client("sqs").get_queue_url(QueueName=INBOUND_QUEUE)["QueueUrl"])
++    ddb = client("dynamodb")
++    ledger_arn = ddb.describe_table(TableName=LEDGER_TABLE)["Table"]["TableArn"]
++    rollup_arn = ddb.describe_table(TableName=ROLLUP_TABLE)["Table"]["TableArn"]
++
++    role_arn = ensure_role(ROLE, LAMBDA_TRUST, managed=[BASIC_EXECUTION],
++                           inline={"payments-ingest-access": _policy(inbound_arn, ledger_arn, rollup_arn)})
++    ensure_function(
++        FUNCTION,
++        role_arn=role_arn,
++        runtime="python3.11",
++        handler="ingest.handler",
++        code=package_dir(SOURCE),
++        environment={"AWS_ENDPOINT_URL": FUNCTION_ENDPOINT, "PAYMENTS_TABLE": LEDGER_TABLE,
++                     "ROLLUPS_TABLE": ROLLUP_TABLE},
++        timeout=60,
++    )
++    ensure_sqs_mapping(FUNCTION, inbound_arn, batch_size=10)
++    log(f"payments ledger ready: {INBOUND_QUEUE} -> {FUNCTION} -> {LEDGER_TABLE}, {ROLLUP_TABLE}")
+diff --git a/services/payments/ingest.py b/services/payments/ingest.py
+new file mode 100644
+index 0000000..93d2483
+--- /dev/null
++++ b/services/payments/ingest.py
+@@ -0,0 +1,133 @@
++"""Payments ingest + rollup maintainer.
++
++Invariants enforced here:
++  * Each distinct payment_id lands exactly once in the payments table.
++  * amount is stored as a DynamoDB Number with the exact decimal the
++    processor sent (json.loads with parse_float=Decimal — no float
++    round-trip ever touches the value).
++  * merchant_rollups[m].total_cents == floor(100 * sum(amounts)) — i.e.
++    sum-then-floor. We keep a running Decimal total_amount on the row
++    and recompute total_cents from it on every update, so per-payment
++    cent-rounding drift cannot accumulate.
++  * payment_count and total_cents are DynamoDB Numbers; total_cents is
++    always a whole integer (no '.0' suffix).
++"""
++import json
++import os
++import time
++from decimal import Decimal, ROUND_FLOOR
++
++import boto3
++from botocore.exceptions import ClientError
++
++ENDPOINT = os.environ["AWS_ENDPOINT_URL"]
++PAYMENTS_TABLE = os.environ.get("PAYMENTS_TABLE", "payments")
++ROLLUPS_TABLE = os.environ.get("ROLLUPS_TABLE", "merchant_rollups")
++
++_dynamodb_resource = boto3.resource("dynamodb", endpoint_url=ENDPOINT)
++_payments_table = _dynamodb_resource.Table(PAYMENTS_TABLE)
++_rollups_table = _dynamodb_resource.Table(ROLLUPS_TABLE)
++
++
++def _floor_cents(total_amount: Decimal) -> int:
++    scaled = total_amount * Decimal(100)
++    return int(scaled.to_integral_value(rounding=ROUND_FLOOR))
++
++
++def _ingest_payment(payload: dict) -> bool:
++    """Write payment row; return True iff this was a fresh insert."""
++    try:
++        _payments_table.put_item(
++            Item=payload,
++            ConditionExpression="attribute_not_exists(payment_id)",
++        )
++        return True
++    except ClientError as e:
++        if e.response["Error"]["Code"] == "ConditionalCheckFailedException":
++            return False
++        raise
++
++
++def _apply_rollup(merchant_id: str, amount: Decimal) -> None:
++    """Atomically fold one payment into the rollup with optimistic locking.
++
++    Uses the boto3 resource-level Table API throughout — plain-Python dicts
++    with Decimal values — so the runtime never sees low-level typed
++    DynamoDB attribute dicts.
++    """
++    attempts = 0
++    while True:
++        attempts += 1
++        resp = _rollups_table.get_item(
++            Key={"merchant_id": merchant_id},
++            ConsistentRead=True,
++        )
++        item = resp.get("Item")
++        if item is None:
++            new_count = 1
++            new_total = amount
++            new_cents = _floor_cents(new_total)
++            try:
++                _rollups_table.put_item(
++                    Item={
++                        "merchant_id": merchant_id,
++                        "payment_count": new_count,
++                        "total_amount": new_total,
++                        "total_cents": new_cents,
++                    },
++                    ConditionExpression="attribute_not_exists(merchant_id)",
++                )
++                return
++            except ClientError as e:
++                if e.response["Error"]["Code"] == "ConditionalCheckFailedException":
++                    if attempts > 50:
++                        raise
++                    time.sleep(0.01)
++                    continue
++                raise
++        else:
++            old_count = int(item["payment_count"])
++            old_total = Decimal(item["total_amount"])
++            new_count = old_count + 1
++            new_total = old_total + amount
++            new_cents = _floor_cents(new_total)
++            try:
++                _rollups_table.update_item(
++                    Key={"merchant_id": merchant_id},
++                    UpdateExpression=(
++                        "SET payment_count = :nc, total_amount = :nt, "
++                        "total_cents = :tc"
++                    ),
++                    ConditionExpression=(
++                        "payment_count = :oc AND total_amount = :ot"
++                    ),
++                    ExpressionAttributeValues={
++                        ":nc": new_count,
++                        ":nt": new_total,
++                        ":tc": new_cents,
++                        ":oc": old_count,
++                        ":ot": old_total,
++                    },
++                )
++                return
++            except ClientError as e:
++                if e.response["Error"]["Code"] == "ConditionalCheckFailedException":
++                    if attempts > 50:
++                        raise
++                    time.sleep(0.01)
++                    continue
++                raise
++
++
++def handler(event, context):
++    for record in event.get("Records", []):
++        body = record["body"]
++        payload = json.loads(body, parse_float=Decimal, parse_int=Decimal)
++        amount = payload["amount"]
++        if not isinstance(amount, Decimal):
++            amount = Decimal(str(amount))
++            payload["amount"] = amount
++        merchant_id = payload["merchant_id"]
++        if _ingest_payment(payload):
++            _apply_rollup(merchant_id, amount)
++    return {"processed": len(event.get("Records", []))}

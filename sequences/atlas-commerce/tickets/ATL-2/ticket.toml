@@ -1,0 +1,56 @@
+# ATL-2: atlas-specific ticket settings (contract: AUTHORING.md). Title, cluster and role are in
+# sequence.toml.
+
+[ticket]
+kind = "code"
+# This ticket is the consumer alone.
+agent_timeout_sec = 3600
+verifier_timeout_sec = 600
+
+[reference]
+# After gold.patch is applied to /app: python3 deploy/deploy.py --component <each>
+deploy = ["orders_core"]
+
+[grading]
+# Test names as they appear in the JUnit reports (atlas_run.py). The validator requires every
+# fail_to_pass test to fail cleanly and every pass_to_pass test to pass when the agent does nothing.
+fail_to_pass = [
+    "test_event_source_mapping_declares_report_batch_item_failures",
+    "test_partial_batch_response_reports_only_unprocessable_messages",
+    "test_redelivered_order_is_acknowledged_without_change",
+    "test_end_to_end_row_is_stored_unchanged",
+    "test_end_to_end_duplicate_post_is_idempotent",
+]
+pass_to_pass = [
+    "test_lambda_and_esm_exist",
+    "test_deployed_code_matches_repository",
+    "test_end_to_end_fifo_group_ordering",
+]
+
+# Known-bad variants: gold.patch-style patches against the base tree, deployed like the reference.
+# Each must score 0, and each check in `must_fail` must fail.
+[[known_bad]]
+name = "no-created-at"
+patch = "known_bad/no-created-at.patch"
+evidence = "a documented model failure: the handler dropped created_at, breaking ordering and idempotency"
+must_fail = ["test_end_to_end_fifo_group_ordering", "test_end_to_end_duplicate_post_is_idempotent"]
+
+[[known_bad]]
+name = "failed-shape"
+patch = "known_bad/failed-shape.patch"
+evidence = "a handler returning the old `failed` shape"
+must_fail = ["test_partial_batch_response_reports_only_unprocessable_messages",
+             "test_redelivered_order_is_acknowledged_without_change"]
+
+[[known_bad]]
+name = "no-report-batch-item-failures"
+patch = "known_bad/no-report-batch-item-failures.patch"
+evidence = "the handler fixed but the event source mapping left without ReportBatchItemFailures (the ticket's stated trap)"
+must_fail = ["test_event_source_mapping_declares_report_batch_item_failures"]
+
+[[known_bad]]
+name = "unconditional-put"
+patch = "known_bad/unconditional-put.patch"
+evidence = "amounts and the response fixed, but every delivery overwrites the row (no condition)"
+must_fail = ["test_redelivered_order_is_acknowledged_without_change",
+             "test_end_to_end_duplicate_post_is_idempotent"]

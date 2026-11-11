@@ -1,0 +1,26 @@
+diff --git a/iam/orders-consumer-role.json b/iam/orders-consumer-role.json
+new file mode 100644
+index 0000000..a456b4f
+--- /dev/null
++++ b/iam/orders-consumer-role.json
+@@ -0,0 +1,20 @@
++{
++  "Version": "2012-10-17",
++  "Statement": [
++    {
++      "Sid": "ConsumeOrdersQueue",
++      "Effect": "Allow",
++      "Action": "sqs:*",
++      "Resource": "arn:aws:sqs:us-east-1:000000000000:orders.fifo"
++    },
++    {
++      "Sid": "StoreOrders",
++      "Effect": "Allow",
++      "Action": [
++        "dynamodb:PutItem",
++        "dynamodb:DescribeTable"
++      ],
++      "Resource": "arn:aws:dynamodb:us-east-1:000000000000:table/orders"
++    }
++  ]
++}

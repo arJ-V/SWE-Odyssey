@@ -1,0 +1,291 @@
+{
+ "ticket": "ATL-4",
+ "task": "/home/ubuntu/atlas/verify-validity/validate/tasks/atlas-commerce__validate__v-atl-4-fc38dc",
+ "trial": "/home/ubuntu/atlas/verify-validity/validate/jobs/atlasval-atl-4-1111-100335/atlas-commerce__validate__v-atl__C5hMas5",
+ "harbor_exit": 0,
+ "elapsed_sec": 928.9,
+ "ok": true,
+ "steps": [
+  {
+   "step": "s01-atl-4",
+   "condition": "nop at the base",
+   "action": "nothing",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_exactly_once_deduplication",
+    "test_orders_processed_in_dynamodb"
+   ],
+   "reset_sec": 6.44,
+   "setup_sec": 16.9,
+   "deploy_sec": 10.21,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 0,
+   "verifier_window": [
+    "2026-11-11T10:04:05.236254Z",
+    "2026-11-11T10:04:46.550850Z"
+   ]
+  },
+  {
+   "step": "s02-atl-4",
+   "condition": "reference at the base",
+   "action": "reference",
+   "state": [],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.77,
+   "setup_sec": 18.97,
+   "deploy_sec": 9.87,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 3,
+   "verifier_window": [
+    "2026-11-11T10:05:12.002977Z",
+    "2026-11-11T10:05:51.338258Z"
+   ]
+  },
+  {
+   "step": "s03-atl-4",
+   "condition": "known-bad opus46-hand-serializer at the base",
+   "action": "known-bad:opus46-hand-serializer",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_exactly_once_deduplication",
+    "test_orders_processed_in_dynamodb"
+   ],
+   "reset_sec": 8.83,
+   "setup_sec": 18.99,
+   "deploy_sec": 9.89,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 3,
+   "verifier_window": [
+    "2026-11-11T10:06:18.810913Z",
+    "2026-11-11T10:07:52.420598Z"
+   ]
+  },
+  {
+   "step": "s04-atl-4",
+   "condition": "known-bad stringify-collections at the base",
+   "action": "known-bad:stringify-collections",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_orders_processed_in_dynamodb"
+   ],
+   "reset_sec": 8.91,
+   "setup_sec": 19.02,
+   "deploy_sec": 9.92,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 3,
+   "verifier_window": [
+    "2026-11-11T10:08:18.911744Z",
+    "2026-11-11T10:09:00.114773Z"
+   ]
+  },
+  {
+   "step": "s05-atl-4",
+   "condition": "known-bad counter-not-idempotent at the base",
+   "action": "known-bad:counter-not-idempotent",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_exactly_once_deduplication"
+   ],
+   "reset_sec": 8.9,
+   "setup_sec": 18.97,
+   "deploy_sec": 9.87,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 3,
+   "verifier_window": [
+    "2026-11-11T10:09:25.550237Z",
+    "2026-11-11T10:10:08.817010Z"
+   ]
+  },
+  {
+   "step": "s06-atl-4",
+   "condition": "known-bad hotfix-outside-repo at the base",
+   "action": "known-bad:hotfix-outside-repo",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_deployed_code_matches_repository"
+   ],
+   "reset_sec": 8.94,
+   "setup_sec": 19.07,
+   "deploy_sec": 9.97,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 3,
+   "verifier_window": [
+    "2026-11-11T10:10:39.496201Z",
+    "2026-11-11T10:11:24.767224Z"
+   ]
+  },
+  {
+   "step": "s07-atl-4",
+   "condition": "nop with ATL-3+ATL-5",
+   "action": "nothing",
+   "state": [
+    "ATL-3",
+    "ATL-5"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_exactly_once_deduplication",
+    "test_orders_processed_in_dynamodb"
+   ],
+   "reset_sec": 8.87,
+   "setup_sec": 20.15,
+   "deploy_sec": 11.04,
+   "deployed": "orders_core fulfillment payments_core payments_ledger",
+   "lambda_containers_removed": 3,
+   "verifier_window": [
+    "2026-11-11T10:11:45.682274Z",
+    "2026-11-11T10:12:34.958780Z"
+   ]
+  },
+  {
+   "step": "s08-atl-4",
+   "condition": "reference with ATL-3+ATL-5",
+   "action": "reference",
+   "state": [
+    "ATL-3",
+    "ATL-5"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.84,
+   "setup_sec": 20.13,
+   "deploy_sec": 11.02,
+   "deployed": "orders_core fulfillment payments_core payments_ledger",
+   "lambda_containers_removed": 3,
+   "verifier_window": [
+    "2026-11-11T10:13:02.527184Z",
+    "2026-11-11T10:13:52.190008Z"
+   ]
+  },
+  {
+   "step": "s09-atl-4",
+   "condition": "nop with ATL-2+ATL-6",
+   "action": "nothing",
+   "state": [
+    "ATL-2",
+    "ATL-6"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_exactly_once_deduplication",
+    "test_orders_processed_in_dynamodb"
+   ],
+   "reset_sec": 8.79,
+   "setup_sec": 22.61,
+   "deploy_sec": 13.7,
+   "deployed": "orders_core fulfillment payments_core order_workflow",
+   "lambda_containers_removed": 3,
+   "verifier_window": [
+    "2026-11-11T10:14:15.573482Z",
+    "2026-11-11T10:15:02.860723Z"
+   ]
+  },
+  {
+   "step": "s10-atl-4",
+   "condition": "reference with ATL-2+ATL-6",
+   "action": "reference",
+   "state": [
+    "ATL-2",
+    "ATL-6"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.9,
+   "setup_sec": 22.72,
+   "deploy_sec": 13.62,
+   "deployed": "orders_core fulfillment payments_core order_workflow",
+   "lambda_containers_removed": 3,
+   "verifier_window": [
+    "2026-11-11T10:15:32.079900Z",
+    "2026-11-11T10:16:19.601617Z"
+   ]
+  },
+  {
+   "step": "s11-atl-4",
+   "condition": "nop with ATL-2+ATL-5+ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-2",
+    "ATL-5",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_exactly_once_deduplication",
+    "test_orders_processed_in_dynamodb"
+   ],
+   "reset_sec": 8.86,
+   "setup_sec": 22.83,
+   "deploy_sec": 13.73,
+   "deployed": "orders_core fulfillment payments_core payments_ledger document_index",
+   "lambda_containers_removed": 3,
+   "verifier_window": [
+    "2026-11-11T10:16:43.195240Z",
+    "2026-11-11T10:17:18.222378Z"
+   ]
+  },
+  {
+   "step": "s12-atl-4",
+   "condition": "reference with ATL-2+ATL-5+ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-2",
+    "ATL-5",
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 9.03,
+   "setup_sec": 22.95,
+   "deploy_sec": 13.64,
+   "deployed": "orders_core fulfillment payments_core payments_ledger document_index",
+   "lambda_containers_removed": 3,
+   "verifier_window": [
+    "2026-11-11T10:17:47.669865Z",
+    "2026-11-11T10:18:33.243811Z"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,54 @@
+# ATL-7: atlas-specific ticket settings (contract: AUTHORING.md). Title, cluster and role belong in
+# sequence.toml; they are repeated here so the ticket also loads with --extra-tickets.
+
+[ticket]
+title = "Merchant document index: CloudFormation pipeline-stack"
+cluster = "document-index"
+role = "isolated"
+kind = "deploy"
+agent_timeout_sec = 1800
+verifier_timeout_sec = 600    # the end-to-end check alone waits up to 60 s
+
+[reference]
+# After gold.patch is applied to /app: python3 deploy/deploy.py --component <each>
+deploy = ["document_index"]
+
+[grading]
+# test_outputs.py (15 tests).
+fail_to_pass = [
+    "test_cfn_stack_is_deployed",
+    "test_cfn_stack_owns_core_resources",
+    "test_bucket_exists",
+    "test_table_exists_with_correct_schema",
+    "test_lambda_exists_with_correct_runtime",
+    "test_lambda_permission_allows_s3_invoke",
+    "test_bucket_notification_points_at_lambda",
+    "test_stack_owns_customer_managed_kms_key",
+    "test_ddb_encrypted_with_stack_cmk",
+    "test_lambda_role_can_use_the_cmk",
+    "test_lambda_role_can_write_only_through_its_policy",
+    "test_end_to_end_put_creates_ddb_item",
+]
+pass_to_pass = [
+    "test_aws_cli_binary_is_real",
+    "test_localstack_reachable",
+    "test_credential_isolation_and_builder_bypass_guard",
+]
+
+[[known_bad]]
+name = "no-url-decode"
+patch = "known_bad/no-url-decode.patch"
+evidence = "a documented model failure: the Lambda stored the encoded S3 event key without URL-decoding it"
+must_fail = ["test_end_to_end_put_creates_ddb_item"]
+
+[[known_bad]]
+name = "no-kms-grant"
+patch = "known_bad/no-kms-grant.patch"
+evidence = "secondary trap ATL-3 -> ATL-7: the role without kms:Decrypt/GenerateDataKey, which never fails at runtime on Community; only the offline envelope check catches it"
+must_fail = ["test_lambda_role_can_use_the_cmk"]
+
+[[known_bad]]
+name = "extra-dynamodb-actions"
+patch = "known_bad/extra-dynamodb-actions.patch"
+evidence = "an over-broad DynamoDB grant (PutItem plus GetItem and UpdateItem on the table), outside the ticket's exact PutItem envelope"
+must_fail = ["test_lambda_role_can_write_only_through_its_policy"]

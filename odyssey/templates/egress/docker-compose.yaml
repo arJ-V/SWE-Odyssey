@@ -1,0 +1,25 @@
+# Written by `odyssey compile --egress allowlist` (docs/SPEC.md section 11).
+#
+# task.toml sets [environment] network_mode = "allowlist", so Harbor 0.22 adds
+# its egress-control sidecar and puts `main` into the sidecar's network
+# namespace, where nftables sends every TCP connection through a transparent
+# gost proxy that admits only the allowed hostnames (TLS SNI / HTTP Host) and
+# rejects all other non-loopback traffic except ICMP. Harbor's own overlay is
+# applied after this file; this file only adds what Harbor does not set.
+services:
+  main:
+    # Without CAP_NET_RAW, root in the agent container cannot open AF_PACKET or
+    # raw IP sockets. AF_PACKET frames bypass the netfilter hooks the sidecar's
+    # rules live on, so with the capability an agent could hand-craft packets
+    # past the proxy.
+    cap_drop:
+      - NET_RAW
+  harbor-docker-egress-control-sidecar:
+    # The agent shares this network namespace. No unprivileged ICMP sockets in
+    # it, so (with NET_RAW dropped above) the agent cannot send ICMP at all;
+    # Harbor's rules let ICMP through, which would allow an ICMP tunnel.
+    sysctls:
+      net.ipv4.ping_group_range: "1 0"
+    # Same gost service and allowlist as Harbor's, plus a request log.
+    volumes:
+      - ./odyssey-egress/gost.yaml:/opt/egress-sidecar/gost.yaml:ro

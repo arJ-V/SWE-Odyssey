@@ -1,0 +1,17 @@
+# Placeholder ticket: NOT part of the pool. It exists to test resets, forward-merge redeploys and
+# leak checks (scripts/atlas/README and README.md "Two-step trial"). Compile it in with
+# --extra-tickets testing/tickets.
+[ticket]
+title = "Ops heartbeat queue (placeholder)"
+cluster = "placeholder"
+role = "placeholder"
+kind = "deploy"
+agent_timeout_sec = 600
+verifier_timeout_sec = 300
+
+[reference]
+deploy = ["ops_heartbeat"]
+
+[grading]
+fail_to_pass = ["test_heartbeat_queue_tagged"]
+pass_to_pass = []

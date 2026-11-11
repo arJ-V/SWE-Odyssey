@@ -1,0 +1,157 @@
+# atlas-commerce: one Harbor multi-step trial = these five services for the whole sequence.
+#
+#   main               the agent's workstation (Harbor execs setup.sh, the agent and test.sh here);
+#                      only AWS endpoint: http://localstack:4566 (the credential proxy)
+#   localstack-proxy   credential proxy (platform/localstack_proxy.py): only
+#                      allowlisted keys and attested Lambda sessions pass; /_localstack/* blocked
+#   deny-guard         applies the Deny statements of the builder policy to the builder key
+#   localstack-backend LocalStack Community 4.14.0, pinned by digest; Lambda containers run on backend_net
+#   atlas-controller   trusted reset controller; network_mode none; talks to main only via the
+#                      ctl volume (request/response files guarded by per-step tokens)
+#
+# Networks: main is on agent_net only; Lambda containers, the proxy, deny-guard and LocalStack
+# share backend_net; the controller is on no network at all.
+services:
+  main:
+    build:
+      context: ${CONTEXT_DIR}
+      target: agent
+    image: ${MAIN_IMAGE_NAME}
+    # PID 1 is the guard (platform/guard.py): it reaps orphans and kills agent leftovers when
+    # Harbor starts a step's verifier.
+    command: ["python3", "-I", "/opt/atlas/guard.py"]
+    init: false
+    stop_grace_period: 3s
+    environment:
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - AWS_SESSION_TOKEN=
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - AWS_SHARED_CREDENTIALS_FILE=/shared/agent/credentials
+    volumes:
+      - ${HOST_VERIFIER_LOGS_PATH}:${ENV_VERIFIER_LOGS_PATH}
+      - ${HOST_AGENT_LOGS_PATH}:${ENV_AGENT_LOGS_PATH}
+      - shared:/shared:ro
+      - ctl:/run/atlas-ctl
+    deploy:
+      resources:
+        limits:
+          cpus: ${CPUS}
+          memory: ${MEMORY}
+    depends_on:
+      localstack-proxy:
+        condition: service_healthy
+      atlas-controller:
+        condition: service_healthy
+    networks:
+      - agent_net
+
+  atlas-controller:
+    build:
+      context: ${CONTEXT_DIR}
+      target: controller
+    image: ${COMPOSE_PROJECT_NAME}-atlas-controller
+    network_mode: none
+    environment:
+      - ATLAS_PROJECT=${COMPOSE_PROJECT_NAME}
+      - ATLAS_SERVICES=apigateway,cloudformation,cloudwatch,dynamodb,dynamodbstreams,events,iam,kms,lambda,logs,s3,sns,sqs,stepfunctions,sts
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - shared:/shared
+      - ctl:/ctl
+      - ${CONTEXT_DIR}/controller/tokens.json:/etc/atlas/tokens.json:ro
+      - ${CONTEXT_DIR}/platform/builder-policy.json:/etc/atlas/builder-policy.json:ro
+    healthcheck:
+      test: ["CMD", "test", "-f", "/tmp/atlas-controller-ready"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    depends_on:
+      localstack-backend:
+        condition: service_healthy
+
+  localstack-proxy:
+    image: python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535
+    command: ["python", "/proxy/localstack_proxy.py"]
+    environment:
+      - LOCALSTACK_UPSTREAM=http://deny-guard:4566
+      - PROXY_ALLOWLIST=/shared/proxy/allowlist
+    volumes:
+      - ${CONTEXT_DIR}/platform/localstack_proxy.py:/proxy/localstack_proxy.py:ro
+      - shared:/shared:ro
+    depends_on:
+      deny-guard:
+        condition: service_started
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "python - <<'PY'\nimport urllib.request\nurllib.request.urlopen('http://localhost:4566/_localstack/health', timeout=5).read()\nPY"
+      interval: 3s
+      timeout: 5s
+      retries: 40
+      start_period: 3s
+    networks:
+      agent_net:
+        aliases:
+          - localstack
+      backend_net:
+        aliases:
+          - localstack
+
+  deny-guard:
+    image: python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535
+    command: ["python", "/guard/deny_guard_proxy.py"]
+    environment:
+      - GUARD_UPSTREAM=http://localstack-backend:4566
+      # Only the builder key is restricted; the verifier key is in the proxy allowlist only.
+      - PROXY_ALLOWLIST=/shared/proxy/builder-keys
+      - BUILDER_DENY_POLICY=/guard/builder-policy.json
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ${CONTEXT_DIR}/platform/deny_guard.py:/guard/deny_guard.py:ro
+      - ${CONTEXT_DIR}/platform/deny_guard_proxy.py:/guard/deny_guard_proxy.py:ro
+      - ${CONTEXT_DIR}/platform/builder-policy.json:/guard/builder-policy.json:ro
+      - shared:/shared:ro
+    depends_on:
+      localstack-backend:
+        condition: service_healthy
+    networks:
+      backend_net:
+        aliases:
+          - deny-guard
+
+  localstack-backend:
+    image: localstack/localstack:4.14.0@sha256:3ebc37595918b8accb852f8048fef2aff047d465167edd655528065b07bc364a
+    environment:
+      - SERVICES=apigateway,cloudformation,cloudwatch,dynamodb,dynamodbstreams,events,iam,kms,lambda,logs,s3,sns,sqs,stepfunctions,sts
+      - LOCALSTACK_HOST=localstack-backend:4566
+      - LAMBDA_DOCKER_NETWORK=${COMPOSE_PROJECT_NAME}_backend_net
+      - LAMBDA_RUNTIME_EXECUTOR=docker
+      - DISABLE_EVENTS=0
+      - PERSISTENCE=0
+      - DEBUG=0
+      - DYNAMODB_HEAP_SIZE=512M
+      - AWS_DEFAULT_REGION=us-east-1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "curl -sf http://localhost:4566/_localstack/health | grep -qE '\"lambda\": \"(available|running)\"' && curl -sf http://localhost:4566/_localstack/health | grep -qE '\"sqs\": \"(available|running)\"' && curl -sf http://localhost:4566/_localstack/health | grep -qE '\"dynamodb\": \"(available|running)\"' && curl -sf http://localhost:4566/_localstack/health | grep -qE '\"iam\": \"(available|running)\"'"
+      interval: 3s
+      timeout: 5s
+      retries: 60
+      start_period: 20s
+    networks:
+      backend_net:
+        aliases:
+          - localstack-backend
+
+volumes:
+  shared:
+  ctl:
+
+networks:
+  agent_net: {}  # atlas:agent_net
+  backend_net: {}

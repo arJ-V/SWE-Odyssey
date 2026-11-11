@@ -1,0 +1,1014 @@
+{
+ "trials": [
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__c0__2Posypq",
+   "job": "cold-c01-nop",
+   "agent": "nop",
+   "ordering_id": "c01-af8089",
+   "ordering": [
+    "ATL-1"
+   ],
+   "rewards": [
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__c0__BuznPyZ",
+   "job": "cold-c01-oracle",
+   "agent": "oracle",
+   "ordering_id": "c01-af8089",
+   "ordering": [
+    "ATL-1"
+   ],
+   "rewards": [
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__c0__xbF7yS9",
+   "job": "cold-c02-nop",
+   "agent": "nop",
+   "ordering_id": "c02-7cd5d1",
+   "ordering": [
+    "ATL-2"
+   ],
+   "rewards": [
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__c0__RMMFLsk",
+   "job": "cold-c02-oracle",
+   "agent": "oracle",
+   "ordering_id": "c02-7cd5d1",
+   "ordering": [
+    "ATL-2"
+   ],
+   "rewards": [
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__c0__z5yCZ2f",
+   "job": "cold-c03-nop",
+   "agent": "nop",
+   "ordering_id": "c03-6aca36",
+   "ordering": [
+    "ATL-3"
+   ],
+   "rewards": [
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__c0__2Kzap5b",
+   "job": "cold-c03-oracle",
+   "agent": "oracle",
+   "ordering_id": "c03-6aca36",
+   "ordering": [
+    "ATL-3"
+   ],
+   "rewards": [
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__c0__oFEiesN",
+   "job": "cold-c04-nop",
+   "agent": "nop",
+   "ordering_id": "c04-a5460d",
+   "ordering": [
+    "ATL-4"
+   ],
+   "rewards": [
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__c0__t4UUT2i",
+   "job": "cold-c04-oracle",
+   "agent": "oracle",
+   "ordering_id": "c04-a5460d",
+   "ordering": [
+    "ATL-4"
+   ],
+   "rewards": [
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__c0__Rgi9SX8",
+   "job": "cold-c05-nop",
+   "agent": "nop",
+   "ordering_id": "c05-24ba47",
+   "ordering": [
+    "ATL-5"
+   ],
+   "rewards": [
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__c0__yomHx5T",
+   "job": "cold-c05-oracle",
+   "agent": "oracle",
+   "ordering_id": "c05-24ba47",
+   "ordering": [
+    "ATL-5"
+   ],
+   "rewards": [
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__c0__i7XxJiE",
+   "job": "cold-c06-nop",
+   "agent": "nop",
+   "ordering_id": "c06-f87cac",
+   "ordering": [
+    "ATL-6"
+   ],
+   "rewards": [
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__c0__2hwLBCk",
+   "job": "cold-c06-oracle",
+   "agent": "oracle",
+   "ordering_id": "c06-f87cac",
+   "ordering": [
+    "ATL-6"
+   ],
+   "rewards": [
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__c0__bDSt5qr",
+   "job": "cold-c07-nop",
+   "agent": "nop",
+   "ordering_id": "c07-6d5034",
+   "ordering": [
+    "ATL-7"
+   ],
+   "rewards": [
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__c0__2vSHZxr",
+   "job": "cold-c07-oracle",
+   "agent": "oracle",
+   "ordering_id": "c07-6d5034",
+   "ordering": [
+    "ATL-7"
+   ],
+   "rewards": [
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__NCjugKu",
+   "job": "w01-nop",
+   "agent": "nop",
+   "ordering_id": "w01-3fec01",
+   "ordering": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-7",
+    "ATL-3",
+    "ATL-6",
+    "ATL-4",
+    "ATL-5"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__MueKDVo",
+   "job": "w01-oracle",
+   "agent": "oracle",
+   "ordering_id": "w01-3fec01",
+   "ordering": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-7",
+    "ATL-3",
+    "ATL-6",
+    "ATL-4",
+    "ATL-5"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__YHEYnuM",
+   "job": "w02-nop",
+   "agent": "nop",
+   "ordering_id": "w02-be3c65",
+   "ordering": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-1",
+    "ATL-4",
+    "ATL-7",
+    "ATL-5",
+    "ATL-6"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__aF72TJB",
+   "job": "w02-oracle",
+   "agent": "oracle",
+   "ordering_id": "w02-be3c65",
+   "ordering": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-1",
+    "ATL-4",
+    "ATL-7",
+    "ATL-5",
+    "ATL-6"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__4U4yL5Y",
+   "job": "w03-nop",
+   "agent": "nop",
+   "ordering_id": "w03-950764",
+   "ordering": [
+    "ATL-3",
+    "ATL-4",
+    "ATL-2",
+    "ATL-5",
+    "ATL-1",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__tMSyXaz",
+   "job": "w03-oracle",
+   "agent": "oracle",
+   "ordering_id": "w03-950764",
+   "ordering": [
+    "ATL-3",
+    "ATL-4",
+    "ATL-2",
+    "ATL-5",
+    "ATL-1",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__rCqzvjm",
+   "job": "w04-nop",
+   "agent": "nop",
+   "ordering_id": "w04-62f8e1",
+   "ordering": [
+    "ATL-4",
+    "ATL-5",
+    "ATL-3",
+    "ATL-6",
+    "ATL-2",
+    "ATL-7",
+    "ATL-1"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__hCSgjhC",
+   "job": "w04-oracle",
+   "agent": "oracle",
+   "ordering_id": "w04-62f8e1",
+   "ordering": [
+    "ATL-4",
+    "ATL-5",
+    "ATL-3",
+    "ATL-6",
+    "ATL-2",
+    "ATL-7",
+    "ATL-1"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__K3a8Sry",
+   "job": "w05-nop",
+   "agent": "nop",
+   "ordering_id": "w05-f795bd",
+   "ordering": [
+    "ATL-5",
+    "ATL-6",
+    "ATL-4",
+    "ATL-7",
+    "ATL-3",
+    "ATL-1",
+    "ATL-2"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__SmQC3fL",
+   "job": "w05-oracle",
+   "agent": "oracle",
+   "ordering_id": "w05-f795bd",
+   "ordering": [
+    "ATL-5",
+    "ATL-6",
+    "ATL-4",
+    "ATL-7",
+    "ATL-3",
+    "ATL-1",
+    "ATL-2"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__bZfzm6L",
+   "job": "w06-nop",
+   "agent": "nop",
+   "ordering_id": "w06-775e68",
+   "ordering": [
+    "ATL-6",
+    "ATL-7",
+    "ATL-5",
+    "ATL-1",
+    "ATL-4",
+    "ATL-2",
+    "ATL-3"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__WmwAdab",
+   "job": "w06-oracle",
+   "agent": "oracle",
+   "ordering_id": "w06-775e68",
+   "ordering": [
+    "ATL-6",
+    "ATL-7",
+    "ATL-5",
+    "ATL-1",
+    "ATL-4",
+    "ATL-2",
+    "ATL-3"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__7E6a2CV",
+   "job": "w07-nop",
+   "agent": "nop",
+   "ordering_id": "w07-f5e663",
+   "ordering": [
+    "ATL-7",
+    "ATL-1",
+    "ATL-6",
+    "ATL-2",
+    "ATL-5",
+    "ATL-3",
+    "ATL-4"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__kkNW8dz",
+   "job": "w07-oracle",
+   "agent": "oracle",
+   "ordering_id": "w07-f5e663",
+   "ordering": [
+    "ATL-7",
+    "ATL-1",
+    "ATL-6",
+    "ATL-2",
+    "ATL-5",
+    "ATL-3",
+    "ATL-4"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__KtNR2mp",
+   "job": "w08-nop",
+   "agent": "nop",
+   "ordering_id": "w08-4b7dbd",
+   "ordering": [
+    "ATL-5",
+    "ATL-4",
+    "ATL-6",
+    "ATL-3",
+    "ATL-7",
+    "ATL-2",
+    "ATL-1"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__9Kuvzdq",
+   "job": "w08-oracle",
+   "agent": "oracle",
+   "ordering_id": "w08-4b7dbd",
+   "ordering": [
+    "ATL-5",
+    "ATL-4",
+    "ATL-6",
+    "ATL-3",
+    "ATL-7",
+    "ATL-2",
+    "ATL-1"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__BGa23pe",
+   "job": "w09-nop",
+   "agent": "nop",
+   "ordering_id": "w09-d47d50",
+   "ordering": [
+    "ATL-6",
+    "ATL-5",
+    "ATL-7",
+    "ATL-4",
+    "ATL-1",
+    "ATL-3",
+    "ATL-2"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w0__9Qa9G64",
+   "job": "w09-oracle",
+   "agent": "oracle",
+   "ordering_id": "w09-d47d50",
+   "ordering": [
+    "ATL-6",
+    "ATL-5",
+    "ATL-7",
+    "ATL-4",
+    "ATL-1",
+    "ATL-3",
+    "ATL-2"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w1__ZYUwDnD",
+   "job": "w10-nop",
+   "agent": "nop",
+   "ordering_id": "w10-b3be25",
+   "ordering": [
+    "ATL-7",
+    "ATL-6",
+    "ATL-1",
+    "ATL-5",
+    "ATL-2",
+    "ATL-4",
+    "ATL-3"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w1__pkzAfuS",
+   "job": "w10-oracle",
+   "agent": "oracle",
+   "ordering_id": "w10-b3be25",
+   "ordering": [
+    "ATL-7",
+    "ATL-6",
+    "ATL-1",
+    "ATL-5",
+    "ATL-2",
+    "ATL-4",
+    "ATL-3"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w1__vRs4anM",
+   "job": "w11-nop",
+   "agent": "nop",
+   "ordering_id": "w11-f7aea1",
+   "ordering": [
+    "ATL-1",
+    "ATL-7",
+    "ATL-2",
+    "ATL-6",
+    "ATL-3",
+    "ATL-5",
+    "ATL-4"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w1__ao2r4Hf",
+   "job": "w11-oracle",
+   "agent": "oracle",
+   "ordering_id": "w11-f7aea1",
+   "ordering": [
+    "ATL-1",
+    "ATL-7",
+    "ATL-2",
+    "ATL-6",
+    "ATL-3",
+    "ATL-5",
+    "ATL-4"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w1__aDY9cee",
+   "job": "w12-nop",
+   "agent": "nop",
+   "ordering_id": "w12-2ca8c9",
+   "ordering": [
+    "ATL-2",
+    "ATL-1",
+    "ATL-3",
+    "ATL-7",
+    "ATL-4",
+    "ATL-6",
+    "ATL-5"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w1__qSQp4NH",
+   "job": "w12-oracle",
+   "agent": "oracle",
+   "ordering_id": "w12-2ca8c9",
+   "ordering": [
+    "ATL-2",
+    "ATL-1",
+    "ATL-3",
+    "ATL-7",
+    "ATL-4",
+    "ATL-6",
+    "ATL-5"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w1__st9eCFv",
+   "job": "w13-nop",
+   "agent": "nop",
+   "ordering_id": "w13-b43c20",
+   "ordering": [
+    "ATL-3",
+    "ATL-2",
+    "ATL-4",
+    "ATL-1",
+    "ATL-5",
+    "ATL-7",
+    "ATL-6"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w1__KT44hUG",
+   "job": "w13-oracle",
+   "agent": "oracle",
+   "ordering_id": "w13-b43c20",
+   "ordering": [
+    "ATL-3",
+    "ATL-2",
+    "ATL-4",
+    "ATL-1",
+    "ATL-5",
+    "ATL-7",
+    "ATL-6"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w1__wj8xQGZ",
+   "job": "w14-nop",
+   "agent": "nop",
+   "ordering_id": "w14-b7a248",
+   "ordering": [
+    "ATL-4",
+    "ATL-3",
+    "ATL-5",
+    "ATL-2",
+    "ATL-6",
+    "ATL-1",
+    "ATL-7"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__w1__QpaA5SH",
+   "job": "w14-oracle",
+   "agent": "oracle",
+   "ordering_id": "w14-b7a248",
+   "ordering": [
+    "ATL-4",
+    "ATL-3",
+    "ATL-5",
+    "ATL-2",
+    "ATL-6",
+    "ATL-1",
+    "ATL-7"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  }
+ ],
+ "independence": {
+  "ATL-1": {
+   "reference": {
+    "distinct_states": 20,
+    "of_possible": 64,
+    "observations": 29,
+    "singles": 6,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   },
+   "nothing": {
+    "distinct_states": 20,
+    "of_possible": 64,
+    "observations": 29,
+    "singles": 6,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   }
+  },
+  "ATL-2": {
+   "reference": {
+    "distinct_states": 20,
+    "of_possible": 64,
+    "observations": 29,
+    "singles": 6,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   },
+   "nothing": {
+    "distinct_states": 20,
+    "of_possible": 64,
+    "observations": 29,
+    "singles": 6,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   }
+  },
+  "ATL-3": {
+   "reference": {
+    "distinct_states": 20,
+    "of_possible": 64,
+    "observations": 29,
+    "singles": 6,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   },
+   "nothing": {
+    "distinct_states": 20,
+    "of_possible": 64,
+    "observations": 29,
+    "singles": 6,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   }
+  },
+  "ATL-4": {
+   "reference": {
+    "distinct_states": 20,
+    "of_possible": 64,
+    "observations": 29,
+    "singles": 6,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   },
+   "nothing": {
+    "distinct_states": 20,
+    "of_possible": 64,
+    "observations": 29,
+    "singles": 6,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   }
+  },
+  "ATL-5": {
+   "reference": {
+    "distinct_states": 20,
+    "of_possible": 64,
+    "observations": 29,
+    "singles": 6,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   },
+   "nothing": {
+    "distinct_states": 20,
+    "of_possible": 64,
+    "observations": 29,
+    "singles": 6,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   }
+  },
+  "ATL-6": {
+   "reference": {
+    "distinct_states": 20,
+    "of_possible": 64,
+    "observations": 29,
+    "singles": 6,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   },
+   "nothing": {
+    "distinct_states": 20,
+    "of_possible": 64,
+    "observations": 29,
+    "singles": 6,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   }
+  },
+  "ATL-7": {
+   "reference": {
+    "distinct_states": 20,
+    "of_possible": 64,
+    "observations": 29,
+    "singles": 6,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   },
+   "nothing": {
+    "distinct_states": 20,
+    "of_possible": 64,
+    "observations": 29,
+    "singles": 6,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   }
+  }
+ }
+}

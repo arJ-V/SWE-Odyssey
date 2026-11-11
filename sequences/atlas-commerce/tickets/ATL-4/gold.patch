@@ -1,0 +1,265 @@
+diff --git a/services/fulfillment/ingestion.py b/services/fulfillment/ingestion.py
+index 95b9494..dbdb393 100644
+--- a/services/fulfillment/ingestion.py
++++ b/services/fulfillment/ingestion.py
+@@ -1,93 +1,83 @@
+ import json
+ import boto3
+-import uuid
+-import time
+ import os
+ import logging
+ import hashlib
++import time
+ 
+ logger = logging.getLogger()
+ logger.setLevel(os.environ.get('LOG_LEVEL', 'INFO'))
+ 
+ BUCKET_NAME = os.environ.get('ORDER_BUCKET', 'raw-orders-bucket')
+-REGION = os.environ.get('AWS_DEFAULT_REGION', 'us-east-1')
+ SERVICE_NAME = 'ingestion-service'
+-VERSION = '2.1.0'
+ 
+ 
+-def validate_payload(orders):
+-    """Validate incoming order batch structure."""
++def _orders_from_event(event):
++    body = event.get('body', '[]')
++    if body is None:
++        body = '[]'
++    if isinstance(body, str):
++        return json.loads(body)
++    return body
++
++
++def _validate(orders):
+     if not isinstance(orders, list):
+         raise ValueError(f"Expected list of orders, got {type(orders).__name__}")
+-    if len(orders) == 0:
++    if not orders:
+         raise ValueError("Empty order batch received")
+     for idx, order in enumerate(orders):
+         if not isinstance(order, dict):
+             raise ValueError(f"Order at index {idx} is not an object")
++        if not order.get('order_id'):
++            raise ValueError(f"Order at index {idx} missing order_id")
+     return True
+ 
+ 
+-def build_envelope(orders, source='api-gateway'):
+-    """Wrap raw orders in a metadata envelope for downstream processing."""
++def _json_response(status, payload):
+     return {
+-        "metadata": {
+-            "received_at": str(time.time()),
+-            "source": source,
+-            "version": VERSION,
+-            "service": SERVICE_NAME,
+-            "batch_size": len(orders),
+-            "region": REGION,
+-            "checksum": hashlib.md5(json.dumps(orders, sort_keys=True).encode()).hexdigest()
+-        },
+-        "orders": orders
++        "statusCode": status,
++        "headers": {"Content-Type": "application/json"},
++        "body": json.dumps(payload),
+     }
+ 
+ 
+ def handler(event, context):
+-    request_id = context.aws_request_id if context else str(uuid.uuid4())
+-    logger.info(f"[{SERVICE_NAME}] Processing request {request_id}")
+-
+     try:
+         ep = os.environ["AWS_ENDPOINT_URL"]
+         s3 = boto3.client('s3', endpoint_url=ep)
+ 
+-        body = event.get('body', '[]')
+-        if isinstance(body, str):
+-            orders = json.loads(body)
+-        else:
+-            orders = body
++        orders = _orders_from_event(event)
++        _validate(orders)
+ 
+-        validate_payload(orders)
+-        logger.info(f"[{SERVICE_NAME}] Validated batch of {len(orders)} orders")
++        # Deterministic key: identical batches collapse to the same S3 object,
++        # so resubmitting an identical batch is a true upsert and does not
++        # trigger redundant downstream processing.
++        canonical = json.dumps(orders, sort_keys=True, separators=(',', ':'))
++        digest = hashlib.sha256(canonical.encode()).hexdigest()
++        object_key = f"batches/{digest}.json"
+ 
+-        envelope = build_envelope(orders)
+-        object_key = f"{int(time.time())}-{uuid.uuid4()}"
++        envelope = {
++            "metadata": {
++                "received_at": str(time.time()),
++                "service": SERVICE_NAME,
++                "batch_size": len(orders),
++                "checksum": digest,
++            },
++            "orders": orders,
++        }
+ 
+         s3.put_object(
+             Bucket=BUCKET_NAME,
+             Key=object_key,
+             Body=json.dumps(envelope),
+-            ContentType='application/json'
++            ContentType='application/json',
+         )
+-
+         logger.info(f"[{SERVICE_NAME}] Stored batch as s3://{BUCKET_NAME}/{object_key}")
+-
+-        return {
+-            "statusCode": 201,
+-            "headers": {"Content-Type": "application/json"},
+-            "body": json.dumps({"status": "accepted"})
+-        }
++        return _json_response(201, {"status": "accepted"})
+     except ValueError as ve:
+         logger.warning(f"[{SERVICE_NAME}] Validation error: {ve}")
+-        return {
+-            "statusCode": 400,
+-            "headers": {"Content-Type": "application/json"},
+-            "body": json.dumps({"error": str(ve)})
+-        }
++        return _json_response(400, {"error": str(ve)})
+     except Exception as exc:
+         logger.error(f"[{SERVICE_NAME}] Unexpected error: {exc}", exc_info=True)
+-        return {
+-            "statusCode": 500,
+-            "headers": {"Content-Type": "application/json"},
+-            "body": json.dumps({"error": "Internal server error"})
+-        }
++        return _json_response(500, {"error": "Internal server error"})
+diff --git a/services/fulfillment/processor.py b/services/fulfillment/processor.py
+index a36598d..fab37ae 100644
+--- a/services/fulfillment/processor.py
++++ b/services/fulfillment/processor.py
+@@ -3,6 +3,8 @@ import boto3
+ import os
+ import logging
+ import time
++from boto3.dynamodb.types import TypeSerializer
++from botocore.exceptions import ClientError
+ 
+ logger = logging.getLogger()
+ logger.setLevel(os.environ.get('LOG_LEVEL', 'INFO'))
+@@ -11,10 +13,11 @@ TABLE_NAME = os.environ.get('FULFILLMENT_TABLE', 'FulfillmentTable')
+ SERVICE_NAME = 'processor-service'
+ MAX_RETRIES = 3
+ RETRY_BASE_DELAY = 0.5
++SERIALIZER = TypeSerializer()
+ 
+ 
+ def write_order(dynamo_client, order):
+-    """Persist an order to the fulfillment table with processing counter."""
++    """Insert one complete order exactly once by its natural order_id key."""
+     order_id = order.get('order_id')
+     if not order_id:
+         logger.warning(f"[{SERVICE_NAME}] Skipping order without order_id")
+@@ -22,17 +25,37 @@ def write_order(dynamo_client, order):
+ 
+     logger.info(f"[{SERVICE_NAME}] Processing order {order_id}")
+ 
++    fields = {
++        key: value
++        for key, value in order.items()
++        if key not in {'order_id', 'processing_count'}
++    }
++    names = {'#processing_count': 'processing_count'}
++    values = {':processing_count': {'N': '1'}}
++    assignments = ['#processing_count = :processing_count']
++    for index, (key, value) in enumerate(fields.items()):
++        name_token = f'#field_{index}'
++        value_token = f':field_{index}'
++        names[name_token] = key
++        values[value_token] = SERIALIZER.serialize(value)
++        assignments.append(f'{name_token} = {value_token}')
++
+     for attempt in range(MAX_RETRIES):
+         try:
+             dynamo_client.update_item(
+                 TableName=TABLE_NAME,
+                 Key={'order_id': {'S': str(order_id)}},
+-                UpdateExpression='ADD processing_count :inc',
+-                ExpressionAttributeValues={':inc': {'N': '1'}}
++                UpdateExpression='SET ' + ', '.join(assignments),
++                ExpressionAttributeNames=names,
++                ExpressionAttributeValues=values,
++                ConditionExpression='attribute_not_exists(order_id)',
+             )
+             logger.info(f"[{SERVICE_NAME}] Order {order_id} persisted to {TABLE_NAME}")
+             return True
+-        except Exception as e:
++        except ClientError as e:
++            if e.response.get('Error', {}).get('Code') == 'ConditionalCheckFailedException':
++                logger.info(f"[{SERVICE_NAME}] Order {order_id} already persisted")
++                return True
+             delay = RETRY_BASE_DELAY * (attempt + 1)
+             logger.warning(
+                 f"[{SERVICE_NAME}] Attempt {attempt + 1}/{MAX_RETRIES} "
+@@ -59,6 +82,7 @@ def handler(event, context):
+ 
+     for record in event.get('Records', []):
+         try:
++            # We assume the bug where Splitter double-encoded JSON is fixed, so this is a dict.
+             order = json.loads(record['body'])
+             if write_order(dynamo, order):
+                 success_count += 1
+diff --git a/services/fulfillment/splitter.py b/services/fulfillment/splitter.py
+index ff76bab..18d1397 100644
+--- a/services/fulfillment/splitter.py
++++ b/services/fulfillment/splitter.py
+@@ -1,6 +1,5 @@
+ import json
+ import boto3
+-import uuid
+ import os
+ import logging
+ 
+@@ -10,17 +9,14 @@ logger.setLevel(os.environ.get('LOG_LEVEL', 'INFO'))
+ FIFO_QUEUE_NAME = os.environ.get('FIFO_QUEUE', 'fulfillment-queue.fifo')
+ MESSAGE_GROUP = os.environ.get('MESSAGE_GROUP', 'orders')
+ SERVICE_NAME = 'splitter-service'
+-MAX_RETRIES = 3
+ 
+ 
+ def get_fifo_queue_url(sqs_client):
+-    """Resolve the FIFO queue URL by name."""
+     resp = sqs_client.get_queue_url(QueueName=FIFO_QUEUE_NAME)
+     return resp['QueueUrl']
+ 
+ 
+ def extract_s3_references(record):
+-    """Parse S3 event notification records from SQS message body."""
+     body = json.loads(record['body'])
+     if 'Records' not in body:
+         logger.warning(f"[{SERVICE_NAME}] No Records key in S3 event notification body")
+@@ -34,7 +30,6 @@ def extract_s3_references(record):
+ 
+ 
+ def fetch_order_data(s3_client, bucket, key):
+-    """Download and parse order data from S3."""
+     logger.info(f"[{SERVICE_NAME}] Fetching s3://{bucket}/{key}")
+     obj = s3_client.get_object(Bucket=bucket, Key=key)
+     raw = obj['Body'].read().decode('utf-8')
+@@ -63,13 +58,11 @@ def handler(event, context):
+ 
+                 for order in orders:
+                     try:
+-                        dedup_id = str(uuid.uuid4())
+-
+                         sqs.send_message(
+                             QueueUrl=queue_url,
+-                            MessageBody=json.dumps(json.dumps(order)),
++                            MessageBody=json.dumps(order),
+                             MessageGroupId=MESSAGE_GROUP,
+-                            MessageDeduplicationId=dedup_id
++                            MessageDeduplicationId=str(order['order_id'])
+                         )
+                         processed_count += 1
+                         logger.debug(f"[{SERVICE_NAME}] Sent order to FIFO queue")

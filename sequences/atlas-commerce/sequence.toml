@@ -1,0 +1,87 @@
+schema = 1
+
+# atlas-commerce: one AWS product (orders, fulfilment, merchant payments) on LocalStack Community
+# 4.14.0 (README.md). Compile with scripts/atlas/compile_atlas.py, not `odyssey compile`: every
+# step resets LocalStack and redeploys the platform from the repository (code state
+# "forward-merge-live", AUTHORING.md).
+# Per-ticket settings (timeouts, reference deploy, grading lists, known-bad variants) are in
+# tickets/<id>/ticket.toml; this file stays loadable by odyssey.spec for designs and accounting.
+
+[sequence]
+id = "atlas-commerce"
+description = "atlas-commerce: order intake, bulk fulfilment and merchant payments on one LocalStack account; each ticket is a deploy, code, repair or policy change to the same repository"
+workdir = "/app"
+memory_dir = "/memory"
+repo_memory_files = ["CLAUDE.md", "AGENTS.md", "NOTES.md"]
+# Defaults; each ticket.toml sets its own (written per step into task.toml).
+agent_timeout_sec = 3600
+verifier_timeout_sec = 600
+
+[environment]
+context = "environment"
+# Host copy of /app's starting state; compile hashes it and setup.sh/test.sh refuse a base
+# tarball that does not match.
+base_tree = "environment/repo"
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+allow_internet = true
+build_timeout_sec = 1800
+
+[grading]
+# The graders read the repository only as data (no ticket imports repository code into the
+# grader), so nothing in the tree is protected beyond the Python import-hook names.
+protected_paths = []
+
+# --- tickets ------------------------------------------------------------------------------------
+# This list is the single source of title, cluster and role (designs and `odyssey account` read
+# them here); it is owned by the sequence integrator. A ticket.toml may repeat them, and
+# `compile_atlas.py check` refuses any disagreement. The order below is the order designs
+# (williams, latin, ...) rotate.
+# cluster = relatedness label (same label = related); role = core | trap | isolated.
+# Designed roles: sibling pair ATL-2/ATL-4 (cluster
+# "orders-consumers"); trap pair ATL-1/ATL-4 (POST /orders on API Gateway with opposite integration
+# styles), secondary trap ATL-3 -> ATL-7 (strip unlisted IAM actions vs required KMS grants);
+# isolated ATL-7.
+
+[[tickets]]
+id = "ATL-1"
+title = "Public order intake: orders-api POST /orders straight to orders.fifo"
+cluster = "order-intake-api"     # trap with ATL-4 (both: POST /orders on API Gateway, opposite integration styles)
+role = "trap"
+
+[[tickets]]
+id = "ATL-2"
+title = "Orders consumer: partial-batch failures, idempotent writes, exact amounts"
+cluster = "orders-consumers"     # sibling of ATL-4
+role = "core"
+
+[[tickets]]
+id = "ATL-3"
+title = "Least privilege for orders-consumer-role"
+cluster = "iam-scope"            # trap source for ATL-7 (strip unlisted actions vs required KMS grants)
+role = "trap"
+
+[[tickets]]
+id = "ATL-4"
+title = "Bulk fulfilment is broken in production"
+cluster = "orders-consumers"     # sibling of ATL-2 (SQS-driven Lambdas writing order rows, idempotent by order_id); trap with ATL-1 (OrdersAPI must stay a Lambda integration)
+role = "trap"
+
+[[tickets]]
+id = "ATL-5"
+title = "Payments ledger and merchant rollups to the cent"
+cluster = "payments-ledger"      # weak sibling of ATL-2 by design (numeric fidelity), kept as its own cluster
+role = "core"
+
+[[tickets]]
+id = "ATL-6"
+title = "Order workflow: NewOrderRule starts OrderProcessor"
+cluster = "order-workflow"       # platform breadth only (Lambda packaging, roles, Step Functions)
+role = "core"
+
+[[tickets]]
+id = "ATL-7"
+title = "Merchant document index: CloudFormation pipeline-stack"
+cluster = "document-index"       # isolated: CloudFormation, S3 notifications, KMS (no other ticket uses them)
+role = "isolated"

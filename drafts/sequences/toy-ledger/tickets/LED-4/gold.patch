@@ -1,0 +1,18 @@
+diff --git a/lib/ledgerly/reports/budget_variance.py b/lib/ledgerly/reports/budget_variance.py
+index 34c4a16..dbd12b5 100644
+--- a/lib/ledgerly/reports/budget_variance.py
++++ b/lib/ledgerly/reports/budget_variance.py
+@@ -31,9 +31,10 @@ def budget_variance(
+     lines = []
+     for account in budget.accounts():
+         account_type = ledger.chart.get(account).type
+-        sign = natural_sign(account_type)
+-        actual = ledger.activity(account, start, end, rollup=True) * sign
+-        planned = budget.amount_for(account, start, end) * sign
++        # The ledger is debit-positive, so actuals need the natural sign. A
++        # Budget already stores amounts in natural sign: use them as they are.
++        actual = ledger.activity(account, start, end, rollup=True) * natural_sign(account_type)
++        planned = budget.amount_for(account, start, end)
+         variance = actual - planned
+         lines.append(
+             VarianceLine(

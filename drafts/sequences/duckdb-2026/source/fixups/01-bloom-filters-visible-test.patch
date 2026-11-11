@@ -1,0 +1,27 @@
+diff --git a/test/sql/copy/parquet/bloom_filters.test b/test/sql/copy/parquet/bloom_filters.test
+index 0b22f6a..3f6141a 100644
+--- a/test/sql/copy/parquet/bloom_filters.test
++++ b/test/sql/copy/parquet/bloom_filters.test
+@@ -38,22 +38,11 @@ EXPLAIN ANALYZE SELECT count(*) FROM '{TEST_DIR}/bloom1.parquet' WHERE r = 201;
+ ----
+ analyzed_plan	<REGEX>:(?s).*Row Groups Scanned: 0 / 10.*
+ 
+-# Equal inclusive bounds are reduced to equality, enabling Bloom filter pruning
+-query II
+-EXPLAIN ANALYZE SELECT count(*) FROM '{TEST_DIR}/bloom1.parquet' WHERE r BETWEEN 201 AND 201;
+-----
+-analyzed_plan	<REGEX>:(?s).*Row Groups Scanned: 0 / 10.*
+-
+ query II
+ EXPLAIN ANALYZE SELECT count(*) FROM '{TEST_DIR}/bloom1.parquet' WHERE r IS NOT DISTINCT FROM 201;
+ ----
+ analyzed_plan	<REGEX>:(?s).*Row Groups Scanned: 0 / 10.*
+ 
+-query II
+-EXPLAIN ANALYZE SELECT count(*) FROM '{TEST_DIR}/bloom1.parquet' WHERE r >= 201 AND r <= 201;
+-----
+-analyzed_plan	<REGEX>:(?s).*Row Groups Scanned: 0 / 10.*
+-
+ statement ok
+ COPY (
+ 	SELECT

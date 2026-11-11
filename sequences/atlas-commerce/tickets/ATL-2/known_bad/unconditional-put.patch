@@ -1,0 +1,89 @@
+diff --git a/deploy/components/orders_core.py b/deploy/components/orders_core.py
+index 49862f7..2e95c49 100644
+--- a/deploy/components/orders_core.py
++++ b/deploy/components/orders_core.py
+@@ -17,7 +17,7 @@ SOURCE = REPO / "services" / "orders_consumer"
+ ROLE_POLICY_FILE = REPO / "iam" / "orders-consumer-role.json"
+ 
+ BATCH_SIZE = 5
+-FUNCTION_RESPONSE_TYPES: list[str] = []
++FUNCTION_RESPONSE_TYPES: list[str] = ["ReportBatchItemFailures"]
+ 
+ 
+ def deploy() -> None:
+diff --git a/services/orders_consumer/handler.py b/services/orders_consumer/handler.py
+index 2f45dab..8e7f295 100644
+--- a/services/orders_consumer/handler.py
++++ b/services/orders_consumer/handler.py
+@@ -2,11 +2,19 @@
+ 
+ Reads order messages from the orders.fifo queue (through the SQS event source
+ mapping) and stores each order in the orders table.
++
++Each order is stored once: the first message for an order_id creates the row
++and fixes its created_at; a redelivery or resubmission of the same order_id is
++acknowledged without changing the row. Amounts are stored exactly as sent.
++Messages that cannot be processed are reported one by one in the partial batch
++response, so the rest of the batch is not retried.
+ """
+ 
+ import json
+ import os
+ import time
++from decimal import Decimal
++
+ import boto3
+ 
+ _endpoint = os.environ.get("AWS_ENDPOINT_URL", "http://localstack:4566")
+@@ -16,29 +24,33 @@ TABLE_NAME = os.environ.get("TABLE_NAME", "orders")
+ 
+ 
+ def _process_record(record):
+-    payload = json.loads(record["body"])
+-    order_id = payload["order_id"]
+-    merchant_id = payload["merchant_id"]
+-    amount = int(payload["amount"])
+-
+-    ddb.put_item(
+-        TableName=TABLE_NAME,
+-        Item={
+-            "order_id": {"S": order_id},
+-            "merchant_id": {"S": merchant_id},
+-            "amount": {"N": str(amount)},
+-            "created_at": {"N": str(int(time.time()))},
+-        },
+-    )
++    payload = json.loads(record["body"], parse_float=Decimal)
++    order_id = str(payload["order_id"])
++    merchant_id = str(payload["merchant_id"])
++    amount = Decimal(str(payload["amount"]))
++    if not amount.is_finite():
++        raise ValueError(f"amount is not a number: {payload['amount']!r}")
++
++    try:
++        ddb.put_item(
++            TableName=TABLE_NAME,
++            Item={
++                "order_id": {"S": order_id},
++                "merchant_id": {"S": merchant_id},
++                "amount": {"N": str(amount)},
++                "created_at": {"N": str(int(time.time()))},
++            },
++        )
++    except ddb.exceptions.ConditionalCheckFailedException:
++        print(f"[info] order_id={order_id} already stored; acknowledged without change")
+ 
+ 
+ def lambda_handler(event, context):
+-    failed = []
++    failures = []
+     for record in event.get("Records", []):
+         try:
+             _process_record(record)
+         except Exception as e:
+             print(f"[error] msgId={record.get('messageId')} {type(e).__name__}: {e}")
+-            failed.append({"itemIdentifier": record["messageId"]})
+-
+-    return {"failed": failed}
++            failures.append({"itemIdentifier": record["messageId"]})
++    return {"batchItemFailures": failures}

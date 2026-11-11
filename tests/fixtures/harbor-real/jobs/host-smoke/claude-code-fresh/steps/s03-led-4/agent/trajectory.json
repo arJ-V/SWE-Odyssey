@@ -1,0 +1,283 @@
+{
+ "schema_version": "ATIF-v1.7",
+ "session_id": "52f83ca3-16f7-459b-8e1f-a3599b60ebab",
+ "agent": {
+  "name": "claude-code",
+  "version": "2.1.322",
+  "model_name": "claude-haiku-5-5"
+ },
+ "steps": [
+  {
+   "step_id": 1,
+   "timestamp": "2026-11-10T07:50:53.740Z",
+   "source": "user",
+   "message": "m:ccc51e3691",
+   "extra": {
+    "is_sidechain": false
+   }
+  },
+  {
+   "step_id": 2,
+   "timestamp": "2026-11-10T07:50:55.000Z",
+   "source": "agent",
+   "model_name": "claude-haiku-5-5",
+   "llm_call_count": 1,
+   "message": "",
+   "metrics": {
+    "prompt_tokens": 17812,
+    "completion_tokens": 238,
+    "cached_tokens": 11506,
+    "extra": {
+     "cache_creation_input_tokens": 6304,
+     "cache_read_input_tokens": 11506,
+     "output_tokens_details": {
+      "thinking_tokens": 91
+     },
+     "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+     },
+     "service_tier": "standard",
+     "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 6304
+     },
+     "inference_geo": "global",
+     "iterations": [],
+     "speed": "standard",
+     "fallback_credit": null
+    }
+   },
+   "tool_calls": [
+    {
+     "tool_call_id": "toolu_01U3ZRiNT2raWSqzX8dnUrn1",
+     "function_name": "Grep",
+     "arguments": {}
+    }
+   ],
+   "observation": {
+    "results": [
+     {
+      "source_call_id": "toolu_01U3ZRiNT2raWSqzX8dnUrn1",
+      "content": ""
+     }
+    ]
+   },
+   "extra": {
+    "is_sidechain": false
+   }
+  },
+  {
+   "step_id": 3,
+   "timestamp": "2026-11-10T07:50:56.419Z",
+   "source": "agent",
+   "model_name": "claude-haiku-5-5",
+   "llm_call_count": 1,
+   "message": "",
+   "metrics": {
+    "prompt_tokens": 20900,
+    "completion_tokens": 275,
+    "cached_tokens": 17810,
+    "extra": {
+     "cache_creation_input_tokens": 3088,
+     "cache_read_input_tokens": 17810,
+     "output_tokens_details": {
+      "thinking_tokens": 0
+     },
+     "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+     },
+     "service_tier": "standard",
+     "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 3088
+     },
+     "inference_geo": "global",
+     "iterations": [],
+     "speed": "standard",
+     "fallback_credit": null
+    }
+   },
+   "tool_calls": [
+    {
+     "tool_call_id": "toolu_017a7ho1xZ6hFNPoZpq9aNYz",
+     "function_name": "Read",
+     "arguments": {}
+    },
+    {
+     "tool_call_id": "toolu_01EnqxMRFTWHaeKhfiE6SU1U",
+     "function_name": "Read",
+     "arguments": {}
+    }
+   ],
+   "observation": {
+    "results": [
+     {
+      "source_call_id": "toolu_017a7ho1xZ6hFNPoZpq9aNYz",
+      "content": ""
+     },
+     {
+      "source_call_id": "toolu_01EnqxMRFTWHaeKhfiE6SU1U",
+      "content": ""
+     }
+    ]
+   },
+   "extra": {
+    "is_sidechain": false
+   }
+  },
+  {
+   "step_id": 4,
+   "timestamp": "2026-11-10T07:50:58.587Z",
+   "source": "agent",
+   "model_name": "claude-haiku-5-5",
+   "llm_call_count": 1,
+   "message": "",
+   "metrics": {
+    "prompt_tokens": 23269,
+    "completion_tokens": 489,
+    "cached_tokens": 20898,
+    "extra": {
+     "cache_creation_input_tokens": 2369,
+     "cache_read_input_tokens": 20898,
+     "output_tokens_details": {
+      "thinking_tokens": 349
+     },
+     "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+     },
+     "service_tier": "standard",
+     "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 2369
+     },
+     "inference_geo": "global",
+     "iterations": [],
+     "speed": "standard",
+     "fallback_credit": null
+    }
+   },
+   "tool_calls": [
+    {
+     "tool_call_id": "toolu_01W1gKFUjLv3NsHt88cpNM3X",
+     "function_name": "Read",
+     "arguments": {}
+    }
+   ],
+   "observation": {
+    "results": [
+     {
+      "source_call_id": "toolu_01W1gKFUjLv3NsHt88cpNM3X",
+      "content": ""
+     }
+    ]
+   },
+   "extra": {
+    "is_sidechain": false
+   }
+  },
+  {
+   "step_id": 5,
+   "timestamp": "2026-11-10T07:50:59.726Z",
+   "source": "agent",
+   "model_name": "claude-haiku-5-5",
+   "llm_call_count": 1,
+   "message": "m:24eac602a6",
+   "metrics": {
+    "prompt_tokens": 24104,
+    "completion_tokens": 418,
+    "cached_tokens": 23267,
+    "extra": {
+     "cache_creation_input_tokens": 835,
+     "cache_read_input_tokens": 23267,
+     "output_tokens_details": {
+      "thinking_tokens": 62
+     },
+     "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+     },
+     "service_tier": "standard",
+     "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 835
+     },
+     "inference_geo": "global",
+     "iterations": [],
+     "speed": "standard",
+     "fallback_credit": null
+    }
+   },
+   "tool_calls": [
+    {
+     "tool_call_id": "toolu_01Ssa7EMcQdoGE3dBXxYxHwi",
+     "function_name": "Edit",
+     "arguments": {}
+    }
+   ],
+   "observation": {
+    "results": [
+     {
+      "source_call_id": "toolu_01Ssa7EMcQdoGE3dBXxYxHwi",
+      "content": ""
+     }
+    ]
+   },
+   "extra": {
+    "is_sidechain": false
+   }
+  },
+  {
+   "step_id": 6,
+   "timestamp": "2026-11-10T07:51:02.258Z",
+   "source": "agent",
+   "model_name": "claude-haiku-5-5",
+   "llm_call_count": 1,
+   "message": "m:9c5801eb12",
+   "metrics": {
+    "prompt_tokens": 24727,
+    "completion_tokens": 653,
+    "cached_tokens": 24102,
+    "extra": {
+     "cache_creation_input_tokens": 623,
+     "cache_read_input_tokens": 24102,
+     "output_tokens_details": {
+      "thinking_tokens": 144
+     },
+     "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+     },
+     "service_tier": "standard",
+     "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 623
+     },
+     "inference_geo": "global",
+     "iterations": [],
+     "speed": "standard",
+     "fallback_credit": null
+    }
+   },
+   "extra": {
+    "is_sidechain": false
+   }
+  }
+ ],
+ "final_metrics": {
+  "total_prompt_tokens": 110812,
+  "total_completion_tokens": 2073,
+  "total_cached_tokens": 97583,
+  "total_cost_usd": 0.003665705,
+  "total_steps": 6,
+  "extra": {
+   "service_tiers": [
+    "standard"
+   ],
+   "total_cache_creation_input_tokens": 13219,
+   "total_cache_read_input_tokens": 97583
+  }
+ }
+}

@@ -1,0 +1,933 @@
+{
+ "ticket": "ATL-1",
+ "task": "/home/ubuntu/atlas/integrate/validate/tasks/atlas-commerce__validate-offline__v-atl-1-caf87f",
+ "trial": "/home/ubuntu/atlas/integrate/validate/jobs/atlasval-atl-1-1111-071700/atlas-commerce__validate-offline__aqmCaAe",
+ "harbor_exit": 0,
+ "elapsed_sec": 1392.6,
+ "ok": true,
+ "steps": [
+  {
+   "step": "s01-atl-1",
+   "condition": "nop at the base",
+   "action": "nothing",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_credentials_role_is_set",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_sets_content_type_header",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_integration_uri_targets_fifo_queue",
+    "test_rest_api_exists_with_post_orders"
+   ],
+   "reset_sec": 6.55,
+   "setup_sec": 17.12,
+   "deploy_sec": 10.23,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 0,
+   "verifier_window": [
+    "2026-11-11T07:17:30.550105Z",
+    "2026-11-11T07:17:33.092475Z"
+   ]
+  },
+  {
+   "step": "s02-atl-1",
+   "condition": "reference at the base",
+   "action": "reference",
+   "state": [],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.69,
+   "setup_sec": 18.79,
+   "deploy_sec": 9.89,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:17:52.994416Z",
+    "2026-11-11T07:18:14.242062Z"
+   ]
+  },
+  {
+   "step": "s03-atl-1",
+   "condition": "known-bad stale-stage at the base",
+   "action": "known-bad:stale-stage",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq"
+   ],
+   "reset_sec": 8.75,
+   "setup_sec": 18.81,
+   "deploy_sec": 9.9,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:18:34.293939Z",
+    "2026-11-11T07:20:39.858323Z"
+   ]
+  },
+  {
+   "step": "s04-atl-1",
+   "condition": "known-bad constant-group-id at the base",
+   "action": "known-bad:constant-group-id",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_integration_template_identifiers_are_request_derived"
+   ],
+   "reset_sec": 8.69,
+   "setup_sec": 18.98,
+   "deploy_sec": 9.88,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:20:59.914040Z",
+    "2026-11-11T07:21:22.772837Z"
+   ]
+  },
+  {
+   "step": "s05-atl-1",
+   "condition": "known-bad no-content-type at the base",
+   "action": "known-bad:no-content-type",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_sets_content_type_header"
+   ],
+   "reset_sec": 8.72,
+   "setup_sec": 18.73,
+   "deploy_sec": 9.83,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:21:42.587403Z",
+    "2026-11-11T07:23:47.935469Z"
+   ]
+  },
+  {
+   "step": "s06-atl-1",
+   "condition": "nop with ATL-2",
+   "action": "nothing",
+   "state": [
+    "ATL-2"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_credentials_role_is_set",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_sets_content_type_header",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_integration_uri_targets_fifo_queue",
+    "test_rest_api_exists_with_post_orders"
+   ],
+   "reset_sec": 8.72,
+   "setup_sec": 18.79,
+   "deploy_sec": 9.89,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:24:07.489182Z",
+    "2026-11-11T07:24:10.268228Z"
+   ]
+  },
+  {
+   "step": "s07-atl-1",
+   "condition": "reference with ATL-2",
+   "action": "reference",
+   "state": [
+    "ATL-2"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.76,
+   "setup_sec": 18.88,
+   "deploy_sec": 9.97,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:24:30.227713Z",
+    "2026-11-11T07:24:51.456241Z"
+   ]
+  },
+  {
+   "step": "s08-atl-1",
+   "condition": "nop with ATL-3",
+   "action": "nothing",
+   "state": [
+    "ATL-3"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_credentials_role_is_set",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_sets_content_type_header",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_integration_uri_targets_fifo_queue",
+    "test_rest_api_exists_with_post_orders"
+   ],
+   "reset_sec": 8.7,
+   "setup_sec": 18.85,
+   "deploy_sec": 9.95,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:25:11.067136Z",
+    "2026-11-11T07:25:13.787812Z"
+   ]
+  },
+  {
+   "step": "s09-atl-1",
+   "condition": "reference with ATL-3",
+   "action": "reference",
+   "state": [
+    "ATL-3"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.69,
+   "setup_sec": 18.77,
+   "deploy_sec": 9.87,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:25:33.643787Z",
+    "2026-11-11T07:25:52.870062Z"
+   ]
+  },
+  {
+   "step": "s10-atl-1",
+   "condition": "nop with ATL-4",
+   "action": "nothing",
+   "state": [
+    "ATL-4"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_credentials_role_is_set",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_sets_content_type_header",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_integration_uri_targets_fifo_queue",
+    "test_rest_api_exists_with_post_orders"
+   ],
+   "reset_sec": 8.74,
+   "setup_sec": 18.96,
+   "deploy_sec": 9.86,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:26:12.602053Z",
+    "2026-11-11T07:26:15.176417Z"
+   ]
+  },
+  {
+   "step": "s11-atl-1",
+   "condition": "reference with ATL-4",
+   "action": "reference",
+   "state": [
+    "ATL-4"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.69,
+   "setup_sec": 18.74,
+   "deploy_sec": 9.84,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:26:35.003954Z",
+    "2026-11-11T07:26:59.851833Z"
+   ]
+  },
+  {
+   "step": "s12-atl-1",
+   "condition": "nop with ATL-5",
+   "action": "nothing",
+   "state": [
+    "ATL-5"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_credentials_role_is_set",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_sets_content_type_header",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_integration_uri_targets_fifo_queue",
+    "test_rest_api_exists_with_post_orders"
+   ],
+   "reset_sec": 8.7,
+   "setup_sec": 19.93,
+   "deploy_sec": 11.03,
+   "deployed": "orders_core fulfillment payments_core payments_ledger",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:27:20.536120Z",
+    "2026-11-11T07:27:23.070276Z"
+   ]
+  },
+  {
+   "step": "s13-atl-1",
+   "condition": "reference with ATL-5",
+   "action": "reference",
+   "state": [
+    "ATL-5"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.72,
+   "setup_sec": 19.9,
+   "deploy_sec": 10.99,
+   "deployed": "orders_core fulfillment payments_core payments_ledger",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:27:44.057749Z",
+    "2026-11-11T07:28:07.167163Z"
+   ]
+  },
+  {
+   "step": "s14-atl-1",
+   "condition": "nop with ATL-6",
+   "action": "nothing",
+   "state": [
+    "ATL-6"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_credentials_role_is_set",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_sets_content_type_header",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_integration_uri_targets_fifo_queue",
+    "test_rest_api_exists_with_post_orders"
+   ],
+   "reset_sec": 7.67,
+   "setup_sec": 21.61,
+   "deploy_sec": 13.7,
+   "deployed": "orders_core fulfillment payments_core order_workflow",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:28:29.530325Z",
+    "2026-11-11T07:28:32.060404Z"
+   ]
+  },
+  {
+   "step": "s15-atl-1",
+   "condition": "reference with ATL-6",
+   "action": "reference",
+   "state": [
+    "ATL-6"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.86,
+   "setup_sec": 22.48,
+   "deploy_sec": 13.37,
+   "deployed": "orders_core fulfillment payments_core order_workflow",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:28:55.618846Z",
+    "2026-11-11T07:29:14.740619Z"
+   ]
+  },
+  {
+   "step": "s16-atl-1",
+   "condition": "nop with ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_credentials_role_is_set",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_sets_content_type_header",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_integration_uri_targets_fifo_queue",
+    "test_rest_api_exists_with_post_orders"
+   ],
+   "reset_sec": 8.72,
+   "setup_sec": 21.47,
+   "deploy_sec": 12.56,
+   "deployed": "orders_core fulfillment payments_core document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:29:36.988239Z",
+    "2026-11-11T07:29:39.721948Z"
+   ]
+  },
+  {
+   "step": "s17-atl-1",
+   "condition": "reference with ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.69,
+   "setup_sec": 21.21,
+   "deploy_sec": 12.3,
+   "deployed": "orders_core fulfillment payments_core document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:30:02.033391Z",
+    "2026-11-11T07:30:23.310219Z"
+   ]
+  },
+  {
+   "step": "s18-atl-1",
+   "condition": "nop with ATL-3+ATL-4+ATL-5+ATL-6+ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_credentials_role_is_set",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_sets_content_type_header",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_integration_uri_targets_fifo_queue",
+    "test_rest_api_exists_with_post_orders"
+   ],
+   "reset_sec": 8.73,
+   "setup_sec": 26.05,
+   "deploy_sec": 16.94,
+   "deployed": "orders_core fulfillment payments_core order_workflow payments_ledger document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:30:50.121090Z",
+    "2026-11-11T07:30:52.840546Z"
+   ]
+  },
+  {
+   "step": "s19-atl-1",
+   "condition": "reference with ATL-3+ATL-4+ATL-5+ATL-6+ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.72,
+   "setup_sec": 25.88,
+   "deploy_sec": 16.97,
+   "deployed": "orders_core fulfillment payments_core order_workflow payments_ledger document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:31:19.802665Z",
+    "2026-11-11T07:31:47.240969Z"
+   ]
+  },
+  {
+   "step": "s20-atl-1",
+   "condition": "nop with ATL-2+ATL-4+ATL-5+ATL-6+ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-2",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_credentials_role_is_set",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_sets_content_type_header",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_integration_uri_targets_fifo_queue",
+    "test_rest_api_exists_with_post_orders"
+   ],
+   "reset_sec": 8.81,
+   "setup_sec": 26.05,
+   "deploy_sec": 16.95,
+   "deployed": "orders_core fulfillment payments_core order_workflow payments_ledger document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:32:14.061559Z",
+    "2026-11-11T07:32:16.581878Z"
+   ]
+  },
+  {
+   "step": "s21-atl-1",
+   "condition": "reference with ATL-2+ATL-4+ATL-5+ATL-6+ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-2",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.72,
+   "setup_sec": 26.01,
+   "deploy_sec": 16.9,
+   "deployed": "orders_core fulfillment payments_core order_workflow payments_ledger document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:32:43.702830Z",
+    "2026-11-11T07:33:17.024001Z"
+   ]
+  },
+  {
+   "step": "s22-atl-1",
+   "condition": "nop with ATL-2+ATL-3+ATL-5+ATL-6+ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_credentials_role_is_set",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_sets_content_type_header",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_integration_uri_targets_fifo_queue",
+    "test_rest_api_exists_with_post_orders"
+   ],
+   "reset_sec": 8.76,
+   "setup_sec": 25.89,
+   "deploy_sec": 16.98,
+   "deployed": "orders_core fulfillment payments_core order_workflow payments_ledger document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:33:43.667879Z",
+    "2026-11-11T07:33:46.412734Z"
+   ]
+  },
+  {
+   "step": "s23-atl-1",
+   "condition": "reference with ATL-2+ATL-3+ATL-5+ATL-6+ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.73,
+   "setup_sec": 25.84,
+   "deploy_sec": 16.93,
+   "deployed": "orders_core fulfillment payments_core order_workflow payments_ledger document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:34:13.326983Z",
+    "2026-11-11T07:34:38.509659Z"
+   ]
+  },
+  {
+   "step": "s24-atl-1",
+   "condition": "nop with ATL-2+ATL-3+ATL-4+ATL-6+ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_credentials_role_is_set",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_sets_content_type_header",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_integration_uri_targets_fifo_queue",
+    "test_rest_api_exists_with_post_orders"
+   ],
+   "reset_sec": 7.68,
+   "setup_sec": 23.74,
+   "deploy_sec": 15.84,
+   "deployed": "orders_core fulfillment payments_core order_workflow document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:35:03.018664Z",
+    "2026-11-11T07:35:05.539185Z"
+   ]
+  },
+  {
+   "step": "s25-atl-1",
+   "condition": "reference with ATL-2+ATL-3+ATL-4+ATL-6+ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.72,
+   "setup_sec": 24.77,
+   "deploy_sec": 15.86,
+   "deployed": "orders_core fulfillment payments_core order_workflow document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:35:31.389980Z",
+    "2026-11-11T07:35:56.775759Z"
+   ]
+  },
+  {
+   "step": "s26-atl-1",
+   "condition": "nop with ATL-2+ATL-3+ATL-4+ATL-5+ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_credentials_role_is_set",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_sets_content_type_header",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_integration_uri_targets_fifo_queue",
+    "test_rest_api_exists_with_post_orders"
+   ],
+   "reset_sec": 7.64,
+   "setup_sec": 21.28,
+   "deploy_sec": 13.38,
+   "deployed": "orders_core fulfillment payments_core payments_ledger document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:36:18.814518Z",
+    "2026-11-11T07:36:21.546546Z"
+   ]
+  },
+  {
+   "step": "s27-atl-1",
+   "condition": "reference with ATL-2+ATL-3+ATL-4+ATL-5+ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 7.68,
+   "setup_sec": 21.14,
+   "deploy_sec": 13.24,
+   "deployed": "orders_core fulfillment payments_core payments_ledger document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:36:43.810761Z",
+    "2026-11-11T07:37:03.129641Z"
+   ]
+  },
+  {
+   "step": "s28-atl-1",
+   "condition": "nop with ATL-2+ATL-3+ATL-4+ATL-5+ATL-6",
+   "action": "nothing",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_credentials_role_is_set",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_sets_content_type_header",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_integration_uri_targets_fifo_queue",
+    "test_rest_api_exists_with_post_orders"
+   ],
+   "reset_sec": 8.71,
+   "setup_sec": 23.74,
+   "deploy_sec": 14.63,
+   "deployed": "orders_core fulfillment payments_core order_workflow payments_ledger",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:37:27.622648Z",
+    "2026-11-11T07:37:30.147280Z"
+   ]
+  },
+  {
+   "step": "s29-atl-1",
+   "condition": "reference with ATL-2+ATL-3+ATL-4+ATL-5+ATL-6",
+   "action": "reference",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.71,
+   "setup_sec": 23.6,
+   "deploy_sec": 14.49,
+   "deployed": "orders_core fulfillment payments_core order_workflow payments_ledger",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:37:54.828331Z",
+    "2026-11-11T07:38:20.230502Z"
+   ]
+  },
+  {
+   "step": "s30-atl-1",
+   "condition": "nop with ATL-2+ATL-3+ATL-4+ATL-5+ATL-6+ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_api_role_has_required_trust_and_scoped_permissions",
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_credentials_role_is_set",
+    "test_integration_request_template_has_dedup_id",
+    "test_integration_request_template_has_message_group_id",
+    "test_integration_request_template_uses_full_body",
+    "test_integration_sets_content_type_header",
+    "test_integration_template_identifiers_are_request_derived",
+    "test_integration_uri_targets_fifo_queue",
+    "test_rest_api_exists_with_post_orders"
+   ],
+   "reset_sec": 8.76,
+   "setup_sec": 25.97,
+   "deploy_sec": 16.86,
+   "deployed": "orders_core fulfillment payments_core order_workflow payments_ledger document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:38:46.984755Z",
+    "2026-11-11T07:38:49.512479Z"
+   ]
+  },
+  {
+   "step": "s31-atl-1",
+   "condition": "reference with ATL-2+ATL-3+ATL-4+ATL-5+ATL-6+ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.8,
+   "setup_sec": 26.06,
+   "deploy_sec": 16.95,
+   "deployed": "orders_core fulfillment payments_core order_workflow payments_ledger document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:39:16.669344Z",
+    "2026-11-11T07:39:42.053221Z"
+   ]
+  }
+ ]
+}

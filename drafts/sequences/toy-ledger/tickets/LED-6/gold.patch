@@ -1,0 +1,17 @@
+diff --git a/lib/ledgerly/books/ledger.py b/lib/ledgerly/books/ledger.py
+index 14f4f2e..f1cd555 100644
+--- a/lib/ledgerly/books/ledger.py
++++ b/lib/ledgerly/books/ledger.py
+@@ -57,9 +57,9 @@ class Ledger:
+         reversal = original.reversed(
+             on=on or original.date, memo=memo or f"Reversal of {txn_id}"
+         )
+-        # A reversal mirrors an entry that already passed validation, so it is
+-        # balanced and its accounts exist by construction; record it directly.
+-        stored = self._record(reversal)
++        # Go through post() like any other entry: the reversal is balanced by
++        # construction, but its date may fall inside a locked period.
++        stored = self.post(reversal)
+         self._reversed_by[txn_id] = stored.txn_id
+         return stored
+ 

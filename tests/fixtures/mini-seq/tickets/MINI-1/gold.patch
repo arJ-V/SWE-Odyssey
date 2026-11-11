@@ -1,0 +1,13 @@
+diff --git a/math.sh b/math.sh
+index ae032ec..ab9c628 100644
+--- a/math.sh
++++ b/math.sh
+@@ -2,7 +2,7 @@
+ # Tiny arithmetic helpers used by the mini-seq fixture.
+ 
+ add() {
+-    echo $(( $1 - $2 ))
++    echo $(( $1 + $2 ))
+ }
+ 
+ # sub and neg are correct; they keep the add and mul hunks apart.

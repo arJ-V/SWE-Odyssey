@@ -1,0 +1,305 @@
+{
+ "ticket": "ATL-3",
+ "task": "/home/ubuntu/atlas/intake/validate3/tasks/atlas-commerce__validate-offline__v-atl-3-2f56b3",
+ "trial": "/home/ubuntu/atlas/intake/validate3/jobs/atlasval-atl-3-1111-051209/atlas-commerce__validate-offline__5nCrHfM",
+ "harbor_exit": 0,
+ "elapsed_sec": 340.5,
+ "ok": true,
+ "steps": [
+  {
+   "step": "s01-atl-3",
+   "condition": "nop at the base",
+   "action": "nothing",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_consumer_role_has_required_trust_and_scoped_permissions",
+    "test_consumer_role_policy_matches_repository"
+   ],
+   "reset_sec": 6.5,
+   "setup_sec": 17.12,
+   "deploy_sec": 10.23,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 0,
+   "verifier_window": [
+    "2026-11-11T05:12:39.478282Z",
+    "2026-11-11T05:12:41.595733Z"
+   ]
+  },
+  {
+   "step": "s02-atl-3",
+   "condition": "reference at the base",
+   "action": "reference",
+   "state": [],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.67,
+   "setup_sec": 18.6,
+   "deploy_sec": 9.7,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:13:03.346157Z",
+    "2026-11-11T05:13:06.105348Z"
+   ]
+  },
+  {
+   "step": "s03-atl-3",
+   "condition": "reference at the base",
+   "action": "reference",
+   "state": [],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.69,
+   "setup_sec": 18.63,
+   "deploy_sec": 9.73,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:13:27.888079Z",
+    "2026-11-11T05:13:30.641859Z"
+   ]
+  },
+  {
+   "step": "s04-atl-3",
+   "condition": "known-bad adds-cmv at the base",
+   "action": "known-bad:adds-cmv",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_consumer_role_has_required_trust_and_scoped_permissions"
+   ],
+   "reset_sec": 8.79,
+   "setup_sec": 19.0,
+   "deploy_sec": 9.9,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:13:51.804984Z",
+    "2026-11-11T05:13:53.976491Z"
+   ]
+  },
+  {
+   "step": "s05-atl-3",
+   "condition": "known-bad sqs-wildcard at the base",
+   "action": "known-bad:sqs-wildcard",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_consumer_role_has_required_trust_and_scoped_permissions"
+   ],
+   "reset_sec": 9.12,
+   "setup_sec": 19.27,
+   "deploy_sec": 9.98,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:14:15.462580Z",
+    "2026-11-11T05:14:17.640966Z"
+   ]
+  },
+  {
+   "step": "s06-atl-3",
+   "condition": "known-bad not-deployed at the base",
+   "action": "known-bad:not-deployed",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_consumer_role_has_required_trust_and_scoped_permissions",
+    "test_consumer_role_policy_matches_repository"
+   ],
+   "reset_sec": 8.79,
+   "setup_sec": 18.8,
+   "deploy_sec": 9.71,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:14:37.220683Z",
+    "2026-11-11T05:14:39.363237Z"
+   ]
+  },
+  {
+   "step": "s07-atl-3",
+   "condition": "known-bad policy-in-code at the base",
+   "action": "known-bad:policy-in-code",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_consumer_role_policy_matches_repository"
+   ],
+   "reset_sec": 8.79,
+   "setup_sec": 18.97,
+   "deploy_sec": 9.87,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:15:01.480464Z",
+    "2026-11-11T05:15:03.486767Z"
+   ]
+  },
+  {
+   "step": "s08-atl-3",
+   "condition": "nop with ATL-1",
+   "action": "nothing",
+   "state": [
+    "ATL-1"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_consumer_role_has_required_trust_and_scoped_permissions",
+    "test_consumer_role_policy_matches_repository"
+   ],
+   "reset_sec": 8.78,
+   "setup_sec": 19.08,
+   "deploy_sec": 9.98,
+   "deployed": "orders_core fulfillment payments_core orders_api",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:15:23.320635Z",
+    "2026-11-11T05:15:25.627036Z"
+   ]
+  },
+  {
+   "step": "s09-atl-3",
+   "condition": "reference with ATL-1",
+   "action": "reference",
+   "state": [
+    "ATL-1"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.77,
+   "setup_sec": 18.85,
+   "deploy_sec": 9.94,
+   "deployed": "orders_core fulfillment payments_core orders_api",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:15:46.619446Z",
+    "2026-11-11T05:15:49.388433Z"
+   ]
+  },
+  {
+   "step": "s10-atl-3",
+   "condition": "nop with ATL-2",
+   "action": "nothing",
+   "state": [
+    "ATL-2"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_consumer_role_has_required_trust_and_scoped_permissions",
+    "test_consumer_role_policy_matches_repository"
+   ],
+   "reset_sec": 7.69,
+   "setup_sec": 17.94,
+   "deploy_sec": 9.85,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:16:08.080946Z",
+    "2026-11-11T05:16:10.204637Z"
+   ]
+  },
+  {
+   "step": "s11-atl-3",
+   "condition": "reference with ATL-2",
+   "action": "reference",
+   "state": [
+    "ATL-2"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.84,
+   "setup_sec": 19.11,
+   "deploy_sec": 10.01,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:16:31.525342Z",
+    "2026-11-11T05:16:34.346252Z"
+   ]
+  },
+  {
+   "step": "s12-atl-3",
+   "condition": "nop with ATL-1+ATL-2",
+   "action": "nothing",
+   "state": [
+    "ATL-1",
+    "ATL-2"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_consumer_role_has_required_trust_and_scoped_permissions",
+    "test_consumer_role_policy_matches_repository"
+   ],
+   "reset_sec": 7.78,
+   "setup_sec": 17.9,
+   "deploy_sec": 10.01,
+   "deployed": "orders_core fulfillment payments_core orders_api",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:16:53.035799Z",
+    "2026-11-11T05:16:55.394295Z"
+   ]
+  },
+  {
+   "step": "s13-atl-3",
+   "condition": "reference with ATL-1+ATL-2",
+   "action": "reference",
+   "state": [
+    "ATL-1",
+    "ATL-2"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.83,
+   "setup_sec": 18.93,
+   "deploy_sec": 9.83,
+   "deployed": "orders_core fulfillment payments_core orders_api",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:17:16.542028Z",
+    "2026-11-11T05:17:19.372872Z"
+   ]
+  }
+ ]
+}

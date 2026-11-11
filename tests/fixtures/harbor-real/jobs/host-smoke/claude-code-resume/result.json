@@ -1,0 +1,67 @@
+{
+ "trial_name": "host-claude-code-resume",
+ "task_name": "odyssey/host-experiment",
+ "config": {
+  "agent": {
+   "name": "claude-code",
+   "model_name": "anthropic/claude-haiku-5-5",
+   "resume_trajectory": true
+  },
+  "task": {
+   "path": "toy-ledger__fm-inf-fb__xae5cee"
+  }
+ },
+ "agent_info": {
+  "name": "claude-code",
+  "model_info": {
+   "name": "claude-haiku-5-5"
+  }
+ },
+ "step_results": [
+  {
+   "step_name": "s01-led-1",
+   "agent_result": {
+    "n_input_tokens": 137307,
+    "n_cache_tokens": 110976,
+    "n_output_tokens": 3015,
+    "cost_usd": 0.005908335000000001
+   },
+   "verifier_result": null,
+   "exception_info": null,
+   "agent_execution": {
+    "started_at": "2026-11-10T07:48:15.731655+00:00",
+    "finished_at": "2026-11-10T07:48:31.500896+00:00"
+   }
+  },
+  {
+   "step_name": "s02-led-3",
+   "agent_result": {
+    "n_input_tokens": 323721,
+    "n_cache_tokens": 289240,
+    "n_output_tokens": 5384,
+    "cost_usd": 0.009893925000000001
+   },
+   "verifier_result": null,
+   "exception_info": null,
+   "agent_execution": {
+    "started_at": "2026-11-10T07:48:31.563783+00:00",
+    "finished_at": "2026-11-10T07:48:45.762354+00:00"
+   }
+  },
+  {
+   "step_name": "s03-led-4",
+   "agent_result": {
+    "n_input_tokens": 510797,
+    "n_cache_tokens": 471306,
+    "n_output_tokens": 7214,
+    "cost_usd": 0.013255585000000004
+   },
+   "verifier_result": null,
+   "exception_info": null,
+   "agent_execution": {
+    "started_at": "2026-11-10T07:48:45.823098+00:00",
+    "finished_at": "2026-11-10T07:48:58.323820+00:00"
+   }
+  }
+ ]
+}

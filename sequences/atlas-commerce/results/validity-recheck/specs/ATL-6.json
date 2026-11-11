@@ -1,0 +1,57 @@
+{
+ "ticket": "ATL-6",
+ "conditions": [
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-7"
+   ],
+   "action": "known-bad:raw-message-delivery",
+   "reward": 0,
+   "label": "known-bad raw-message-delivery with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-7"
+   ],
+   "action": "known-bad:events-role-states-star",
+   "reward": 0,
+   "label": "known-bad events-role-states-star with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-7"
+   ],
+   "action": "known-bad:target-input-path",
+   "reward": 0,
+   "label": "known-bad target-input-path with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-7"
+   ],
+   "action": "known-bad:always-default-price",
+   "reward": 0,
+   "label": "known-bad always-default-price with all six"
+  }
+ ]
+}

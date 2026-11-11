@@ -1,0 +1,30 @@
+diff --git a/lib/ledgerly/reports/balance_sheet.py b/lib/ledgerly/reports/balance_sheet.py
+index 565909f..0384538 100644
+--- a/lib/ledgerly/reports/balance_sheet.py
++++ b/lib/ledgerly/reports/balance_sheet.py
+@@ -13,6 +13,7 @@ from dataclasses import dataclass
+ 
+ from ..books import AccountType, Ledger
+ from ..money import Money, sum_money
++from ._signs import natural_sign
+ from .income_statement import StatementLine, net_income
+ 
+ CURRENT_EARNINGS = "Equity:Current earnings"
+@@ -41,7 +42,7 @@ def balance_sheet(ledger: Ledger, as_of: dt.date | None = None) -> BalanceSheet:
+         account_type = ledger.chart.get(account).type
+         if account_type in sections and not balance.is_zero():
+             sections[account_type].append(
+-                StatementLine(account, balance * _display_sign(account_type))
++                StatementLine(account, balance * natural_sign(account_type))
+             )
+     equity = sections[AccountType.EQUITY]
+     equity.append(StatementLine(CURRENT_EARNINGS, net_income(ledger, None, as_of)))
+@@ -58,8 +59,3 @@ def balance_sheet(ledger: Ledger, as_of: dt.date | None = None) -> BalanceSheet:
+         total_liabilities=total(sections[AccountType.LIABILITY]),
+         total_equity=total(equity),
+     )
+-
+-
+-def _display_sign(account_type: AccountType) -> int:
+-    # Liabilities are credit balances in the ledger; show them as positive.
+-    return -1 if account_type is AccountType.LIABILITY else 1

@@ -1,0 +1,21 @@
+{
+ "ticket": "ATL-1",
+ "extra_known_bad": [
+  {
+   "name": "vv-api-role-star",
+   "patch": "/home/ubuntu/atlas/verify-validity/tools/kb/atl1-api-role-star.patch",
+   "evidence": "verifier probe",
+   "must_fail": [
+    "test_api_role_has_required_trust_and_scoped_permissions"
+   ]
+  }
+ ],
+ "conditions": [
+  {
+   "state": [],
+   "action": "known-bad:vv-api-role-star",
+   "reward": 1,
+   "label": "vv-api-role-star at the base (gap probe; 1 expected)"
+  }
+ ]
+}

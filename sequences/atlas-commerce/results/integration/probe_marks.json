@@ -1,0 +1,30 @@
+{
+ "ATL-1": [
+  "\"\"\"Orders API: public REST API orders-api (stage dev) whose POST /orders sends each order straight to orders.fifo.\"\"\"",
+  "return apigw.create_resource(restApiId=api_id, parentId=by_path[\"/\"], pathPart=RESOURCE_PATH.lstrip(\"/\"))[\"id\"]"
+ ],
+ "ATL-2": [
+  "print(f\"[info] order_id={order_id} already stored; acknowledged without change\")",
+  "and fixes its created_at; a redelivery or resubmission of the same order_id is"
+ ],
+ "ATL-3": [
+  "\"Resource\": \"arn:aws:dynamodb:us-east-1:000000000000:table/orders\"",
+  "\"Resource\": \"arn:aws:sqs:us-east-1:000000000000:orders.fifo\""
+ ],
+ "ATL-4": [
+  "# We assume the bug where Splitter double-encoded JSON is fixed, so this is a dict.",
+  "if e.response.get('Error', {}).get('Code') == 'ConditionalCheckFailedException':"
+ ],
+ "ATL-5": [
+  "\"\"\"Payments ledger: payments-ingest consumes payments-inbound, records each payment in payments and keeps merchant_rollups to the cent.\"\"\"",
+  "from support import (BASIC_EXECUTION, FUNCTION_ENDPOINT, LAMBDA_TRUST, REPO, client, ensure_function, ensure_role,"
+ ],
+ "ATL-6": [
+  "\"\"\"Order workflow: NewOrderRule -> OrderProcessor (price items, payment + risk check, route to FulfillmentQueue or OrderAlerts).\"\"\"",
+  "\"Comment\": \"OrderProcessor: price each item, take payment and run the risk check in parallel, then route the order.\","
+ ],
+ "ATL-7": [
+  "\"\"\"Merchant document index: CloudFormation stack pipeline-stack (pipeline-source -> pipeline-processor -> pipeline-events, CMK-encrypted).\"\"\"",
+  "Description: Merchant document index. Every object created in pipeline-source is recorded in pipeline-events by pipeline-processor."
+ ]
+}

@@ -1,0 +1,61 @@
+{
+  "arm": "fm-inf-fb",
+  "arm_options": {
+    "code_state": "forward-merge",
+    "feedback": "binary",
+    "framing": "informed",
+    "seed_notes": null
+  },
+  "design": "explicit",
+  "memory_dir": "/memory",
+  "odyssey_manifest_version": 1,
+  "odyssey_version": "0.1.0",
+  "ordering": [
+    "LED-1",
+    "LED-3",
+    "LED-4"
+  ],
+  "ordering_id": "xae5cee",
+  "repo_memory_files": [
+    "CLAUDE.md",
+    "AGENTS.md",
+    "NOTES.md"
+  ],
+  "sequence": "toy-ledger",
+  "steps": [
+    {
+      "cluster": "A",
+      "name": "s01-led-1",
+      "position": 1,
+      "role": "core",
+      "state_tickets": [],
+      "ticket": "LED-1",
+      "title": "Refunds split across cost centres do not balance"
+    },
+    {
+      "cluster": "B",
+      "name": "s02-led-3",
+      "position": 2,
+      "role": "core",
+      "state_tickets": [
+        "LED-1"
+      ],
+      "ticket": "LED-3",
+      "title": "Balance sheet shows equity as negative and never balances"
+    },
+    {
+      "cluster": "B",
+      "name": "s03-led-4",
+      "position": 3,
+      "role": "trap",
+      "state_tickets": [
+        "LED-1",
+        "LED-3"
+      ],
+      "ticket": "LED-4",
+      "title": "Budget vs actual report is wrong for revenue lines"
+    }
+  ],
+  "task_name": "odyssey/toy-ledger__fm-inf-fb__xae5cee",
+  "workdir": "/app"
+}

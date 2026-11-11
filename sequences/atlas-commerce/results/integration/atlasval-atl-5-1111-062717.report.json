@@ -1,0 +1,980 @@
+{
+ "ticket": "ATL-5",
+ "task": "/home/ubuntu/atlas/integrate/validate/tasks/atlas-commerce__validate-offline__v-atl-5-6e9330",
+ "trial": "/home/ubuntu/atlas/integrate/validate/jobs/atlasval-atl-5-1111-062717/atlas-commerce__validate-offline__J3LSHzW",
+ "harbor_exit": 0,
+ "elapsed_sec": 2982.7,
+ "ok": true,
+ "steps": [
+  {
+   "step": "s01-atl-5",
+   "condition": "nop at the base",
+   "action": "nothing",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_ingest_workload_uses_lambda_role",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 6.63,
+   "setup_sec": 17.1,
+   "deploy_sec": 10.21,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 0,
+   "verifier_window": [
+    "2026-11-11T06:28:01.420256Z",
+    "2026-11-11T06:30:04.230218Z"
+   ]
+  },
+  {
+   "step": "s02-atl-5",
+   "condition": "reference at the base",
+   "action": "reference",
+   "state": [],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.71,
+   "setup_sec": 18.97,
+   "deploy_sec": 9.87,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T06:30:25.346373Z",
+    "2026-11-11T06:30:45.594521Z"
+   ]
+  },
+  {
+   "step": "s03-atl-5",
+   "condition": "known-bad floor-per-payment at the base",
+   "action": "known-bad:floor-per-payment",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 8.71,
+   "setup_sec": 18.78,
+   "deploy_sec": 9.88,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T06:31:06.500096Z",
+    "2026-11-11T06:32:46.287162Z"
+   ]
+  },
+  {
+   "step": "s04-atl-5",
+   "condition": "known-bad float-running-total at the base",
+   "action": "known-bad:float-running-total",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 8.74,
+   "setup_sec": 18.75,
+   "deploy_sec": 9.85,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T06:33:07.168889Z",
+    "2026-11-11T06:34:48.825005Z"
+   ]
+  },
+  {
+   "step": "s05-atl-5",
+   "condition": "known-bad ledger-drops-payer at the base",
+   "action": "known-bad:ledger-drops-payer",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_payment_row_preserves_processor_fields"
+   ],
+   "reset_sec": 8.72,
+   "setup_sec": 18.77,
+   "deploy_sec": 9.87,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T06:35:09.749474Z",
+    "2026-11-11T06:35:26.959459Z"
+   ]
+  },
+  {
+   "step": "s06-atl-5",
+   "condition": "nop with ATL-1",
+   "action": "nothing",
+   "state": [
+    "ATL-1"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_ingest_workload_uses_lambda_role",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 7.77,
+   "setup_sec": 17.85,
+   "deploy_sec": 9.95,
+   "deployed": "orders_core fulfillment payments_core orders_api",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T06:35:45.570427Z",
+    "2026-11-11T06:37:48.426291Z"
+   ]
+  },
+  {
+   "step": "s07-atl-5",
+   "condition": "reference with ATL-1",
+   "action": "reference",
+   "state": [
+    "ATL-1"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.7,
+   "setup_sec": 18.82,
+   "deploy_sec": 9.91,
+   "deployed": "orders_core fulfillment payments_core orders_api",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T06:38:09.373991Z",
+    "2026-11-11T06:38:30.014566Z"
+   ]
+  },
+  {
+   "step": "s08-atl-5",
+   "condition": "nop with ATL-2",
+   "action": "nothing",
+   "state": [
+    "ATL-2"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_ingest_workload_uses_lambda_role",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 8.73,
+   "setup_sec": 18.97,
+   "deploy_sec": 9.85,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T06:38:49.732108Z",
+    "2026-11-11T06:40:52.635922Z"
+   ]
+  },
+  {
+   "step": "s09-atl-5",
+   "condition": "reference with ATL-2",
+   "action": "reference",
+   "state": [
+    "ATL-2"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.71,
+   "setup_sec": 18.68,
+   "deploy_sec": 9.77,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T06:41:13.464663Z",
+    "2026-11-11T06:41:34.112197Z"
+   ]
+  },
+  {
+   "step": "s10-atl-5",
+   "condition": "nop with ATL-3",
+   "action": "nothing",
+   "state": [
+    "ATL-3"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_ingest_workload_uses_lambda_role",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 8.81,
+   "setup_sec": 18.94,
+   "deploy_sec": 9.83,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T06:41:53.813940Z",
+    "2026-11-11T06:43:56.885552Z"
+   ]
+  },
+  {
+   "step": "s11-atl-5",
+   "condition": "reference with ATL-3",
+   "action": "reference",
+   "state": [
+    "ATL-3"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 7.64,
+   "setup_sec": 17.8,
+   "deploy_sec": 9.9,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T06:44:16.833183Z",
+    "2026-11-11T06:44:34.486882Z"
+   ]
+  },
+  {
+   "step": "s12-atl-5",
+   "condition": "nop with ATL-4",
+   "action": "nothing",
+   "state": [
+    "ATL-4"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_ingest_workload_uses_lambda_role",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 8.78,
+   "setup_sec": 19.06,
+   "deploy_sec": 9.95,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T06:44:54.335129Z",
+    "2026-11-11T06:46:57.186203Z"
+   ]
+  },
+  {
+   "step": "s13-atl-5",
+   "condition": "reference with ATL-4",
+   "action": "reference",
+   "state": [
+    "ATL-4"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 7.72,
+   "setup_sec": 17.77,
+   "deploy_sec": 9.87,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T06:47:17.082128Z",
+    "2026-11-11T06:47:37.750064Z"
+   ]
+  },
+  {
+   "step": "s14-atl-5",
+   "condition": "nop with ATL-6",
+   "action": "nothing",
+   "state": [
+    "ATL-6"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_ingest_workload_uses_lambda_role",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 8.73,
+   "setup_sec": 22.85,
+   "deploy_sec": 13.74,
+   "deployed": "orders_core fulfillment payments_core order_workflow",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T06:48:01.359267Z",
+    "2026-11-11T06:50:04.216493Z"
+   ]
+  },
+  {
+   "step": "s15-atl-5",
+   "condition": "reference with ATL-6",
+   "action": "reference",
+   "state": [
+    "ATL-6"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.73,
+   "setup_sec": 22.33,
+   "deploy_sec": 13.42,
+   "deployed": "orders_core fulfillment payments_core order_workflow",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T06:50:28.689303Z",
+    "2026-11-11T06:50:49.404728Z"
+   ]
+  },
+  {
+   "step": "s16-atl-5",
+   "condition": "nop with ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_ingest_workload_uses_lambda_role",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 8.75,
+   "setup_sec": 21.55,
+   "deploy_sec": 12.44,
+   "deployed": "orders_core fulfillment payments_core document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T06:51:11.714965Z",
+    "2026-11-11T06:53:14.563045Z"
+   ]
+  },
+  {
+   "step": "s17-atl-5",
+   "condition": "reference with ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.74,
+   "setup_sec": 21.45,
+   "deploy_sec": 12.34,
+   "deployed": "orders_core fulfillment payments_core document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T06:53:38.151573Z",
+    "2026-11-11T06:53:55.844510Z"
+   ]
+  },
+  {
+   "step": "s18-atl-5",
+   "condition": "nop with ATL-2+ATL-3+ATL-4+ATL-6+ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_ingest_workload_uses_lambda_role",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 8.74,
+   "setup_sec": 24.9,
+   "deploy_sec": 15.79,
+   "deployed": "orders_core fulfillment payments_core order_workflow document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T06:54:21.509322Z",
+    "2026-11-11T06:56:24.314399Z"
+   ]
+  },
+  {
+   "step": "s19-atl-5",
+   "condition": "reference with ATL-2+ATL-3+ATL-4+ATL-6+ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.68,
+   "setup_sec": 24.69,
+   "deploy_sec": 15.78,
+   "deployed": "orders_core fulfillment payments_core order_workflow document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T06:56:51.135285Z",
+    "2026-11-11T06:57:11.896968Z"
+   ]
+  },
+  {
+   "step": "s20-atl-5",
+   "condition": "nop with ATL-1+ATL-3+ATL-4+ATL-6+ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-1",
+    "ATL-3",
+    "ATL-4",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_ingest_workload_uses_lambda_role",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 8.72,
+   "setup_sec": 24.81,
+   "deploy_sec": 15.9,
+   "deployed": "orders_core fulfillment payments_core orders_api order_workflow document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T06:57:37.475265Z",
+    "2026-11-11T06:59:40.542414Z"
+   ]
+  },
+  {
+   "step": "s21-atl-5",
+   "condition": "reference with ATL-1+ATL-3+ATL-4+ATL-6+ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-1",
+    "ATL-3",
+    "ATL-4",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 7.69,
+   "setup_sec": 23.82,
+   "deploy_sec": 15.92,
+   "deployed": "orders_core fulfillment payments_core orders_api order_workflow document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:00:06.494106Z",
+    "2026-11-11T07:00:24.254154Z"
+   ]
+  },
+  {
+   "step": "s22-atl-5",
+   "condition": "nop with ATL-1+ATL-2+ATL-4+ATL-6+ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-4",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_ingest_workload_uses_lambda_role",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 8.77,
+   "setup_sec": 24.94,
+   "deploy_sec": 15.83,
+   "deployed": "orders_core fulfillment payments_core orders_api order_workflow document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:00:49.955406Z",
+    "2026-11-11T07:02:52.993251Z"
+   ]
+  },
+  {
+   "step": "s23-atl-5",
+   "condition": "reference with ATL-1+ATL-2+ATL-4+ATL-6+ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-4",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.67,
+   "setup_sec": 25.07,
+   "deploy_sec": 15.96,
+   "deployed": "orders_core fulfillment payments_core orders_api order_workflow document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:03:20.193331Z",
+    "2026-11-11T07:03:40.982621Z"
+   ]
+  },
+  {
+   "step": "s24-atl-5",
+   "condition": "nop with ATL-1+ATL-2+ATL-3+ATL-6+ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_ingest_workload_uses_lambda_role",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 8.76,
+   "setup_sec": 24.95,
+   "deploy_sec": 16.04,
+   "deployed": "orders_core fulfillment payments_core orders_api order_workflow document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:04:06.706804Z",
+    "2026-11-11T07:06:09.558487Z"
+   ]
+  },
+  {
+   "step": "s25-atl-5",
+   "condition": "reference with ATL-1+ATL-2+ATL-3+ATL-6+ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.78,
+   "setup_sec": 24.82,
+   "deploy_sec": 15.91,
+   "deployed": "orders_core fulfillment payments_core orders_api order_workflow document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:06:36.505639Z",
+    "2026-11-11T07:06:57.301467Z"
+   ]
+  },
+  {
+   "step": "s26-atl-5",
+   "condition": "nop with ATL-1+ATL-2+ATL-3+ATL-4+ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_ingest_workload_uses_lambda_role",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 8.82,
+   "setup_sec": 21.6,
+   "deploy_sec": 12.49,
+   "deployed": "orders_core fulfillment payments_core orders_api document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:07:19.675452Z",
+    "2026-11-11T07:09:22.753239Z"
+   ]
+  },
+  {
+   "step": "s27-atl-5",
+   "condition": "reference with ATL-1+ATL-2+ATL-3+ATL-4+ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.74,
+   "setup_sec": 21.33,
+   "deploy_sec": 12.43,
+   "deployed": "orders_core fulfillment payments_core orders_api document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:09:46.221496Z",
+    "2026-11-11T07:10:04.028099Z"
+   ]
+  },
+  {
+   "step": "s28-atl-5",
+   "condition": "nop with ATL-1+ATL-2+ATL-3+ATL-4+ATL-6",
+   "action": "nothing",
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-6"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_ingest_workload_uses_lambda_role",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 8.79,
+   "setup_sec": 22.41,
+   "deploy_sec": 13.5,
+   "deployed": "orders_core fulfillment payments_core orders_api order_workflow",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:10:27.198204Z",
+    "2026-11-11T07:12:30.029568Z"
+   ]
+  },
+  {
+   "step": "s29-atl-5",
+   "condition": "reference with ATL-1+ATL-2+ATL-3+ATL-4+ATL-6",
+   "action": "reference",
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-6"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.78,
+   "setup_sec": 22.26,
+   "deploy_sec": 13.35,
+   "deployed": "orders_core fulfillment payments_core orders_api order_workflow",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:12:54.440981Z",
+    "2026-11-11T07:13:15.191355Z"
+   ]
+  },
+  {
+   "step": "s30-atl-5",
+   "condition": "nop with ATL-1+ATL-2+ATL-3+ATL-4+ATL-6+ATL-7",
+   "action": "nothing",
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_all_injected_payments_landed_in_ledger",
+    "test_every_paid_merchant_has_rollup_row",
+    "test_ingest_workload_uses_lambda_role",
+    "test_injected_merchants_all_have_rollup_rows",
+    "test_no_phantom_merchants_in_rollups",
+    "test_payment_amount_exact_fidelity",
+    "test_payment_count_correctness_per_test_merchant",
+    "test_payment_row_preserves_processor_fields",
+    "test_pipeline_converges_for_late_arriving_payment",
+    "test_reconciliation_holds_globally",
+    "test_rollup_attributes_are_dynamodb_numbers",
+    "test_total_cents_correctness_per_test_merchant",
+    "test_total_cents_floor_semantics_with_float_trap",
+    "test_total_cents_is_integer_no_decimal_component"
+   ],
+   "reset_sec": 8.75,
+   "setup_sec": 24.76,
+   "deploy_sec": 15.84,
+   "deployed": "orders_core fulfillment payments_core orders_api order_workflow document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T07:13:40.706869Z",
+    "2026-11-11T07:15:43.754939Z"
+   ]
+  },
+  {
+   "step": "s31-atl-5",
+   "condition": "reference with ATL-1+ATL-2+ATL-3+ATL-4+ATL-6+ATL-7",
+   "action": "reference",
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.68,
+   "setup_sec": 24.9,
+   "deploy_sec": 15.99,
+   "deployed": "orders_core fulfillment payments_core orders_api order_workflow document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T07:16:10.803388Z",
+    "2026-11-11T07:16:28.354917Z"
+   ]
+  }
+ ]
+}

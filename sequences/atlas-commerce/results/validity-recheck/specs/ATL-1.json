@@ -1,0 +1,68 @@
+{
+ "ticket": "ATL-1",
+ "extra_known_bad": [
+  {
+   "name": "vv-requestid-dedup",
+   "patch": "/home/ubuntu/atlas/verify-validity/tools/kb/atl1-requestid-dedup.patch",
+   "evidence": "verifier probe",
+   "must_fail": [
+    "test_end_to_end_duplicate_post_is_idempotent"
+   ]
+  }
+ ],
+ "conditions": [
+  {
+   "state": [],
+   "action": "known-bad:vv-requestid-dedup",
+   "reward": 0,
+   "label": "vv-requestid-dedup at the base"
+  },
+  {
+   "state": [
+    "ATL-2"
+   ],
+   "action": "known-bad:vv-requestid-dedup",
+   "reward": 1,
+   "label": "vv-requestid-dedup with ATL-2 (documented weakness; 1 expected)"
+  },
+  {
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:stale-stage",
+   "reward": 0,
+   "label": "known-bad stale-stage with all six"
+  },
+  {
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:constant-group-id",
+   "reward": 0,
+   "label": "known-bad constant-group-id with all six"
+  },
+  {
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:no-content-type",
+   "reward": 0,
+   "label": "known-bad no-content-type with all six"
+  }
+ ]
+}

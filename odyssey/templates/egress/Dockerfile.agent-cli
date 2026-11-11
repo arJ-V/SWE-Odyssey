@@ -1,0 +1,28 @@
+
+# --- appended by `odyssey compile --egress allowlist` (docs/SPEC.md section 11) ---
+# The agent container can reach only the model APIs, so Harbor cannot download
+# Claude Code or Codex when a trial starts (its installers fetch from
+# claude.ai, raw.githubusercontent.com, nodejs.org and npm). Both CLIs are
+# installed here, at build time, with a private Node.js under /opt/agent-cli so
+# a project's own node is left alone. Harbor's claude-code and codex agents
+# skip their install when `claude` / `codex` is already on PATH (unless a
+# different version is requested with --ak version=..., which then fails
+# closed because the install hosts are blocked).
+COPY --from=@@NODE_IMAGE@@ /usr/local/bin/node /opt/agent-cli/bin/node
+COPY --from=@@NODE_IMAGE@@ /usr/local/lib/node_modules/npm /opt/agent-cli/lib/node_modules/npm
+ARG AGENT_CLI_CLAUDE_CODE_VERSION=@@CLAUDE_CODE_VERSION@@
+ARG AGENT_CLI_CODEX_VERSION=@@CODEX_VERSION@@
+RUN set -eu; \
+    export PATH="/opt/agent-cli/bin:$PATH" npm_config_cache=/tmp/agent-cli-npm-cache; \
+    node /opt/agent-cli/lib/node_modules/npm/bin/npm-cli.js install -g --prefix /opt/agent-cli \
+        --no-fund --no-audit --no-update-notifier --loglevel=error \
+        "@anthropic-ai/claude-code@${AGENT_CLI_CLAUDE_CODE_VERSION}" \
+        "@openai/codex@${AGENT_CLI_CODEX_VERSION}"; \
+    rm -rf /tmp/agent-cli-npm-cache; \
+    ln -sf /opt/agent-cli/bin/claude /usr/local/bin/claude; \
+    printf '#!/bin/sh\nexec /opt/agent-cli/bin/node /opt/agent-cli/lib/node_modules/@openai/codex/bin/codex.js "$@"\n' \
+        > /usr/local/bin/codex; \
+    chmod 0755 /usr/local/bin/codex; \
+    /usr/local/bin/claude --version; \
+    /usr/local/bin/codex --version; \
+    rm -rf /root/.claude /root/.claude.json /root/.codex

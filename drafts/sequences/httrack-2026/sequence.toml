@@ -1,0 +1,128 @@
+schema = 1
+
+[sequence]
+id = "httrack-2026"
+description = "HTTrack (C, autotools) at a July 2026 snapshot with ten stacked, already-merged fixes reverted: FTP transfers, chunked framing, WARC revisits, the ProxyTrack cache reader and WebDAV, the WebHTTrack server, query-string escaping and cache repair"
+workdir = "/app"
+memory_dir = "/memory"
+repo_memory_files = ["CLAUDE.md", "AGENTS.md", "NOTES.md"]
+agent_timeout_sec = 3600
+# run.sh gets 80% of this (720 s); a grade measures 60-120 s (README.md).
+verifier_timeout_sec = 900
+
+[environment]
+context = "environment"
+# The base tree exists only in the image (the Dockerfile builds it from the
+# upstream snapshot); this is its hash manifest, written by
+# `odyssey base-manifest drafts/sequences/httrack-2026 --image <built image>`.
+base_manifest = "base.manifest"
+cpus = 4
+memory_mb = 8192
+storage_mb = 20480
+# The agent needs the network to reach its model; nothing in the build of a
+# ticket or in its tests does (validate runs every check with --no-network).
+allow_internet = true
+build_timeout_sec = 1800
+
+# What test.sh takes from the segment's trusted start tree instead of the
+# agent's tree before run.sh rebuilds from source: the whole test suite and its
+# helpers, and the engine self-tests the suite drives (compiled into the
+# binary, but test code). Every .gitignore is trusted too, because run.sh uses
+# them to delete generated files before it bootstraps. The build system is
+# trusted as well: run.sh regenerates it with autoreconf, so an agent's
+# configure.ac, Makefile.am or m4 edit would otherwise run inside the grader
+# (a one-line AC_CONFIG_COMMANDS that sets TEST_LOG_COMPILER=true scored 1
+# with no fix). No ticket's fix touches these files; a fix that needs a new
+# compiled source file cannot be graded here.
+[grading]
+protected_paths = [
+    "configure.ac",
+    "acinclude.m4",
+    "m4",
+    "Makefile.am",
+    "src/Makefile.am",
+    "man/Makefile.am",
+    "templates/Makefile.am",
+    "lang/Makefile.am",
+    "html/Makefile.am",
+    "libtest/Makefile.am",
+    "fuzz/Makefile.am",
+    "tests",
+    "src/htsselftest.c",
+    "src/htsselftest.h",
+    "src/htscache_selftest.c",
+    "src/htscache_selftest.h",
+    "src/htsdns_selftest.c",
+    "src/htsdns_selftest.h",
+]
+protected_names = [".gitignore"]
+
+# Cluster ftp: FTP transfers. Two core tickets in different layers (the
+# transfer backlog vs the FTP client's resume decision).
+[[tickets]]
+id = "HTT-01"
+title = "FTP downloads sometimes end up as empty files when several run in parallel"
+cluster = "ftp"
+role = "core"
+
+[[tickets]]
+id = "HTT-02"
+title = "FTP resume without a cache splices a changed remote file onto the old local copy"
+cluster = "ftp"
+role = "core"
+
+# Cluster transfer: the HTTP transfer engine's completion handling. HTT-04 is
+# the trap: same engine file as HTT-03, but the fix is about how WARC records
+# describe an update, not about accepting or refusing a body.
+[[tickets]]
+id = "HTT-03"
+title = "A chunked response cut off before its last chunk is saved and cached as complete"
+cluster = "transfer"
+role = "core"
+
+[[tickets]]
+id = "HTT-04"
+title = "WARC revisit records lose the peer IP and claim 304s the server never sent"
+cluster = "transfer"
+role = "trap"
+
+# Cluster proxytrack: the ProxyTrack cache server. HTT-05 and HTT-06 are the
+# same legacy .ndx/.dat reader; HTT-07 is the trap (same program, WebDAV
+# listing code, unrelated mechanism).
+[[tickets]]
+id = "HTT-05"
+title = "proxytrack mis-reads .ndx indexes whose fields are exactly at their size limit"
+cluster = "proxytrack"
+role = "core"
+
+[[tickets]]
+id = "HTT-06"
+title = "proxytrack: a bad .ndx position serves the wrong record, and long cache paths overrun buffers"
+cluster = "proxytrack"
+role = "core"
+
+[[tickets]]
+id = "HTT-07"
+title = "proxytrack dies on a WebDAV PROPFIND for a page that is in the cache"
+cluster = "proxytrack"
+role = "trap"
+
+# Isolated tickets in code no other ticket touches: the WebHTTrack server, the
+# HTML parser's entity handling in query strings, and cache repair.
+[[tickets]]
+id = "HTT-08"
+title = "WebHTTrack serves PNGs as image/gif, JPEGs as downloads, and guesses types from anywhere in the path"
+cluster = "N-server"
+role = "isolated"
+
+[[tickets]]
+id = "HTT-09"
+title = "A character reference in a query string that the page charset cannot represent breaks the query"
+cluster = "N-charset"
+role = "isolated"
+
+[[tickets]]
+id = "HTT-10"
+title = "Cache repair replaces the cache with an empty archive and reports success when the move fails"
+cluster = "N-cache"
+role = "isolated"

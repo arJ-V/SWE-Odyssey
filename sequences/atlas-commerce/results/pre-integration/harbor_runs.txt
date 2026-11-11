@@ -1,0 +1,10 @@
+oracle-2step-r1 {"exception": "PermissionError", "steps": [["s01-atl-2", {"reward": 1, "error": 0, "tampered": 0}]]}
+oracle-2step-r2 {"exception": null, "steps": [["s01-atl-2", {"reward": 1, "error": 0, "tampered": 0}], ["s02-atl-ph", {"reward": 1, "error": 0, "tampered": 0}]]}
+nop-2step-r1 {"exception": null, "steps": [["s01-atl-2", {"reward": 0, "error": 0, "tampered": 0}], ["s02-atl-ph", {"reward": 0, "error": 0, "tampered": 0}]]}
+oracle-rev-r1 {"exception": null, "steps": [["s01-atl-ph", {"reward": 1, "error": 0, "tampered": 0}], ["s02-atl-2", {"reward": 1, "error": 0, "tampered": 0}]]}
+nop-rev-r1 {"exception": null, "steps": [["s01-atl-ph", {"reward": 0, "error": 0, "tampered": 0}], ["s02-atl-2", {"reward": 0, "error": 0, "tampered": 0}]]}
+probe-2step-r1 {"exception": null, "steps": [["s01-atl-2", {"reward": 0, "error": 0, "tampered": 0}], ["s02-atl-ph", {"reward": 0, "error": 0, "tampered": 0}]]}
+probe-2step-r2 {"exception": null, "steps": [["s01-atl-2", {"reward": 0, "error": 0, "tampered": 0}], ["s02-atl-ph", {"reward": 0, "error": 0, "tampered": 0}]]}
+resume-probe-r1 {"exception": null, "steps": [["s01-atl-2", {"reward": 0, "error": 0, "tampered": 0}], ["s02-atl-ph", {"reward": 0, "error": 0, "tampered": 0}]]}
+probe-noguard-r1 {"exception": null, "steps": [["s01-atl-2", {"reward": 1, "error": 0, "tampered": 0}], ["s02-atl-ph", {"reward": 0, "error": 0, "tampered": 0}]]}
+probe-noguard-plant-r1 {"exception": null, "steps": [["s01-atl-2", {"reward": 0, "error": 0, "tampered": 1}], ["s02-atl-ph", {"reward": 0, "error": 0, "tampered": 0}]]}

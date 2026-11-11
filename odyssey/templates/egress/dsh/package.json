@@ -1,0 +1,9 @@
+{
+  "name": "odyssey-dsh",
+  "version": "0.0.0",
+  "private": true,
+  "description": "DeepSeek Harness pinned for `odyssey compile --agent-cli dsh`",
+  "dependencies": {
+    "@deepseek-ai/dsh": "0.2.1-rc.4"
+  }
+}

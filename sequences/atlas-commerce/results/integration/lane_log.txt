@@ -1,0 +1,106 @@
+2026-11-11T06:27:17Z start val-atl-5 (load 0.00 0.03 0.36)
+2026-11-11T06:27:22Z start val-atl-4 (load 0.32 0.10 0.38)
+2026-11-11T07:07:18Z end val-atl-4 rc=0 2396s
+2026-11-11T07:07:18Z start val-atl-6 (load 0.78 0.74 0.73)
+2026-11-11T07:17:00Z end val-atl-5 rc=0 2983s
+2026-11-11T07:17:00Z start val-atl-1 (load 1.38 0.88 0.79)
+2026-11-11T07:28:45Z end val-atl-6 rc=0 1287s
+2026-11-11T07:28:45Z start val-atl-2 (load 0.94 0.99 0.91)
+2026-11-11T07:40:12Z end val-atl-1 rc=0 1392s
+2026-11-11T07:40:12Z start val-atl-3 (load 1.50 1.47 1.17)
+2026-11-11T07:53:30Z end val-atl-2 rc=0 1485s
+2026-11-11T07:53:30Z start cold-c01-nop (load 1.19 1.01 1.03)
+2026-11-11T07:54:33Z end cold-c01-nop rc=0 63s
+2026-11-11T07:54:33Z start cold-c02-nop (load 1.05 1.01 1.03)
+2026-11-11T07:54:47Z end val-atl-3 rc=0 875s
+2026-11-11T07:54:47Z start val-atl-7 (load 0.98 0.99 1.02)
+2026-11-11T07:55:54Z end cold-c02-nop rc=0 81s
+2026-11-11T07:55:54Z start cold-c03-nop (load 0.95 0.98 1.01)
+2026-11-11T07:56:56Z end cold-c03-nop rc=0 62s
+2026-11-11T07:56:56Z start cold-c04-nop (load 0.97 0.99 1.01)
+2026-11-11T07:58:40Z end cold-c04-nop rc=0 104s
+2026-11-11T07:58:40Z start cold-c05-nop (load 0.86 0.95 0.99)
+2026-11-11T08:01:43Z end cold-c05-nop rc=0 183s
+2026-11-11T08:01:43Z start cold-c06-nop (load 0.88 0.97 0.99)
+2026-11-11T08:02:48Z end cold-c06-nop rc=0 65s
+2026-11-11T08:02:48Z start cold-c07-nop (load 0.90 0.97 0.99)
+2026-11-11T08:03:50Z end cold-c07-nop rc=0 62s
+2026-11-11T08:03:50Z start w02-oracle (load 0.95 0.97 1.00)
+2026-11-11T08:09:24Z end w02-oracle rc=0 334s
+2026-11-11T08:09:24Z start w02-nop (load 1.36 1.25 1.10)
+2026-11-11T08:10:10Z end val-atl-7 rc=0 923s
+2026-11-11T08:10:10Z start cold-c01-oracle (load 0.91 1.15 1.07)
+2026-11-11T08:11:34Z end cold-c01-oracle rc=0 84s
+2026-11-11T08:11:34Z start cold-c02-oracle (load 2.00 1.41 1.17)
+2026-11-11T08:12:57Z end cold-c02-oracle rc=0 83s
+2026-11-11T08:12:57Z start cold-c03-oracle (load 1.01 1.26 1.14)
+2026-11-11T08:14:01Z end cold-c03-oracle rc=0 64s
+2026-11-11T08:14:01Z start cold-c04-oracle (load 0.71 1.14 1.11)
+2026-11-11T08:15:44Z end w02-nop rc=0 380s
+2026-11-11T08:15:44Z start w04-oracle (load 0.76 1.03 1.07)
+2026-11-11T08:15:53Z end cold-c04-oracle rc=0 112s
+2026-11-11T08:15:53Z start cold-c05-oracle (load 0.96 1.06 1.08)
+2026-11-11T08:17:15Z end cold-c05-oracle rc=0 82s
+2026-11-11T08:17:15Z start cold-c06-oracle (load 1.10 1.03 1.06)
+2026-11-11T08:18:38Z end cold-c06-oracle rc=0 83s
+2026-11-11T08:18:38Z start cold-c07-oracle (load 1.61 1.26 1.14)
+2026-11-11T08:19:46Z end cold-c07-oracle rc=0 68s
+2026-11-11T08:19:46Z start w01-oracle (load 1.04 1.16 1.11)
+2026-11-11T08:21:31Z end w04-oracle rc=0 347s
+2026-11-11T08:21:31Z start w04-nop (load 0.81 1.06 1.08)
+2026-11-11T08:25:33Z end w01-oracle rc=0 347s
+2026-11-11T08:25:33Z start w01-nop (load 0.69 0.83 0.98)
+2026-11-11T08:28:05Z end w04-nop rc=0 394s
+2026-11-11T08:28:05Z start w06-oracle (load 1.29 1.05 1.04)
+2026-11-11T08:32:01Z end w01-nop rc=0 388s
+2026-11-11T08:32:01Z start w03-oracle (load 0.70 0.92 1.00)
+2026-11-11T08:34:20Z end w06-oracle rc=0 375s
+2026-11-11T08:34:20Z start w06-nop (load 1.08 1.04 1.03)
+2026-11-11T08:37:32Z end w03-oracle rc=0 331s
+2026-11-11T08:37:32Z start w03-nop (load 0.75 0.98 1.01)
+2026-11-11T08:41:08Z end w06-nop rc=0 408s
+2026-11-11T08:41:08Z start w08-oracle (load 0.73 0.94 0.99)
+2026-11-11T08:43:52Z end w03-nop rc=0 380s
+2026-11-11T08:43:52Z start w05-oracle (load 0.51 0.74 0.90)
+2026-11-11T08:47:07Z end w08-oracle rc=0 359s
+2026-11-11T08:47:07Z start w08-nop (load 0.87 0.86 0.92)
+2026-11-11T08:50:02Z end w05-oracle rc=0 370s
+2026-11-11T08:50:02Z start w05-nop (load 0.56 0.78 0.88)
+2026-11-11T08:54:00Z end w08-nop rc=0 413s
+2026-11-11T08:54:00Z start w10-oracle (load 0.51 0.68 0.81)
+2026-11-11T08:57:06Z end w05-nop rc=0 424s
+2026-11-11T08:57:06Z start probe-w02 (load 0.81 0.79 0.84)
+2026-11-11T09:00:01Z end w10-oracle rc=0 361s
+2026-11-11T09:00:01Z start w10-nop (load 0.61 0.77 0.82)
+2026-11-11T09:03:55Z end probe-w02 rc=0 409s
+2026-11-11T09:03:55Z start w07-oracle (load 0.60 0.68 0.77)
+2026-11-11T09:07:03Z end w10-nop rc=0 422s
+2026-11-11T09:07:03Z start w12-oracle (load 0.45 0.62 0.74)
+2026-11-11T09:10:01Z end w07-oracle rc=0 366s
+2026-11-11T09:10:01Z start w07-nop (load 0.78 0.72 0.75)
+2026-11-11T09:12:40Z end w12-oracle rc=0 337s
+2026-11-11T09:12:40Z start w12-nop (load 1.41 1.07 0.89)
+2026-11-11T09:16:57Z end w07-nop rc=0 416s
+2026-11-11T09:16:57Z start w09-oracle (load 0.85 1.00 0.90)
+2026-11-11T09:19:03Z end w12-nop rc=0 383s
+2026-11-11T09:19:03Z start w14-oracle (load 0.84 0.94 0.89)
+2026-11-11T09:23:13Z end w09-oracle rc=0 376s
+2026-11-11T09:23:13Z start w09-nop (load 1.64 1.27 1.04)
+2026-11-11T09:24:39Z end w14-oracle rc=0 336s
+2026-11-11T09:24:39Z start w14-nop (load 1.12 1.21 1.04)
+2026-11-11T09:29:58Z end w09-nop rc=0 405s
+2026-11-11T09:29:58Z start w11-oracle (load 0.85 0.80 0.89)
+2026-11-11T09:31:07Z end w14-nop rc=0 388s
+2026-11-11T09:31:07Z start probe-w09 (load 1.38 0.99 0.95)
+2026-11-11T09:35:42Z end w11-oracle rc=0 344s
+2026-11-11T09:35:42Z start w11-nop (load 0.52 0.88 0.93)
+2026-11-11T09:38:29Z end probe-w09 rc=0 442s
+2026-11-11T09:38:29Z start install-claude-code (load 1.33 0.98 0.96)
+2026-11-11T09:39:19Z end install-claude-code rc=0 50s
+2026-11-11T09:39:19Z start install-codex (load 0.92 0.93 0.94)
+2026-11-11T09:40:16Z end install-codex rc=0 57s
+2026-11-11T09:42:20Z end w11-nop rc=0 398s
+2026-11-11T09:42:20Z start w13-oracle (load 0.39 0.63 0.82)
+2026-11-11T09:48:05Z end w13-oracle rc=0 345s
+2026-11-11T09:48:05Z start w13-nop (load 0.88 0.74 0.81)
+2026-11-11T09:54:41Z end w13-nop rc=0 396s

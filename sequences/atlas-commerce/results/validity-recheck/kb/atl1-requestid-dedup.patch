@@ -1,0 +1,106 @@
+diff --git a/deploy/components/orders_api.py b/deploy/components/orders_api.py
+new file mode 100644
+index 0000000..247c194
+--- /dev/null
++++ b/deploy/components/orders_api.py
+@@ -0,0 +1,100 @@
++"""Orders API: public REST API orders-api (stage dev) whose POST /orders sends each order straight to orders.fifo."""
++
++from botocore.exceptions import ClientError
++
++from support import REGION, account_id, client, ensure_role, log, queue_arn
++
++ORDER = 40
++
++API_NAME = "orders-api"
++STAGE = "dev"
++RESOURCE_PATH = "/orders"
++QUEUE = "orders.fifo"
++ROLE = "apigw-to-sqs-role"
++ROLE_POLICY = "ApiGwToSqsPolicy"
++
++APIGW_TRUST = {
++    "Version": "2012-10-17",
++    "Statement": [
++        {"Effect": "Allow", "Principal": {"Service": "apigateway.amazonaws.com"}, "Action": "sts:AssumeRole"}
++    ],
++}
++
++# SQS SendMessage is a form-encoded query API: the whole JSON request body becomes the message
++# body, and the FIFO identifiers come from the order itself (one message group per merchant;
++# a retried POST of the same order within SQS's deduplication window is dropped by SQS).
++REQUEST_TEMPLATE = (
++    "Action=SendMessage"
++    "&MessageBody=$util.urlEncode($input.body)"
++    '&MessageGroupId=$util.urlEncode($input.path("$.merchant_id"))'
++    '&MessageDeduplicationId=$context.requestId'
++)
++FORM_CONTENT_TYPE = "'application/x-www-form-urlencoded'"
++
++
++def _error_code(exc: ClientError) -> str:
++    return exc.response.get("Error", {}).get("Code", "")
++
++
++def _rest_api(apigw) -> str:
++    for page in apigw.get_paginator("get_rest_apis").paginate():
++        for api in page.get("items", []):
++            if api.get("name") == API_NAME:
++                return api["id"]
++    api_id = apigw.create_rest_api(name=API_NAME, endpointConfiguration={"types": ["REGIONAL"]})["id"]
++    log(f"created REST API {API_NAME} ({api_id})")
++    return api_id
++
++
++def _orders_resource(apigw, api_id: str) -> str:
++    items = apigw.get_resources(restApiId=api_id, limit=500).get("items", [])
++    by_path = {item.get("path"): item["id"] for item in items}
++    if RESOURCE_PATH in by_path:
++        return by_path[RESOURCE_PATH]
++    return apigw.create_resource(restApiId=api_id, parentId=by_path["/"], pathPart=RESOURCE_PATH.lstrip("/"))["id"]
++
++
++def _post_method(apigw, api_id: str, resource_id: str) -> None:
++    try:
++        method = apigw.get_method(restApiId=api_id, resourceId=resource_id, httpMethod="POST")
++    except ClientError as exc:
++        if _error_code(exc) != "NotFoundException":
++            raise
++        method = apigw.put_method(restApiId=api_id, resourceId=resource_id, httpMethod="POST",
++                                  authorizationType="NONE")
++    if "200" not in (method.get("methodResponses") or {}):
++        apigw.put_method_response(restApiId=api_id, resourceId=resource_id, httpMethod="POST",
++                                  statusCode="200", responseModels={"application/json": "Empty"})
++
++
++def deploy() -> None:
++    sqs = client("sqs")
++    apigw = client("apigateway")
++    queue = queue_arn(sqs.get_queue_url(QueueName=QUEUE)["QueueUrl"])
++
++    role_arn = ensure_role(ROLE, APIGW_TRUST, inline={ROLE_POLICY: {
++        "Version": "2012-10-17",
++        "Statement": [{"Effect": "Allow",
++                       "Action": ["sqs:SendMessage", "sqs:GetQueueUrl", "sqs:GetQueueAttributes"],
++                       "Resource": queue}],
++    }})
++
++    api_id = _rest_api(apigw)
++    resource_id = _orders_resource(apigw, api_id)
++    _post_method(apigw, api_id, resource_id)
++    apigw.put_integration(
++        restApiId=api_id, resourceId=resource_id, httpMethod="POST",
++        type="AWS", integrationHttpMethod="POST",
++        uri=f"arn:aws:apigateway:{REGION}:sqs:path/{account_id()}/{QUEUE}",
++        credentials=role_arn,
++        passthroughBehavior="WHEN_NO_MATCH",
++        requestParameters={"integration.request.header.Content-Type": FORM_CONTENT_TYPE},
++        requestTemplates={"application/json": REQUEST_TEMPLATE},
++    )
++    apigw.put_integration_response(restApiId=api_id, resourceId=resource_id, httpMethod="POST",
++                                   statusCode="200", responseTemplates={"application/json": ""})
++    # The live stage serves the deployment it was last given, so every deploy publishes the
++    # integration configured above.
++    deployment = apigw.create_deployment(restApiId=api_id, stageName=STAGE,
++                                         description="deploy/components/orders_api.py")["id"]
++    log(f"orders API ready: POST {RESOURCE_PATH} on {API_NAME}/{STAGE} (deployment {deployment}) -> {QUEUE}")

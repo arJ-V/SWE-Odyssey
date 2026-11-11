@@ -1,0 +1,57 @@
+{
+ "ticket": "ATL-2",
+ "conditions": [
+  {
+   "state": [
+    "ATL-1",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:no-created-at",
+   "reward": 0,
+   "label": "known-bad no-created-at with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:failed-shape",
+   "reward": 0,
+   "label": "known-bad failed-shape with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:no-report-batch-item-failures",
+   "reward": 0,
+   "label": "known-bad no-report-batch-item-failures with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:unconditional-put",
+   "reward": 0,
+   "label": "known-bad unconditional-put with all six"
+  }
+ ]
+}

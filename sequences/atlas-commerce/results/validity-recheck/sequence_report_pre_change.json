@@ -1,0 +1,232 @@
+{
+ "trials": [
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__xd__gxPiAJE",
+   "job": "vv-o1-nop",
+   "agent": "nop",
+   "ordering_id": "xd50044",
+   "ordering": [
+    "ATL-4",
+    "ATL-1",
+    "ATL-2",
+    "ATL-6",
+    "ATL-3",
+    "ATL-7",
+    "ATL-5"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__xd__UDwCoL2",
+   "job": "vv-o1-oracle",
+   "agent": "oracle",
+   "ordering_id": "xd50044",
+   "ordering": [
+    "ATL-4",
+    "ATL-1",
+    "ATL-2",
+    "ATL-6",
+    "ATL-3",
+    "ATL-7",
+    "ATL-5"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__xb__RZiUoSi",
+   "job": "vv-o2-nop",
+   "agent": "nop",
+   "ordering_id": "xb12bcb",
+   "ordering": [
+    "ATL-7",
+    "ATL-3",
+    "ATL-5",
+    "ATL-2",
+    "ATL-6",
+    "ATL-1",
+    "ATL-4"
+   ],
+   "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "problems": []
+  },
+  {
+   "trial": "atlas-commerce__fml-inf-nofb__xb__rccwUrw",
+   "job": "vv-o2-oracle",
+   "agent": "oracle",
+   "ordering_id": "xb12bcb",
+   "ordering": [
+    "ATL-7",
+    "ATL-3",
+    "ATL-5",
+    "ATL-2",
+    "ATL-6",
+    "ATL-1",
+    "ATL-4"
+   ],
+   "rewards": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "problems": []
+  }
+ ],
+ "independence": {
+  "ATL-1": {
+   "reference": {
+    "distinct_states": 6,
+    "of_possible": 64,
+    "observations": 6,
+    "singles": 1,
+    "all_others": false,
+    "states_with_wrong_verdict": []
+   },
+   "nothing": {
+    "distinct_states": 6,
+    "of_possible": 64,
+    "observations": 6,
+    "singles": 1,
+    "all_others": false,
+    "states_with_wrong_verdict": []
+   }
+  },
+  "ATL-2": {
+   "reference": {
+    "distinct_states": 6,
+    "of_possible": 64,
+    "observations": 6,
+    "singles": 0,
+    "all_others": false,
+    "states_with_wrong_verdict": []
+   },
+   "nothing": {
+    "distinct_states": 6,
+    "of_possible": 64,
+    "observations": 6,
+    "singles": 0,
+    "all_others": false,
+    "states_with_wrong_verdict": []
+   }
+  },
+  "ATL-3": {
+   "reference": {
+    "distinct_states": 6,
+    "of_possible": 64,
+    "observations": 6,
+    "singles": 1,
+    "all_others": false,
+    "states_with_wrong_verdict": []
+   },
+   "nothing": {
+    "distinct_states": 6,
+    "of_possible": 64,
+    "observations": 6,
+    "singles": 1,
+    "all_others": false,
+    "states_with_wrong_verdict": []
+   }
+  },
+  "ATL-4": {
+   "reference": {
+    "distinct_states": 5,
+    "of_possible": 64,
+    "observations": 6,
+    "singles": 0,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   },
+   "nothing": {
+    "distinct_states": 5,
+    "of_possible": 64,
+    "observations": 6,
+    "singles": 0,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   }
+  },
+  "ATL-5": {
+   "reference": {
+    "distinct_states": 6,
+    "of_possible": 64,
+    "observations": 6,
+    "singles": 0,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   },
+   "nothing": {
+    "distinct_states": 6,
+    "of_possible": 64,
+    "observations": 6,
+    "singles": 0,
+    "all_others": true,
+    "states_with_wrong_verdict": []
+   }
+  },
+  "ATL-6": {
+   "reference": {
+    "distinct_states": 6,
+    "of_possible": 64,
+    "observations": 6,
+    "singles": 0,
+    "all_others": false,
+    "states_with_wrong_verdict": []
+   },
+   "nothing": {
+    "distinct_states": 6,
+    "of_possible": 64,
+    "observations": 6,
+    "singles": 0,
+    "all_others": false,
+    "states_with_wrong_verdict": []
+   }
+  },
+  "ATL-7": {
+   "reference": {
+    "distinct_states": 5,
+    "of_possible": 64,
+    "observations": 6,
+    "singles": 0,
+    "all_others": false,
+    "states_with_wrong_verdict": []
+   },
+   "nothing": {
+    "distinct_states": 5,
+    "of_possible": 64,
+    "observations": 6,
+    "singles": 0,
+    "all_others": false,
+    "states_with_wrong_verdict": []
+   }
+  }
+ }
+}

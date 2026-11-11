@@ -1,0 +1,59 @@
+# ATL-4: atlas-specific ticket settings (contract: AUTHORING.md). Title, cluster and role are in
+# sequence.toml.
+
+[ticket]
+kind = "repair"
+# The agent must find its way around the repository and ship through deploy/deploy.py; the
+# effect of this budget on difficulty is unmeasured.
+agent_timeout_sec = 1800
+# The grader waits 15 s + up to 60 s for the pipeline + 15 s for the resubmission, then runs the
+# wildcard guard: about 2 minutes; run.sh gets 80% of this.
+verifier_timeout_sec = 600
+
+[reference]
+# After gold.patch is applied to /app: python3 deploy/deploy.py --component <each>
+deploy = ["fulfillment"]
+
+[grading]
+# Test names as they appear in the JUnit reports (atlas_run.py).
+fail_to_pass = [
+    "test_orders_processed_in_dynamodb",
+    "test_exactly_once_deduplication",
+]
+pass_to_pass = [
+    "test_credential_isolation_runtime_proofs",
+    "test_ingestion_role_cannot_write_fulfillment_table",
+    "test_named_pipeline_stages_are_live_wired",
+    "test_api_returns_201",
+    "test_api_returns_accepted_body",
+    "test_api_json_response",
+    "test_ingestion_archived_the_submitted_batch",
+    "test_queues_encrypted_with_dedicated_key",
+    "test_deployed_code_matches_repository",
+]
+
+# Known-bad variants: gold.patch-style patches against the base tree, deployed like the reference.
+[[known_bad]]
+name = "opus46-hand-serializer"
+patch = "known_bad/opus46-hand-serializer.patch"
+evidence = "a documented model failure: the processor serialized Python bool before checking bool, producing invalid DynamoDB numbers True/False, and stringified list/map fields; that trial failed test_orders_processed_in_dynamodb and test_exactly_once_deduplication"
+must_fail = ["test_orders_processed_in_dynamodb", "test_exactly_once_deduplication"]
+
+[[known_bad]]
+name = "stringify-collections"
+patch = "known_bad/stringify-collections.patch"
+evidence = "the reference with list/map fields stored as JSON strings; isolates the collection half of the hand-serializer defect"
+must_fail = ["test_orders_processed_in_dynamodb"]
+
+[[known_bad]]
+name = "counter-not-idempotent"
+patch = "known_bad/counter-not-idempotent.patch"
+evidence = "double encoding and the lost fields fixed, but the random FIFO deduplication id and the ADD counter kept, so a resubmitted batch is counted twice ('inflated counts')"
+must_fail = ["test_exactly_once_deduplication"]
+
+[[known_bad]]
+name = "hotfix-outside-repo"
+patch = "known_bad/hotfix-outside-repo.patch"
+deploy = ["fulfillment", "fulfillment_hotfix"]
+evidence = "the repaired handlers pushed to the functions by a separate script while services/fulfillment/ keeps the broken code (code uploaded by hand); the pipeline works, the repository does not"
+must_fail = ["test_deployed_code_matches_repository"]

@@ -1,0 +1,15 @@
+# --- appended by `odyssey compile --egress allowlist --agent-cli dsh` ---
+# DeepSeek Harness (`dsh`, npm @deepseek-ai/dsh, a developer preview), installed at
+# build time for the same reason as the CLIs above: the trial cannot reach npm.
+# `npm ci` installs exactly the tree in odyssey-dsh/package-lock.json (every
+# package from registry.npmjs.org with its sha512 integrity) with the private
+# Node.js above, into /opt/dsh. dsh is not put on PATH; the odyssey wrapper
+# (scripts/open_models/harbor_agents.py, DshPreinstalled) runs it by path.
+COPY odyssey-dsh/package.json odyssey-dsh/package-lock.json /opt/dsh/
+RUN set -eu; \
+    export PATH="/opt/agent-cli/bin:$PATH" npm_config_cache=/tmp/agent-cli-npm-cache; \
+    cd /opt/dsh; \
+    node /opt/agent-cli/lib/node_modules/npm/bin/npm-cli.js ci \
+        --no-fund --no-audit --no-update-notifier --loglevel=error; \
+    rm -rf /tmp/agent-cli-npm-cache /root/.dsh; \
+    /opt/agent-cli/bin/node /opt/dsh/node_modules/@deepseek-ai/dsh/lib/bin.js --version

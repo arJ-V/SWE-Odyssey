@@ -1,0 +1,360 @@
+# SWE-Odyssey frozen price sheet (used for Standardized Dollar Cost, SDC).
+#
+# FROZEN: do not edit prices in place once a pilot has started. If list prices change,
+# add a new sheet (prices-YYYY-MM-DD.toml) and pass it with --prices, so every SDC number
+# in a report can be traced to one dated sheet.
+#
+# Units: USD per million tokens, standard (non-batch, non-priority, global-routing) tier.
+#   input          uncached ("fresh") input tokens
+#   cache_write    tokens written to the prompt cache, default TTL
+#                  (Anthropic: 5-minute write; OpenAI GPT-5.6: 30-minute write)
+#   cache_write_1h Anthropic 1-hour TTL write (used only when the trajectory records the
+#                  ephemeral_1h split); OpenAI 12-hour write is listed in notes only
+#   cache_read     cache hits / refreshes
+#   output         output tokens, including reasoning/thinking tokens
+#
+# [models."<id>".long_context] holds the prices that apply to the WHOLE request when its
+# prompt (all input tokens incl. cache reads and writes) exceeds threshold_tokens.
+#
+# verified = true means every number in the entry was read on the cited official page on
+# the retrieval date. Fields named in unverified_fields are our assumption, not a listed
+# price.
+
+[meta]
+sheet_date = "2026-11-10"
+currency = "USD"
+unit = "per_million_tokens"
+
+# ---------------------------------------------------------------- Anthropic
+# Source table: "Model pricing" and "Long context pricing" on the pricing page.
+# Data residency (inference_geo="us") would multiply every category by 1.1x; not applied.
+
+[models."claude-opus-5-5"]
+provider = "anthropic"
+input = 4.00
+cache_write = 5.00
+cache_write_1h = 8.00
+cache_read = 0.20
+output = 20.00
+source = "https://platform.claude.com/docs/en/about-claude/pricing"
+retrieved = "2026-11-10"
+verified = true
+notes = "1M context at standard pricing (no long-context surcharge). Cache reads are 0.05x input. Fast mode ($8/$40) not used."
+
+[models."claude-sonnet-5-5"]
+provider = "anthropic"
+input = 2.00
+cache_write = 2.50
+cache_write_1h = 4.00
+cache_read = 0.10
+output = 10.00
+source = "https://platform.claude.com/docs/en/about-claude/pricing"
+retrieved = "2026-11-10"
+verified = true
+notes = "1M context at standard pricing (no long-context surcharge). Cache reads are 0.05x input."
+
+[models."claude-haiku-5-5"]
+provider = "anthropic"
+input = 0.10
+cache_write = 0.125
+cache_write_1h = 0.20
+cache_read = 0.01
+output = 0.50
+source = "https://platform.claude.com/docs/en/about-claude/pricing"
+retrieved = "2026-11-10"
+verified = true
+notes = "Priced by prompt length: a request whose prompt (incl. cache reads/writes) is over 100,000 tokens pays the long_context prices for the whole request."
+
+[models."claude-haiku-5-5".long_context]
+threshold_tokens = 100000
+input = 0.50
+cache_write = 0.625
+cache_write_1h = 1.00
+cache_read = 0.05
+output = 2.50
+
+[models."claude-fable-5-2"]
+provider = "anthropic"
+input = 8.00
+cache_write = 10.00
+cache_write_1h = 16.00
+cache_read = 0.20
+output = 40.00
+source = "https://platform.claude.com/docs/en/about-claude/pricing"
+retrieved = "2026-11-10"
+verified = true
+notes = "1M context at standard pricing (no long-context surcharge). Cache reads are 0.025x input. Fast mode ($16/$80) not used."
+
+# ---------------------------------------------------------------- OpenAI
+# Source table: Standard tier on the API pricing page; short context = <=272K input tokens,
+# long context = >272K input tokens (whole request).
+# Where the page shows "-" for cache writes (gpt-5.5, gpt-5.4, gpt-5.3-codex) or no write
+# column (gpt-5.4-mini), the page does not say what "-" means. We assume no write premium
+# (written tokens billed as ordinary input) and mark cache_write as unverified.
+
+[models."gpt-5.6-sol"]
+provider = "openai"
+input = 4.00
+cache_write = 5.00
+cache_read = 0.40
+output = 20.00
+source = "https://developers.openai.com/api/docs/pricing ; https://developers.openai.com/api/docs/models/gpt-5.6-sol"
+retrieved = "2026-11-10"
+verified = true
+notes = "PROMOTIONAL price: the pages say promotional pricing runs until 2026-11-30 and is a 20% input / 33% output cut, which implies a regular price of about $5 input / $30 output (not listed). 12h cache write $10.00. Model page: cache writes billed at 1.25x uncached input; >272K prompts priced at 2x input and 1.5x output for the full request."
+
+[models."gpt-5.6-sol".long_context]
+threshold_tokens = 272000
+input = 8.00
+cache_write = 10.00
+cache_read = 0.80
+output = 30.00
+
+[models."gpt-5.6-terra"]
+provider = "openai"
+input = 2.00
+cache_write = 2.50
+cache_read = 0.20
+output = 12.00
+source = "https://developers.openai.com/api/docs/pricing"
+retrieved = "2026-11-10"
+verified = true
+notes = "30m cache write listed; 12h cache write $5.00."
+
+[models."gpt-5.6-terra".long_context]
+threshold_tokens = 272000
+input = 4.00
+cache_write = 5.00
+cache_read = 0.40
+output = 18.00
+
+[models."gpt-5.6-luna"]
+provider = "openai"
+input = 0.20
+cache_write = 0.25
+cache_read = 0.02
+output = 1.20
+source = "https://developers.openai.com/api/docs/pricing"
+retrieved = "2026-11-10"
+verified = true
+notes = "30m cache write listed; 12h cache write $0.50."
+
+[models."gpt-5.6-luna".long_context]
+threshold_tokens = 272000
+input = 0.40
+cache_write = 0.50
+cache_read = 0.04
+output = 1.80
+
+[models."gpt-5.5"]
+provider = "openai"
+input = 5.00
+cache_write = 5.00
+cache_read = 0.50
+output = 30.00
+source = "https://developers.openai.com/api/docs/pricing"
+retrieved = "2026-11-10"
+verified = true
+unverified_fields = ["cache_write"]
+notes = "Cache write column shows '-'; assumed equal to input."
+
+[models."gpt-5.5".long_context]
+threshold_tokens = 272000
+input = 10.00
+cache_write = 10.00
+cache_read = 1.00
+output = 45.00
+
+[models."gpt-5.4"]
+provider = "openai"
+input = 2.50
+cache_write = 2.50
+cache_read = 0.25
+output = 15.00
+source = "https://developers.openai.com/api/docs/pricing"
+retrieved = "2026-11-10"
+verified = true
+unverified_fields = ["cache_write"]
+notes = "Cache write column shows '-'; assumed equal to input."
+
+[models."gpt-5.4".long_context]
+threshold_tokens = 272000
+input = 5.00
+cache_write = 5.00
+cache_read = 0.50
+output = 22.50
+
+[models."gpt-5.4-mini"]
+provider = "openai"
+input = 0.75
+cache_write = 0.75
+cache_read = 0.075
+output = 4.50
+source = "https://developers.openai.com/api/docs/pricing"
+retrieved = "2026-11-10"
+verified = true
+unverified_fields = ["cache_write"]
+notes = "Listed in a table with no cache-write or long-context columns; cache_write assumed equal to input; no long-context surcharge listed."
+
+[models."gpt-5.3-codex"]
+provider = "openai"
+input = 1.75
+cache_write = 1.75
+cache_read = 0.175
+output = 14.00
+source = "https://developers.openai.com/api/docs/pricing"
+retrieved = "2026-11-10"
+verified = true
+unverified_fields = ["cache_write"]
+notes = "Specialized (Codex) table; cache write shows '-', assumed equal to input; no long-context surcharge listed."
+
+[models."gpt-6.1-sol"]
+provider = "openai"
+input = 2.00
+cache_write = 2.50
+cache_read = 0.10
+output = 10.00
+source = "https://developers.openai.com/api/docs/pricing ; https://developers.openai.com/api/docs/models/gpt-6.1-sol"
+retrieved = "2026-11-10"
+verified = true
+notes = "Standard tier, short context. 12h cache write $5.00. Not listed as promotional. Model page: prompts over 272K input tokens are priced at 2x input and cache rates and 1.5x output for the full request; Codex uses a default 500K context window."
+
+[models."gpt-6.1-sol".long_context]
+threshold_tokens = 272000
+input = 4.00
+cache_write = 5.00
+cache_read = 0.20
+output = 15.00
+
+# ---------------------------------------------------------------- Amazon Bedrock (open-weight models)
+# Keys are the Bedrock model or inference-profile ids the harness is
+# given (`openai/<id>` on Bedrock's OpenAI-compatible endpoint; accounting drops the
+# `openai/` prefix). Standard tier, US regions; an inference profile's prefix matters
+# because us. (US CRIS) and global. profiles are priced differently.
+# Where the page lists no cache prices the model has no prompt caching on Bedrock
+# (measured 2026-11-10: a repeated 8K-token prompt reported no cached tokens for
+# zai.glm-5 and minimax.minimax-m2.5, and 8,098 cached tokens for us.moonshotai.kimi-k3);
+# cache_read and cache_write are then set to the input price and listed as unverified.
+# In full runs the OpenAI-compatible endpoint did report `cached_tokens` for zai.glm-5 and
+# minimax.minimax-m2.5, but Bedrock's own CloudWatch meter counted every prompt token as
+# InputTokenCount and none as CacheReadInputTokenCount, so pricing them at the input
+# price matches what Bedrock metered.
+# Kimi on Bedrock reported cache_write_tokens = 0 on a cache-filling call; the listed
+# write price is kept for completeness.
+
+[models."us.moonshotai.kimi-k3"]
+provider = "bedrock"
+input = 3.30
+cache_write = 4.125
+cache_read = 0.33
+output = 16.50
+source = "https://aws.amazon.com/bedrock/pricing/"
+retrieved = "2026-11-10"
+verified = true
+notes = "Listed as 'Kimi 3', US CRIS, Standard tier. Global CRIS (global.moonshotai.kimi-k3) is $3.00 / $15.00 / $0.30 / $3.75."
+
+[models."global.moonshotai.kimi-k3"]
+provider = "bedrock"
+input = 3.00
+cache_write = 3.75
+cache_read = 0.30
+output = 15.00
+source = "https://aws.amazon.com/bedrock/pricing/"
+retrieved = "2026-11-10"
+verified = true
+notes = "Listed as 'Kimi 3', Global CRIS, Standard tier."
+
+[models."us.moonshotai.kimi-k3.1"]
+provider = "bedrock"
+input = 4.40
+cache_write = 5.50
+cache_read = 0.22
+output = 22.00
+source = "https://aws.amazon.com/bedrock/pricing/"
+retrieved = "2026-11-10"
+verified = true
+notes = "Listed as 'Kimi K3.1 Pro - Highspeed', US CRIS, Standard tier. Global CRIS is $4.00 / $20.00 / $0.20 / $5.00."
+
+[models."zai.glm-5"]
+provider = "bedrock"
+input = 1.00
+cache_write = 1.00
+cache_read = 1.00
+output = 3.20
+source = "https://aws.amazon.com/bedrock/pricing/"
+retrieved = "2026-11-10"
+verified = true
+unverified_fields = ["cache_write", "cache_read"]
+notes = "On-demand, US East/West. No cache prices listed and no caching observed: cache fields set to the input price."
+
+[models."minimax.minimax-m2.5"]
+provider = "bedrock"
+input = 0.30
+cache_write = 0.30
+cache_read = 0.30
+output = 1.20
+source = "https://aws.amazon.com/bedrock/pricing/"
+retrieved = "2026-11-10"
+verified = true
+unverified_fields = ["cache_write", "cache_read"]
+notes = "On-demand, US East/West. No cache prices listed and no caching observed: cache fields set to the input price."
+
+[models."deepseek.v3.2"]
+provider = "bedrock"
+input = 0.62
+cache_write = 0.62
+cache_read = 0.62
+output = 1.85
+source = "https://aws.amazon.com/bedrock/pricing/"
+retrieved = "2026-11-10"
+verified = true
+unverified_fields = ["cache_write", "cache_read"]
+notes = "On-demand, US East/West. No cache prices listed: cache fields set to the input price."
+
+[models."qwen.qwen3-coder-next"]
+provider = "bedrock"
+input = 0.50
+cache_write = 0.50
+cache_read = 0.50
+output = 1.20
+source = "https://aws.amazon.com/bedrock/pricing/"
+retrieved = "2026-11-10"
+verified = true
+unverified_fields = ["cache_write", "cache_read"]
+notes = "On-demand, US East/West. No cache prices listed: cache fields set to the input price."
+
+[models."gpt-6.1-terra"]
+provider = "openai"
+input = 1.00
+cache_write = 1.25
+cache_read = 0.05
+output = 5.00
+source = "https://developers.openai.com/api/docs/pricing"
+retrieved = "2026-11-10"
+verified = true
+notes = "Standard tier, short context. 12h cache write $2.50."
+
+[models."gpt-6.1-terra".long_context]
+threshold_tokens = 272000
+input = 2.00
+cache_write = 2.50
+cache_read = 0.10
+output = 7.50
+
+[models."gpt-6-luna"]
+provider = "openai"
+input = 0.10
+cache_write = 0.125
+cache_read = 0.01
+output = 0.50
+source = "https://developers.openai.com/api/docs/pricing"
+retrieved = "2026-11-10"
+verified = true
+notes = "Standard tier, short context. 12h cache write $0.25."
+
+[models."gpt-6-luna".long_context]
+threshold_tokens = 272000
+input = 0.20
+cache_write = 0.25
+cache_read = 0.02
+output = 0.75

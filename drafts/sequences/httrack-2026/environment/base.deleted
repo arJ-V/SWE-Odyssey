@@ -1,0 +1,12 @@
+tests/106_engine-repair-rename.test
+tests/110_local-ftp-parallel.test
+tests/117_local-proxytrack-ndx-cursor.test
+tests/119_local-proxytrack-ndx-fields2.test
+tests/120_local-proxytrack-webdav-default.test
+tests/121_local-ftp-nocache-splice.test
+tests/130_local-chunked-truncated.test
+tests/134_local-warc-revisit-ip.test
+tests/135_local-warc-forced-notmodified.test
+tests/136_local-warc-cache-priority.test
+tests/139_local-query-charref.test
+tests/142_webhttrack-content-type.test

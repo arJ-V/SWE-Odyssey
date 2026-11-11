@@ -1,0 +1,120 @@
+schema = 1
+
+[sequence]
+id = "duckdb-2026"
+description = "DuckDB (C++, CMake) at an August 2026 snapshot with stacked, already-merged July 2026 fixes reverted: filter combining and prefix pushdown, statistics propagation through casts, least/greatest and min/max, row-group pruning on rowids and after WAL replay, read-only WAL replay of indexes, Hive NULL partitions, struct-field renames with defaults, and reversed window frames"
+workdir = "/app"
+memory_dir = "/memory"
+# The upstream tree has its own AGENTS.md and an (empty) CLAUDE.md; agent notes
+# written to them persist across segments like NOTES.md.
+repo_memory_files = ["CLAUDE.md", "AGENTS.md", "NOTES.md"]
+agent_timeout_sec = 5400
+# run.sh gets 80% of this; run.sh measured 28-313 s per grade in Harbor cold oracle trials (README.md).
+verifier_timeout_sec = 1800
+
+[environment]
+context = "environment"
+# The base tree exists only in the image (the Dockerfile builds it from the
+# upstream snapshot); this is its hash manifest, written by
+# `odyssey base-manifest drafts/sequences/duckdb-2026 --image <built image>`.
+base_manifest = "base.manifest"
+cpus = 4
+memory_mb = 16384
+storage_mb = 40960
+# The agent needs the network to reach its model; nothing in the build of a
+# ticket or in its tests does (validate runs every check with --no-network).
+allow_internet = true
+# The image build compiles DuckDB once to fill the ccache (Dockerfile).
+build_timeout_sec = 5400
+
+# What test.sh takes from the segment's trusted start tree instead of the
+# agent's tree before run.sh rebuilds: the sqllogictest suite with the C++
+# test runner compiled into test/unittest, the test data, the top-level
+# Makefile and the build scripts, and every CMake file anywhere (CMakeLists.txt,
+# *.cmake), so the agent cannot change how the grader's build produces or runs
+# test/unittest. No gold patch touches a CMake file; the price is that a fix
+# that adds a new source file cannot be graded.
+[grading]
+# third_party/catch is the Catch2 framework the test runner is built with (a
+# rigged catch.hpp alone scored 1 before it was protected); third_party/sqlite
+# does not exist in the base but is on the runner's include path, so anything
+# planted there is removed.
+protected_paths = ["test", "data", "Makefile", "scripts", "third_party/catch", "third_party/sqlite"]
+protected_names = ["CMakeLists.txt", "*.cmake", "*.cmake.in"]
+
+# Cluster filter: the optimizer's filter combiner (one source file). DDB-02 is
+# the trap: same file as DDB-01, but prefix-function pushdown into table
+# filters, not the merging of comparison bounds.
+[[tickets]]
+id = "DDB-01"
+title = "Parquet scan reads every row group for x BETWEEN c AND c, although x = c skips them all"
+cluster = "filter"
+role = "core"
+
+[[tickets]]
+id = "DDB-02"
+title = "starts_with(s, ...) and s ^@ ... scan every row group, while the equivalent LIKE 'x%' prunes"
+cluster = "filter"
+role = "trap"
+
+# Cluster stats: statistics propagation in the optimizer. DDB-03 and DDB-04
+# are both about casts (a cast's child statistics; min/max over a cast);
+# DDB-05 propagates statistics of a scalar function in the core_functions
+# extension.
+[[tickets]]
+id = "DDB-03"
+title = "Filters on an element of a fixed-size ARRAY column never prune row groups"
+cluster = "stats"
+role = "core"
+
+[[tickets]]
+id = "DDB-04"
+title = "min(i::BIGINT) over a Parquet file scans all row groups, min(i) reads only metadata"
+cluster = "stats"
+role = "core"
+
+[[tickets]]
+id = "DDB-05"
+title = "least / greatest lose column statistics, so impossible filters still scan the table"
+cluster = "stats"
+role = "core"
+
+# Cluster rowgroup: row-group pruning in table storage (row group vs column
+# data), both "a scan skips or keeps the wrong row groups".
+[[tickets]]
+id = "DDB-06"
+title = "A rowid lookup at a row-group boundary scans two row groups"
+cluster = "rowgroup"
+role = "core"
+
+[[tickets]]
+id = "DDB-07"
+title = "After reopening a database, IS NULL misses rows that were updated to NULL before the restart"
+cluster = "rowgroup"
+role = "core"
+
+# Isolated tickets in code no other ticket touches: index WAL replay in
+# read-only mode, Hive partition values, struct-field renames, window frames.
+[[tickets]]
+id = "DDB-08"
+title = "Attaching a database READ_ONLY fails when its WAL contains index data"
+cluster = "N-wal-index"
+role = "isolated"
+
+[[tickets]]
+id = "DDB-09"
+title = "A VARCHAR Hive partition with the value 'NULL' is read back as SQL NULL"
+cluster = "N-hive"
+role = "isolated"
+
+[[tickets]]
+id = "DDB-10"
+title = "Renaming a struct field leaves the column's DEFAULT on the old field name"
+cluster = "N-alter"
+role = "isolated"
+
+[[tickets]]
+id = "DDB-11"
+title = "COUNT(*) over a reversed ROWS frame returns -1"
+cluster = "N-window"
+role = "isolated"

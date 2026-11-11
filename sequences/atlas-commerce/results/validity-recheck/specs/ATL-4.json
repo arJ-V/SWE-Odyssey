@@ -1,0 +1,57 @@
+{
+ "ticket": "ATL-4",
+ "conditions": [
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:opus46-hand-serializer",
+   "reward": 0,
+   "label": "known-bad opus46-hand-serializer with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:stringify-collections",
+   "reward": 0,
+   "label": "known-bad stringify-collections with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:counter-not-idempotent",
+   "reward": 0,
+   "label": "known-bad counter-not-idempotent with all six"
+  },
+  {
+   "state": [
+    "ATL-1",
+    "ATL-2",
+    "ATL-3",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "action": "known-bad:hotfix-outside-repo",
+   "reward": 0,
+   "label": "known-bad hotfix-outside-repo with all six"
+  }
+ ]
+}

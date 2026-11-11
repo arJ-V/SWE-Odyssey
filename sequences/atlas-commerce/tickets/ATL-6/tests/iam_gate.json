@@ -1,0 +1,34 @@
+{
+  "account_id": "000000000000",
+  "region": "us-east-1",
+  "principals": {
+    "eventbridgestepfunctionsrole": {
+      "role_of": {
+        "eventbridge_target_on_rule": "NewOrderRule"
+      }
+    }
+  },
+  "requests": [
+    {
+      "id": "eventbridgestepfunctionsrole-startexecution-allowed",
+      "principal": "eventbridgestepfunctionsrole",
+      "action": "states:StartExecution",
+      "resource": "arn:aws:states:us-east-1:000000000000:stateMachine:OrderProcessor",
+      "expect": "allow"
+    },
+    {
+      "id": "eventbridgestepfunctionsrole-deletestatemachine-denied",
+      "principal": "eventbridgestepfunctionsrole",
+      "action": "states:DeleteStateMachine",
+      "resource": "arn:aws:states:us-east-1:000000000000:stateMachine:OrderProcessor",
+      "expect": "deny"
+    },
+    {
+      "id": "eventbridgestepfunctionsrole-startexecution-out-of-scope-denied",
+      "principal": "eventbridgestepfunctionsrole",
+      "action": "states:StartExecution",
+      "resource": "arn:aws:states:us-east-1:000000000000:stateMachine:gate-probe-unauthorized",
+      "expect": "deny"
+    }
+  ]
+}

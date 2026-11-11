@@ -1,0 +1,337 @@
+diff --git a/deploy/components/order_workflow.py b/deploy/components/order_workflow.py
+new file mode 100644
+index 0000000..fe16374
+--- /dev/null
++++ b/deploy/components/order_workflow.py
+@@ -0,0 +1,152 @@
++"""Order workflow: NewOrderRule -> OrderProcessor (price items, payment + risk check, route to FulfillmentQueue or OrderAlerts)."""
++
++import json
++
++from botocore.exceptions import ClientError
++
++from support import (BASIC_EXECUTION, FUNCTION_ENDPOINT, LAMBDA_TRUST, REPO, account_id, client, ensure_function,
++                     ensure_queue, ensure_role, ensure_table, log, package_files)
++
++ORDER = 60
++
++SOURCE = REPO / "services" / "order_workflow"
++DEFINITION = SOURCE / "state_machine.json"
++
++PRODUCT_TABLE = "ProductData"
++FULFILLMENT_QUEUE = "FulfillmentQueue"
++ALERTS_QUEUE = "AlertsQueue"
++ALERTS_TOPIC = "OrderAlerts"
++STATE_MACHINE = "OrderProcessor"
++RULE = "NewOrderRule"
++TARGET_ID = "OrderProcessor"
++EVENT_PATTERN = {"source": ["com.ecommerce.orders"], "detail-type": ["OrderPlaced"]}
++
++FUNCTIONS_ROLE = "order-workflow-functions-role"
++STATES_ROLE = "order-workflow-states-role"
++EVENTS_ROLE = "order-workflow-events-role"
++
++# (function name, module in services/order_workflow/)
++FUNCTIONS = [("EnrichItemLambda", "enrich_item"), ("ProcessPaymentLambda", "process_payment")]
++
++# Seed row of the product cache.
++SEED_PRODUCTS = [{"productId": {"S": "A100"}, "price": {"N": "50.00"}}]
++
++
++def _trust(service: str) -> dict:
++    return {"Version": "2012-10-17", "Statement": [
++        {"Effect": "Allow", "Principal": {"Service": service}, "Action": "sts:AssumeRole"}]}
++
++
++def _policy(*statements: dict) -> dict:
++    return {"Version": "2012-10-17", "Statement": list(statements)}
++
++
++def _product_cache() -> str:
++    arn = ensure_table(PRODUCT_TABLE, "productId")
++    ddb = client("dynamodb")
++    for item in SEED_PRODUCTS:
++        try:
++            ddb.put_item(TableName=PRODUCT_TABLE, Item=item, ConditionExpression="attribute_not_exists(productId)")
++            log(f"seeded {PRODUCT_TABLE} {item['productId']['S']}")
++        except ClientError as exc:
++            if exc.response.get("Error", {}).get("Code") != "ConditionalCheckFailedException":
++                raise
++    return arn
++
++
++def _alerts(topic_arn: str) -> None:
++    """AlertsQueue subscribed to OrderAlerts with the standard SNS envelope (no raw delivery)."""
++    sqs, sns = client("sqs"), client("sns")
++    url, queue_arn, _ = ensure_queue(ALERTS_QUEUE, {})
++    sqs.set_queue_attributes(QueueUrl=url, Attributes={"Policy": json.dumps(_policy({
++        "Sid": "OrderAlertsDelivery",
++        "Effect": "Allow",
++        "Principal": {"Service": "sns.amazonaws.com"},
++        "Action": "sqs:SendMessage",
++        "Resource": queue_arn,
++        "Condition": {"ArnEquals": {"aws:SourceArn": topic_arn}},
++    }))})
++    subscriptions = sns.list_subscriptions_by_topic(TopicArn=topic_arn).get("Subscriptions", [])
++    existing = [s["SubscriptionArn"] for s in subscriptions
++                if s.get("Protocol") == "sqs" and s.get("Endpoint") == queue_arn]
++    if existing:
++        subscription_arn = existing[0]
++    else:
++        subscription_arn = sns.subscribe(TopicArn=topic_arn, Protocol="sqs", Endpoint=queue_arn,
++                                         ReturnSubscriptionArn=True)["SubscriptionArn"]
++        log(f"subscribed {ALERTS_QUEUE} to {ALERTS_TOPIC}")
++    sns.set_subscription_attributes(SubscriptionArn=subscription_arn, AttributeName="RawMessageDelivery",
++                                    AttributeValue="false")
++
++
++def _state_machine(definition: str, role_arn: str) -> str:
++    sfn = client("stepfunctions")
++    arn = f"arn:aws:states:{sfn.meta.region_name}:{account_id()}:stateMachine:{STATE_MACHINE}"
++    try:
++        sfn.describe_state_machine(stateMachineArn=arn)
++    except ClientError as exc:
++        if exc.response.get("Error", {}).get("Code") not in ("StateMachineDoesNotExist", "ResourceNotFound"):
++            raise
++        arn = sfn.create_state_machine(name=STATE_MACHINE, definition=definition, roleArn=role_arn)["stateMachineArn"]
++        log(f"created state machine {STATE_MACHINE}")
++        return arn
++    sfn.update_state_machine(stateMachineArn=arn, definition=definition, roleArn=role_arn)
++    log(f"updated state machine {STATE_MACHINE}")
++    return arn
++
++
++def _rule(state_machine_arn: str, role_arn: str) -> None:
++    events = client("events")
++    events.put_rule(Name=RULE, EventPattern=json.dumps(EVENT_PATTERN), State="ENABLED")
++    stale = [t["Id"] for t in events.list_targets_by_rule(Rule=RULE).get("Targets", []) if t["Id"] != TARGET_ID]
++    if stale:
++        events.remove_targets(Rule=RULE, Ids=stale)
++    events.put_targets(Rule=RULE, Targets=[{"Id": TARGET_ID, "Arn": state_machine_arn, "RoleArn": role_arn,
++                                            "InputPath": "$.detail"}])
++
++
++def deploy() -> None:
++    region = client("sts").meta.region_name
++    account = account_id()
++    table_arn = _product_cache()
++
++    fulfillment_url, fulfillment_arn, _ = ensure_queue(FULFILLMENT_QUEUE, {})
++    topic_arn = client("sns").create_topic(Name=ALERTS_TOPIC)["TopicArn"]
++    _alerts(topic_arn)
++
++    functions_role = ensure_role(FUNCTIONS_ROLE, LAMBDA_TRUST, managed=[BASIC_EXECUTION], inline={
++        "ProductCache": _policy({"Effect": "Allow", "Action": ["dynamodb:GetItem", "dynamodb:PutItem"],
++                                 "Resource": table_arn})})
++    function_arns = {}
++    for name, module in FUNCTIONS:
++        function_arns[name] = ensure_function(
++            name,
++            role_arn=functions_role,
++            runtime="python3.11",
++            handler=f"{module}.handler",
++            code=package_files(SOURCE / f"{module}.py"),
++            environment={"AWS_ENDPOINT_URL": FUNCTION_ENDPOINT, "TABLE_NAME": PRODUCT_TABLE},
++            timeout=30,
++        )
++
++    state_machine_arn = f"arn:aws:states:{region}:{account}:stateMachine:{STATE_MACHINE}"
++    states_role = ensure_role(STATES_ROLE, _trust("states.amazonaws.com"), inline={"OrderProcessorTasks": _policy(
++        {"Effect": "Allow", "Action": "lambda:InvokeFunction", "Resource": sorted(function_arns.values())},
++        {"Effect": "Allow", "Action": "sqs:SendMessage", "Resource": fulfillment_arn},
++        {"Effect": "Allow", "Action": "sns:Publish", "Resource": topic_arn},
++    )})
++    definition = DEFINITION.read_text()
++    for placeholder, value in {
++        "EnrichItemFunctionArn": function_arns["EnrichItemLambda"],
++        "ProcessPaymentFunctionArn": function_arns["ProcessPaymentLambda"],
++        "FulfillmentQueueUrl": fulfillment_url,
++        "OrderAlertsTopicArn": topic_arn,
++    }.items():
++        definition = definition.replace("${" + placeholder + "}", value)
++    json.loads(definition)
++    state_machine_arn = _state_machine(definition, states_role)
++
++    events_role = ensure_role(EVENTS_ROLE, _trust("events.amazonaws.com"), inline={"StartOrderProcessor": _policy(
++        {"Effect": "Allow", "Action": "states:StartExecution", "Resource": state_machine_arn})})
++    _rule(state_machine_arn, events_role)
++    log(f"order workflow ready: {RULE} -> {STATE_MACHINE} -> {FULFILLMENT_QUEUE} | {ALERTS_TOPIC} -> {ALERTS_QUEUE}")
+diff --git a/services/order_workflow/enrich_item.py b/services/order_workflow/enrich_item.py
+new file mode 100644
+index 0000000..682023f
+--- /dev/null
++++ b/services/order_workflow/enrich_item.py
+@@ -0,0 +1,40 @@
++"""EnrichItemLambda: price one order item from the ProductData cache.
++
++Input is one item of an order, e.g. {"productId": "B200", "qty": 2}. The price comes from the
++ProductData table; on a cache miss the default price 99.99 is used and written to the table, so
++later orders find it. A price already in the table is never overwritten. Output is the item with
++its price added: {"productId": "B200", "qty": 2, "price": 99.99}.
++"""
++
++import os
++from decimal import Decimal
++
++import boto3
++
++DEFAULT_PRICE = Decimal("99.99")
++TABLE_NAME = os.environ.get("TABLE_NAME", "ProductData")
++
++_endpoint = os.environ.get("AWS_ENDPOINT_URL", "http://localstack:4566")
++_dynamodb = boto3.resource("dynamodb", endpoint_url=_endpoint)
++table = _dynamodb.Table(TABLE_NAME)
++
++
++def handler(event, context):
++    product_id = event["productId"]
++    qty = event["qty"]
++
++    response = table.get_item(Key={"productId": product_id})
++    if "Item" in response:
++        price = response["Item"]["price"]
++    else:
++        price = DEFAULT_PRICE
++        try:
++            table.put_item(
++                Item={"productId": product_id, "price": price},
++                ConditionExpression="attribute_not_exists(productId)",
++            )
++        except _dynamodb.meta.client.exceptions.ConditionalCheckFailedException:
++            # Cached concurrently by another item of the same order: use that price.
++            price = table.get_item(Key={"productId": product_id}, ConsistentRead=True)["Item"]["price"]
++
++    return {"productId": product_id, "qty": qty, "price": float(price)}
+diff --git a/services/order_workflow/process_payment.py b/services/order_workflow/process_payment.py
+new file mode 100644
+index 0000000..9f4517c
+--- /dev/null
++++ b/services/order_workflow/process_payment.py
+@@ -0,0 +1,17 @@
++"""ProcessPaymentLambda: decide whether an order is paid straight away or reviewed.
++
++Input is the list of enriched items (the output of the workflow's Map state). The order total is
++the sum of qty * price; up to and including 1000.00 the payment is approved, above it the order
++goes to review.
++"""
++
++from decimal import Decimal
++
++REVIEW_THRESHOLD = Decimal("1000.00")
++
++
++def handler(event, context):
++    total = sum((Decimal(str(item["qty"])) * Decimal(str(item["price"])) for item in event), Decimal("0"))
++    if total <= REVIEW_THRESHOLD:
++        return {"paymentStatus": "APPROVED"}
++    return {"paymentStatus": "REVIEW"}
+diff --git a/services/order_workflow/state_machine.json b/services/order_workflow/state_machine.json
+new file mode 100644
+index 0000000..8560aa0
+--- /dev/null
++++ b/services/order_workflow/state_machine.json
+@@ -0,0 +1,104 @@
++{
++  "Comment": "OrderProcessor: price each item, take payment and run the risk check in parallel, then route the order.",
++  "StartAt": "ExtractDetail",
++  "States": {
++    "ExtractDetail": {
++      "Type": "Pass",
++      "InputPath": "$.detail",
++      "Next": "ProcessItems"
++    },
++    "ProcessItems": {
++      "Type": "Map",
++      "ItemsPath": "$.items",
++      "MaxConcurrency": 3,
++      "ResultPath": "$.enrichedItems",
++      "Iterator": {
++        "StartAt": "EnrichItem",
++        "States": {
++          "EnrichItem": {
++            "Type": "Task",
++            "Resource": "${EnrichItemFunctionArn}",
++            "End": true
++          }
++        }
++      },
++      "Next": "RiskAndPayment"
++    },
++    "RiskAndPayment": {
++      "Type": "Parallel",
++      "ResultPath": "$.parallelResults",
++      "Branches": [
++        {
++          "StartAt": "ProcessPayment",
++          "States": {
++            "ProcessPayment": {
++              "Type": "Task",
++              "Resource": "${ProcessPaymentFunctionArn}",
++              "InputPath": "$.enrichedItems",
++              "End": true
++            }
++          }
++        },
++        {
++          "StartAt": "RiskCheck",
++          "States": {
++            "RiskCheck": {
++              "Type": "Pass",
++              "Result": {"riskScore": 0},
++              "End": true
++            }
++          }
++        }
++      ],
++      "Next": "PrepareRouting"
++    },
++    "PrepareRouting": {
++      "Type": "Pass",
++      "Parameters": {
++        "orderId.$": "$.orderId",
++        "paymentStatus.$": "$.parallelResults[0].paymentStatus",
++        "riskScore.$": "$.parallelResults[1].riskScore"
++      },
++      "Next": "RouteOrder"
++    },
++    "RouteOrder": {
++      "Type": "Choice",
++      "Choices": [
++        {
++          "Variable": "$.paymentStatus",
++          "StringEquals": "APPROVED",
++          "Next": "SendToFulfillment"
++        },
++        {
++          "Variable": "$.paymentStatus",
++          "StringEquals": "REVIEW",
++          "Next": "SendToAlerts"
++        }
++      ]
++    },
++    "SendToFulfillment": {
++      "Type": "Task",
++      "Resource": "arn:aws:states:::sqs:sendMessage",
++      "Parameters": {
++        "QueueUrl": "${FulfillmentQueueUrl}",
++        "MessageBody": {
++          "orderId.$": "$.orderId",
++          "status": "APPROVED"
++        }
++      },
++      "End": true
++    },
++    "SendToAlerts": {
++      "Type": "Task",
++      "Resource": "arn:aws:states:::sns:publish",
++      "Parameters": {
++        "TopicArn": "${OrderAlertsTopicArn}",
++        "Message": {
++          "orderId.$": "$.orderId",
++          "status": "REVIEW"
++        }
++      },
++      "End": true
++    }
++  }
++}

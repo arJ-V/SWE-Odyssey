@@ -1,0 +1,198 @@
+diff --git a/deploy/components/document_index.py b/deploy/components/document_index.py
+new file mode 100644
+index 0000000..0703c4d
+--- /dev/null
++++ b/deploy/components/document_index.py
+@@ -0,0 +1,51 @@
++"""Merchant document index: CloudFormation stack pipeline-stack (pipeline-source -> pipeline-processor -> pipeline-events, CMK-encrypted)."""
++
++from botocore.exceptions import ClientError
++
++from support import REPO, client, log
++
++ORDER = 70
++
++STACK = "pipeline-stack"
++TEMPLATE = REPO / "deploy" / "stacks" / "pipeline-stack.yaml"
++CAPABILITIES = ["CAPABILITY_IAM"]
++# A stack in one of these states cannot be updated; it is deleted and created again.
++UNUSABLE = {"ROLLBACK_COMPLETE", "ROLLBACK_FAILED", "CREATE_FAILED", "DELETE_FAILED"}
++WAIT = {"Delay": 2, "MaxAttempts": 150}
++
++
++def _status(cfn) -> str | None:
++    try:
++        stacks = cfn.describe_stacks(StackName=STACK)["Stacks"]
++    except ClientError as exc:
++        if "does not exist" in str(exc):
++            return None
++        raise
++    status = stacks[0]["StackStatus"] if stacks else None
++    return None if status == "DELETE_COMPLETE" else status
++
++
++def deploy() -> None:
++    cfn = client("cloudformation")
++    body = TEMPLATE.read_text()
++    status = _status(cfn)
++    if status in UNUSABLE:
++        log(f"stack {STACK} is {status}; deleting it before creating it again")
++        cfn.delete_stack(StackName=STACK)
++        cfn.get_waiter("stack_delete_complete").wait(StackName=STACK, WaiterConfig=WAIT)
++        status = None
++    if status is None:
++        cfn.create_stack(StackName=STACK, TemplateBody=body, Capabilities=CAPABILITIES)
++        cfn.get_waiter("stack_create_complete").wait(StackName=STACK, WaiterConfig=WAIT)
++        log(f"created stack {STACK}")
++    else:
++        try:
++            cfn.update_stack(StackName=STACK, TemplateBody=body, Capabilities=CAPABILITIES)
++        except ClientError as exc:
++            if "No updates are to be performed" not in str(exc):
++                raise
++            log(f"stack {STACK} is up to date")
++        else:
++            cfn.get_waiter("stack_update_complete").wait(StackName=STACK, WaiterConfig=WAIT)
++            log(f"updated stack {STACK}")
++    log(f"document index ready: {STACK} (pipeline-source -> pipeline-processor -> pipeline-events)")
+diff --git a/deploy/stacks/pipeline-stack.yaml b/deploy/stacks/pipeline-stack.yaml
+new file mode 100644
+index 0000000..adfca2e
+--- /dev/null
++++ b/deploy/stacks/pipeline-stack.yaml
+@@ -0,0 +1,135 @@
++AWSTemplateFormatVersion: '2010-09-09'
++Description: Merchant document index. Every object created in pipeline-source is recorded in pipeline-events by pipeline-processor.
++
++Resources:
++
++  PipelineKey:
++    Type: AWS::KMS::Key
++    Properties:
++      Description: CMK for pipeline-events DDB encryption
++      EnableKeyRotation: true
++      KeyPolicy:
++        Version: '2012-10-17'
++        Statement:
++          - Sid: AllowRootAccount
++            Effect: Allow
++            Principal:
++              AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
++            Action: kms:*
++            Resource: '*'
++
++  EventsTable:
++    Type: AWS::DynamoDB::Table
++    Properties:
++      TableName: pipeline-events
++      BillingMode: PAY_PER_REQUEST
++      AttributeDefinitions:
++        - AttributeName: object_key
++          AttributeType: S
++      KeySchema:
++        - AttributeName: object_key
++          KeyType: HASH
++      SSESpecification:
++        SSEEnabled: true
++        SSEType: KMS
++        KMSMasterKeyId: !GetAtt PipelineKey.Arn
++
++  ProcessorRole:
++    Type: AWS::IAM::Role
++    Properties:
++      AssumeRolePolicyDocument:
++        Version: '2012-10-17'
++        Statement:
++          - Effect: Allow
++            Principal:
++              Service: lambda.amazonaws.com
++            Action: sts:AssumeRole
++      ManagedPolicyArns:
++        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
++      Policies:
++        - PolicyName: DDBWrite
++          PolicyDocument:
++            Version: '2012-10-17'
++            Statement:
++              - Effect: Allow
++                Action:
++                  - dynamodb:PutItem
++                  - dynamodb:GetItem
++                  - dynamodb:UpdateItem
++                Resource: !GetAtt EventsTable.Arn
++        - PolicyName: KMSAccess
++          PolicyDocument:
++            Version: '2012-10-17'
++            Statement:
++              - Effect: Allow
++                Action:
++                  - kms:Decrypt
++                  - kms:GenerateDataKey
++                  - kms:DescribeKey
++                Resource: !GetAtt PipelineKey.Arn
++
++  ProcessorFunction:
++    Type: AWS::Lambda::Function
++    Properties:
++      FunctionName: pipeline-processor
++      Runtime: python3.11
++      Handler: index.handler
++      Timeout: 30
++      Role: !GetAtt ProcessorRole.Arn
++      Code:
++        ZipFile: |
++          import json
++          import os
++          import urllib.parse
++          import boto3
++
++          def handler(event, context):
++              table_name = os.environ["TABLE_NAME"]
++              endpoint = os.environ.get("AWS_ENDPOINT_URL")
++              ddb = boto3.client("dynamodb", endpoint_url=endpoint) if endpoint else boto3.client("dynamodb")
++
++              processed = 0
++              for record in event.get("Records", []):
++                  s3 = record["s3"]
++                  bucket = s3["bucket"]["name"]
++                  key = urllib.parse.unquote_plus(s3["object"]["key"])
++                  size = int(s3["object"].get("size", 0))
++                  event_time = record.get("eventTime", "")
++
++                  ddb.put_item(
++                      TableName=table_name,
++                      Item={
++                          "object_key": {"S": key},
++                          "bucket": {"S": bucket},
++                          "size": {"N": str(size)},
++                          "event_time": {"S": event_time},
++                      },
++                  )
++                  processed += 1
++
++              return {"statusCode": 200, "body": json.dumps({"processed": processed})}
++      Environment:
++        Variables:
++          TABLE_NAME: !Ref EventsTable
++          AWS_ENDPOINT_URL: http://localstack:4566
++
++  ProcessorPermission:
++    Type: AWS::Lambda::Permission
++    Properties:
++      FunctionName: !Ref ProcessorFunction
++      Action: lambda:InvokeFunction
++      Principal: s3.amazonaws.com
++      # The bucket's literal ARN, not a reference to it: a reference would make the bucket's
++      # notification and this permission depend on each other.
++      SourceArn: arn:aws:s3:::pipeline-source
++
++  SourceBucket:
++    Type: AWS::S3::Bucket
++    # S3 checks that it may invoke the function when the notification is set.
++    DependsOn: ProcessorPermission
++    Properties:
++      BucketName: pipeline-source
++      NotificationConfiguration:
++        LambdaConfigurations:
++          - Function: !GetAtt ProcessorFunction.Arn
++            Event: s3:ObjectCreated:*

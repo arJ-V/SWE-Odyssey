@@ -1,0 +1,154 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "BuildAndOperateAtlasCommerce",
+      "Effect": "Allow",
+      "Action": [
+        "apigateway:GET",
+        "apigateway:PATCH",
+        "apigateway:POST",
+        "apigateway:PUT",
+        "cloudformation:CreateStack",
+        "cloudformation:DescribeStackEvents",
+        "cloudformation:DescribeStackResources",
+        "cloudformation:DescribeStacks",
+        "cloudformation:ListStackResources",
+        "cloudformation:UpdateStack",
+        "cloudwatch:GetMetricData",
+        "cloudwatch:GetMetricStatistics",
+        "cloudwatch:ListMetrics",
+        "dynamodb:*",
+        "dynamodb:CreateTable",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:ListTables",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "events:*",
+        "iam:AttachRolePolicy",
+        "iam:CreateRole",
+        "iam:GetPolicy",
+        "iam:GetPolicyVersion",
+        "iam:GetRole",
+        "iam:GetRolePolicy",
+        "iam:ListAttachedRolePolicies",
+        "iam:ListRolePolicies",
+        "iam:ListRoles",
+        "iam:PassRole",
+        "iam:PutRolePolicy",
+        "iam:UpdateAssumeRolePolicy",
+        "kms:CreateAlias",
+        "kms:CreateKey",
+        "kms:DescribeKey",
+        "kms:GetKeyPolicy",
+        "kms:ListAliases",
+        "lambda:*",
+        "lambda:AddPermission",
+        "lambda:CreateEventSourceMapping",
+        "lambda:CreateFunction",
+        "lambda:GetEventSourceMapping",
+        "lambda:GetFunction",
+        "lambda:GetFunctionConfiguration",
+        "lambda:GetPolicy",
+        "lambda:ListEventSourceMappings",
+        "lambda:UpdateFunctionCode",
+        "lambda:UpdateFunctionConfiguration",
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams",
+        "logs:FilterLogEvents",
+        "logs:GetLogEvents",
+        "s3:CreateBucket",
+        "s3:GetBucketNotification",
+        "s3:GetObject",
+        "s3:ListAllMyBuckets",
+        "s3:ListBucket",
+        "s3:PutBucketNotification",
+        "sns:*",
+        "sqs:*",
+        "sqs:CreateQueue",
+        "sqs:DeleteMessage",
+        "sqs:DeleteMessageBatch",
+        "sqs:GetQueueAttributes",
+        "sqs:GetQueueUrl",
+        "sqs:ListQueues",
+        "sqs:ReceiveMessage",
+        "sqs:SendMessage",
+        "sqs:SetQueueAttributes",
+        "states:*",
+        "sts:GetCallerIdentity"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "DriveSourceEvent",
+      "Effect": "Allow",
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::pipeline-source/*"
+    },
+    {
+      "Sid": "DenyDirectQueueInjection",
+      "Effect": "Deny",
+      "Action": "sqs:SendMessage",
+      "Resource": "arn:aws:sqs:us-east-1:000000000000:orders.fifo"
+    },
+    {
+      "Sid": "DenyDirectOrdersTableWrites",
+      "Effect": "Deny",
+      "Action": [
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:BatchWriteItem"
+      ],
+      "Resource": "arn:aws:dynamodb:us-east-1:000000000000:table/orders"
+    },
+    {
+      "Sid": "DenyDirectConsumerInvocation",
+      "Effect": "Deny",
+      "Action": "lambda:InvokeFunction",
+      "Resource": "arn:aws:lambda:us-east-1:000000000000:function:orders-consumer"
+    },
+    {
+      "Sid": "DenyDirectGradedFulfillmentWrites",
+      "Effect": "Deny",
+      "Action": [
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:BatchWriteItem"
+      ],
+      "Resource": "arn:aws:dynamodb:us-east-1:000000000000:table/FulfillmentTable"
+    },
+    {
+      "Sid": "DenyDirectLedgerAndRollupWrites",
+      "Effect": "Deny",
+      "Action": [
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:TransactWriteItems"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:us-east-1:000000000000:table/payments",
+        "arn:aws:dynamodb:us-east-1:000000000000:table/merchant_rollups"
+      ]
+    },
+    {
+      "Sid": "DenyDirectGradedTableWrites",
+      "Effect": "Deny",
+      "Action": [
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:BatchWriteItem"
+      ],
+      "Resource": "arn:aws:dynamodb:us-east-1:000000000000:table/pipeline-events"
+    },
+    {
+      "Sid": "DenyDirectProcessorInvocation",
+      "Effect": "Deny",
+      "Action": "lambda:InvokeFunction",
+      "Resource": "arn:aws:lambda:us-east-1:000000000000:function:pipeline-processor"
+    }
+  ]
+}

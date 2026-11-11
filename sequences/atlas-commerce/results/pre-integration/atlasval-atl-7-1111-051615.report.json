@@ -1,0 +1,322 @@
+{
+ "ticket": "ATL-7",
+ "task": "/home/ubuntu/atlas/workflow-index/validate/tasks/atlas-commerce__validate-offline__v-atl-7-2b55c7",
+ "trial": "/home/ubuntu/atlas/workflow-index/validate/jobs/atlasval-atl-7-1111-051615/atlas-commerce__validate-offline__a8NtmwD",
+ "harbor_exit": 0,
+ "elapsed_sec": 407.4,
+ "ok": true,
+ "steps": [
+  {
+   "step": "s01-atl-7",
+   "condition": "nop at the base",
+   "action": "nothing",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_bucket_exists",
+    "test_bucket_notification_points_at_lambda",
+    "test_cfn_stack_is_deployed",
+    "test_cfn_stack_owns_core_resources",
+    "test_ddb_encrypted_with_stack_cmk",
+    "test_end_to_end_put_creates_ddb_item",
+    "test_lambda_exists_with_correct_runtime",
+    "test_lambda_permission_allows_s3_invoke",
+    "test_lambda_role_can_use_the_cmk",
+    "test_lambda_role_can_write_only_through_its_policy",
+    "test_stack_owns_customer_managed_kms_key",
+    "test_table_exists_with_correct_schema"
+   ],
+   "reset_sec": 5.54,
+   "setup_sec": 16.27,
+   "deploy_sec": 10.4,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 0,
+   "verifier_window": [
+    "2026-11-11T05:16:44.267669Z",
+    "2026-11-11T05:16:47.452154Z"
+   ]
+  },
+  {
+   "step": "s02-atl-7",
+   "condition": "reference at the base",
+   "action": "reference",
+   "state": [],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 7.79,
+   "setup_sec": 18.08,
+   "deploy_sec": 10.0,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:17:08.959650Z",
+    "2026-11-11T05:17:12.964704Z"
+   ]
+  },
+  {
+   "step": "s03-atl-7",
+   "condition": "reference at the base",
+   "action": "reference",
+   "state": [],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 7.85,
+   "setup_sec": 18.08,
+   "deploy_sec": 9.99,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T05:17:34.411887Z",
+    "2026-11-11T05:17:38.511301Z"
+   ]
+  },
+  {
+   "step": "s04-atl-7",
+   "condition": "known-bad no-url-decode at the base",
+   "action": "known-bad:no-url-decode",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_end_to_end_put_creates_ddb_item"
+   ],
+   "reset_sec": 7.95,
+   "setup_sec": 17.99,
+   "deploy_sec": 9.9,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T05:17:59.874769Z",
+    "2026-11-11T05:19:02.836050Z"
+   ]
+  },
+  {
+   "step": "s05-atl-7",
+   "condition": "known-bad no-kms-grant at the base",
+   "action": "known-bad:no-kms-grant",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_lambda_role_can_use_the_cmk"
+   ],
+   "reset_sec": 8.78,
+   "setup_sec": 18.81,
+   "deploy_sec": 9.91,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T05:19:24.965795Z",
+    "2026-11-11T05:19:28.327335Z"
+   ]
+  },
+  {
+   "step": "s06-atl-7",
+   "condition": "known-bad extra-dynamodb-actions at the base",
+   "action": "known-bad:extra-dynamodb-actions",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_lambda_role_can_write_only_through_its_policy"
+   ],
+   "reset_sec": 7.74,
+   "setup_sec": 17.71,
+   "deploy_sec": 9.82,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T05:19:49.389275Z",
+    "2026-11-11T05:19:52.765740Z"
+   ]
+  },
+  {
+   "step": "s07-atl-7",
+   "condition": "nop with ATL-2",
+   "action": "nothing",
+   "state": [
+    "ATL-2"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_bucket_exists",
+    "test_bucket_notification_points_at_lambda",
+    "test_cfn_stack_is_deployed",
+    "test_cfn_stack_owns_core_resources",
+    "test_ddb_encrypted_with_stack_cmk",
+    "test_end_to_end_put_creates_ddb_item",
+    "test_lambda_exists_with_correct_runtime",
+    "test_lambda_permission_allows_s3_invoke",
+    "test_lambda_role_can_use_the_cmk",
+    "test_lambda_role_can_write_only_through_its_policy",
+    "test_stack_owns_customer_managed_kms_key",
+    "test_table_exists_with_correct_schema"
+   ],
+   "reset_sec": 7.81,
+   "setup_sec": 17.96,
+   "deploy_sec": 9.87,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T05:20:11.487962Z",
+    "2026-11-11T05:20:14.474776Z"
+   ]
+  },
+  {
+   "step": "s08-atl-7",
+   "condition": "reference with ATL-2",
+   "action": "reference",
+   "state": [
+    "ATL-2"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.81,
+   "setup_sec": 18.96,
+   "deploy_sec": 9.86,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:20:36.749339Z",
+    "2026-11-11T05:20:40.489254Z"
+   ]
+  },
+  {
+   "step": "s09-atl-7",
+   "condition": "nop with ATL-6",
+   "action": "nothing",
+   "state": [
+    "ATL-6"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_bucket_exists",
+    "test_bucket_notification_points_at_lambda",
+    "test_cfn_stack_is_deployed",
+    "test_cfn_stack_owns_core_resources",
+    "test_ddb_encrypted_with_stack_cmk",
+    "test_end_to_end_put_creates_ddb_item",
+    "test_lambda_exists_with_correct_runtime",
+    "test_lambda_permission_allows_s3_invoke",
+    "test_lambda_role_can_use_the_cmk",
+    "test_lambda_role_can_write_only_through_its_policy",
+    "test_stack_owns_customer_managed_kms_key",
+    "test_table_exists_with_correct_schema"
+   ],
+   "reset_sec": 7.79,
+   "setup_sec": 21.71,
+   "deploy_sec": 13.62,
+   "deployed": "orders_core fulfillment payments_core order_workflow",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T05:21:02.985886Z",
+    "2026-11-11T05:21:05.689389Z"
+   ]
+  },
+  {
+   "step": "s10-atl-7",
+   "condition": "reference with ATL-6",
+   "action": "reference",
+   "state": [
+    "ATL-6"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.73,
+   "setup_sec": 22.33,
+   "deploy_sec": 13.44,
+   "deployed": "orders_core fulfillment payments_core order_workflow",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:21:31.349641Z",
+    "2026-11-11T05:21:35.363080Z"
+   ]
+  },
+  {
+   "step": "s11-atl-7",
+   "condition": "nop with ATL-2+ATL-6",
+   "action": "nothing",
+   "state": [
+    "ATL-2",
+    "ATL-6"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_bucket_exists",
+    "test_bucket_notification_points_at_lambda",
+    "test_cfn_stack_is_deployed",
+    "test_cfn_stack_owns_core_resources",
+    "test_ddb_encrypted_with_stack_cmk",
+    "test_end_to_end_put_creates_ddb_item",
+    "test_lambda_exists_with_correct_runtime",
+    "test_lambda_permission_allows_s3_invoke",
+    "test_lambda_role_can_use_the_cmk",
+    "test_lambda_role_can_write_only_through_its_policy",
+    "test_stack_owns_customer_managed_kms_key",
+    "test_table_exists_with_correct_schema"
+   ],
+   "reset_sec": 8.76,
+   "setup_sec": 22.58,
+   "deploy_sec": 13.47,
+   "deployed": "orders_core fulfillment payments_core order_workflow",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T05:21:58.720539Z",
+    "2026-11-11T05:22:01.490088Z"
+   ]
+  },
+  {
+   "step": "s12-atl-7",
+   "condition": "reference with ATL-2+ATL-6",
+   "action": "reference",
+   "state": [
+    "ATL-2",
+    "ATL-6"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.87,
+   "setup_sec": 22.48,
+   "deploy_sec": 13.39,
+   "deployed": "orders_core fulfillment payments_core order_workflow",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T05:22:27.356434Z",
+    "2026-11-11T05:22:31.368236Z"
+   ]
+  }
+ ]
+}

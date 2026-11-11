@@ -1,0 +1,146 @@
+{
+ "ticket": "ATL-1",
+ "task": "/home/ubuntu/atlas/verify-validity/validate/tasks/atlas-commerce__validate__v-atl-1-edf7f2",
+ "trial": "/home/ubuntu/atlas/verify-validity/validate/jobs/atlasval-atl-1-1111-105630/atlas-commerce__validate__v-atl__9PSxs8A",
+ "harbor_exit": 0,
+ "elapsed_sec": 488.6,
+ "ok": true,
+ "steps": [
+  {
+   "step": "s01-atl-1",
+   "condition": "vv-requestid-dedup at the base",
+   "action": "known-bad:vv-requestid-dedup",
+   "state": [],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_end_to_end_duplicate_post_is_idempotent"
+   ],
+   "reset_sec": 6.57,
+   "setup_sec": 17.09,
+   "deploy_sec": 10.2,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 0,
+   "verifier_window": [
+    "2026-11-11T10:57:14.024433Z",
+    "2026-11-11T10:57:32.884200Z"
+   ]
+  },
+  {
+   "step": "s02-atl-1",
+   "condition": "vv-requestid-dedup with ATL-2 (documented weakness; 1 expected)",
+   "action": "known-bad:vv-requestid-dedup",
+   "state": [
+    "ATL-2"
+   ],
+   "reward": 1,
+   "expected": 1,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [],
+   "reset_sec": 8.7,
+   "setup_sec": 18.84,
+   "deploy_sec": 9.73,
+   "deployed": "orders_core fulfillment payments_core",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T10:57:52.813293Z",
+    "2026-11-11T10:58:16.073432Z"
+   ]
+  },
+  {
+   "step": "s03-atl-1",
+   "condition": "known-bad stale-stage with all six",
+   "action": "known-bad:stale-stage",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq"
+   ],
+   "reset_sec": 8.73,
+   "setup_sec": 26.35,
+   "deploy_sec": 17.45,
+   "deployed": "orders_core fulfillment payments_core order_workflow payments_ledger document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T10:58:43.517769Z",
+    "2026-11-11T11:00:49.058639Z"
+   ]
+  },
+  {
+   "step": "s04-atl-1",
+   "condition": "known-bad constant-group-id with all six",
+   "action": "known-bad:constant-group-id",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_integration_template_identifiers_are_request_derived"
+   ],
+   "reset_sec": 8.81,
+   "setup_sec": 25.82,
+   "deploy_sec": 16.91,
+   "deployed": "orders_core fulfillment payments_core order_workflow payments_ledger document_index",
+   "lambda_containers_removed": 1,
+   "verifier_window": [
+    "2026-11-11T11:01:15.965906Z",
+    "2026-11-11T11:01:34.581277Z"
+   ]
+  },
+  {
+   "step": "s05-atl-1",
+   "condition": "known-bad no-content-type with all six",
+   "action": "known-bad:no-content-type",
+   "state": [
+    "ATL-2",
+    "ATL-3",
+    "ATL-4",
+    "ATL-5",
+    "ATL-6",
+    "ATL-7"
+   ],
+   "reward": 0,
+   "expected": 0,
+   "ok": true,
+   "problems": [],
+   "failed_tests": [
+    "test_end_to_end_duplicate_post_is_idempotent",
+    "test_end_to_end_fifo_group_ordering",
+    "test_end_to_end_post_reaches_ddb_no_dlq",
+    "test_integration_sets_content_type_header"
+   ],
+   "reset_sec": 8.7,
+   "setup_sec": 25.69,
+   "deploy_sec": 16.78,
+   "deployed": "orders_core fulfillment payments_core order_workflow payments_ledger document_index",
+   "lambda_containers_removed": 2,
+   "verifier_window": [
+    "2026-11-11T11:02:01.375252Z",
+    "2026-11-11T11:04:06.757558Z"
+   ]
+  }
+ ]
+}
