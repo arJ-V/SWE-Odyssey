@@ -33,9 +33,6 @@ result is the **warm ÷ cold ratio per ticket**; below 1 means experience helped
 | time | wall-clock time the agent spent on the ticket |
 | dollars | every token of the ticket's model calls at list price |
 
-Dollars are reported alongside but are not the point. A long session re-reads its own
-history on every call, so an agent can learn, take fewer steps and still cost the same.
-
 Ticket order is rotated across sequences so that position is not confused with difficulty.
 
 ## How systems line up so far
@@ -45,9 +42,7 @@ Ticket order is rotated across sequences so that position is not confused with d
 Each row is one system (a model inside its vendor's agent) on the pilot sequence,
 `atlas-commerce`: one small e-commerce backend on a local AWS emulator, seven tickets that mix
 deploying infrastructure, writing code, repairing a production fault and tightening an access
-policy. Every ticket was run cold twice and warm in five to nine rotated orderings. The figure
-is regenerated from the run data by `scripts/analysis/readme_figure.py`; time and dollar ratios
-come out of `odyssey analyze`. More systems are being added as they finish.
+policy. Every ticket was run cold twice and warm in five to nine rotated orderings.
 
 ## Run it
 
@@ -75,28 +70,6 @@ uv run python -m odyssey.cli analyze jobs/atlas/segments.csv                    
 uv run python -m odyssey.cli analyze jobs/atlas/segments.csv --metric sdc_usd    # dollars
 ```
 
-## Status
-
-This is an early pilot, built in a few days with heavy use of AI agents.
-
-- No human has yet reviewed every ticket, grader and trajectory.
-- Each model runs in its vendor's own agent at default settings; model and harness are
-  measured as one unit.
-- The agent has root in the container that grades it and the task has no network restriction
-  yet, so results rely on agents not trying to cheat.
-
-## Repository layout
-
-| Path | What |
-|---|---|
-| `sequences/atlas-commerce/` | the pilot sequence |
-| `scripts/atlas/` | compile, validate and clean-up tools for it |
-| `odyssey/` | shared tooling: compile sequences to Harbor tasks, validate, account, analyse |
-| `docs/SPEC.md` | the contract every sequence follows |
-| `tests/` | unit tests (`uv run pytest`; `uv run pytest scripts/atlas/test_compile_atlas.py` for the atlas compiler) |
-| `drafts/` | earlier and unfinished task sets and notes; see [drafts/README.md](drafts/README.md) |
-
 ## Licence
 
-MIT; see [LICENSE](LICENSE). Material from other projects under `drafts/` keeps its own
-licence; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+MIT; see [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

@@ -1,6 +1,6 @@
 <svg xmlns='http://www.w3.org/2000/svg' width='1000' height='404' viewBox='0 0 1000 404' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
 <rect width='1000' height='404' rx='12' fill='#FBFBF8'/>
-<text x='28' y='36' font-size='18' font-weight='600' fill='#14213D'>Warm ÷ cold per ticket on the pilot sequence, tickets 2 onward</text>
+<text x='28' y='36' font-size='18' font-weight='600' fill='#14213D'>Warm ÷ cold per ticket on the pilot sequence</text>
 <text x='28' y='58' font-size='12' fill='#6A7179'>Below 1: the agent needed less for the same ticket once it had worked the earlier ones. Bars: 95% intervals from resampling sequences. Log scale.</text>
 <text x='300' y='82' font-size='13' font-weight='600' fill='#14213D'>steps per ticket</text>
 <line x1='300.0' y1='92' x2='300.0' y2='334' stroke='#E3E1D9' stroke-dasharray='0'/>

@@ -3,7 +3,7 @@
 
     python3 scripts/analysis/readme_figure.py   # reads jobs/poc-httrack/summary.json (from poc_ratios.py)
 
-One row per system, two panels: steps per ticket and new work per ticket, tickets 2 onward.
+One row per system, two panels: steps per ticket and new work per ticket.
 Rows are sorted by the steps ratio. Systems whose runs are not finished are left out.
 """
 import json, math
@@ -38,7 +38,7 @@ def X(x0, v): return x0 + (math.log(min(max(v, lo), hi)) - math.log(lo)) / (math
 
 svg = [f"<svg xmlns='http://www.w3.org/2000/svg' width='{W}' height='{H}' viewBox='0 0 {W} {H}' {F}>",
        f"<rect width='{W}' height='{H}' rx='12' fill='#FBFBF8'/>",
-       "<text x='28' y='36' font-size='18' font-weight='600' fill='#14213D'>Warm ÷ cold per ticket on the pilot sequence, tickets 2 onward</text>",
+       "<text x='28' y='36' font-size='18' font-weight='600' fill='#14213D'>Warm ÷ cold per ticket on the pilot sequence</text>",
        "<text x='28' y='58' font-size='12' fill='#6A7179'>Below 1: the agent needed less for the same ticket once it had worked the earlier ones. Bars: 95% intervals from resampling sequences. Log scale.</text>"]
 panels = [("steps per ticket", "steps", LEFT), ("new work per ticket", "work", LEFT + PW + GAP)]
 for title, _, x0 in panels:
