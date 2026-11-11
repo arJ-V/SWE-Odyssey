@@ -56,6 +56,7 @@ SYSTEMS = {
     "atlas: DeepSeek Harness + Kimi K3": {"tickets": ATLAS_TICKETS, "last": 7, "cold": [(ATLAS_KIMI, "kimi-cold1"), (ATLAS_KIMI, "kimi-cold2")], "warm": (ATLAS_KIMI, "kimi-warm")},
     "atlas: DeepSeek Harness + Kimi K3.1": {"tickets": ATLAS_TICKETS, "last": 7, "cold": [(ATLAS_KIMI, "kimi31-cold1"), (ATLAS_KIMI, "kimi31-cold2")], "warm": (ATLAS_KIMI, "kimi31-warm")},
     "atlas: DeepSeek Harness + Qwen3 Coder Next": {"tickets": ATLAS_TICKETS, "last": 7, "cold": [(ATLAS_KIMI, "qwen-cold1"), (ATLAS_KIMI, "qwen-cold2")], "warm": (ATLAS_KIMI, "qwen-warm")},
+    "atlas: DeepSeek Harness + DeepSeek V3.2": {"tickets": ATLAS_TICKETS, "last": 7, "cold": [(ATLAS_KIMI, "deepseek-cold1"), (ATLAS_KIMI, "deepseek-cold2")], "warm": (ATLAS_KIMI, "deepseek-warm")},
     "duckdb: Codex + GPT-6.1 Sol (reset)": {"tickets": DUCK_TICKETS, "cold": [(DUCK, "gpt61sol-cold"), (DUCK, "gpt61sol-cold2")], "warm": (DUCK, "gpt61sol-warm")},
 }
 METRICS = ["it_delta_net", "sdc_usd", "n_llm_calls", "agent_seconds"]

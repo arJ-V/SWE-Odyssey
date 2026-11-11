@@ -38,54 +38,24 @@ history on every call, so an agent can learn, take fewer steps and still cost th
 
 Ticket order is rotated across sequences so that position is not confused with difficulty.
 
-## The current task: `atlas-commerce`
+## The picture
 
-One small e-commerce backend (order intake, bulk fulfilment, merchant payments) running on a
-local AWS emulator that needs no cloud account. Seven tickets change that one system. They mix
-the kinds of work a platform engineer gets in a week: deploying new infrastructure, writing
-application code, repairing something broken in production and tightening an access policy.
+![One sequence measured cold and warm, and the pooled warm ÷ cold ratio by position](docs/figure.svg)
 
-Between tickets the system is reset to a known state, so the agent carries over what it
-learned but not its own leftovers. Details are in
-[sequences/atlas-commerce/README.md](sequences/atlas-commerce/README.md).
+Left: the design. Each ticket is solved by a fresh agent (cold) and by one agent working the
+whole sequence with its session resumed (warm). Before each ticket the system is reset to its
+base state plus the reference fixes for the tickets already seen, so the agent keeps what it
+learned and nothing else, and ticket order is rotated so position is not difficulty.
 
-## Preliminary results
+Right: what the measurement looks like on the pilot sequence, pooled over every system run so
+far. Position 1 has no history and sits at 1, as it should; the curve past it is the question
+the benchmark asks. Per-system numbers come out of `odyssey analyze` and are not summarised
+here.
 
-<!-- results:start -->
-Warm ÷ cold for tickets 2 to 7, with 95% intervals from resampling whole sequences. Below 1
-means experience helped.
-
-| System | Warm sequences | Solved cold | Solved warm | Steps | New work | Time | Dollars |
-|---|---|---|---|---|---|---|---|
-| Claude Code + Opus 5.5 | 5 | 11 of 14 | 32 of 35 | 0.74 (0.65–0.88) | 0.60 (0.55–0.66) | 1.00 (0.78–1.41) | 1.08 (0.90–1.41) |
-| Claude Code + Sonnet 5.5 | 7 | 12 of 14 | 45 of 49 | 0.63 (0.58–0.68) | 0.53 (0.50–0.57) | 0.86 (0.77–0.95) | 0.79 (0.75–0.82) |
-| Claude Code + Haiku 5.5 | 5 | 13 of 14 | 33 of 35 | 0.52 (0.45–0.62) | 0.48 (0.43–0.53) | 0.78 (0.65–0.98) | 2.39 (1.74–3.48) |
-| Codex + GPT-6.1 Sol | 9 | 12 of 14 | 56 of 63 | 0.76 (0.67–0.87) | 0.91 (0.82–1.02) | 1.74 (1.39–2.20) | 1.30 (1.09–1.54) |
-| Codex + GPT-6.1 Terra | 7 | 12 of 14 | 44 of 49 | 0.92 (0.80–1.08) | 0.83 (0.75–0.93) | 1.32 (1.14–1.54) | 1.37 (1.17–1.59) |
-| Codex + GPT-6 Luna | 7 | 10 of 14 | 48 of 49 | 1.04 (0.86–1.26) | 1.07 (0.92–1.24) | 1.26 (1.09–1.48) | 1.87 (1.53–2.29) |
-
-- **The Claude Code systems learn.** With experience of the system they take 26–48% fewer
-  steps per ticket and do 40–52% less new work, starting from the second ticket.
-- **The Codex systems mostly do not.** GPT-6.1 Sol takes about a quarter fewer steps and
-  GPT-6.1 Terra does 17% less new work; their other intervals, and both of GPT-6 Luna's,
-  include no change. Model and harness differ together here, so this is not a comparison of
-  the models alone.
-- **No system is reliably quicker on the clock.** Each call in a long session is slower,
-  which cancels the saved steps for Claude Code and outweighs them for Codex. The time measure
-  also leans toward warm by 10–25% (a first ticket with no history comes out at 0.74–0.92, not
-  1), so a time ratio near 0.8 means no change.
-- **Only one system is cheaper.** Sonnet 5.5 pays 21% less; the rest pay the same or more,
-  because every call re-reads a longer history. Haiku 5.5 pays more than double because its
-  price rises once a prompt passes 100,000 tokens.
-- **Experience never hurt success.** Every system solved at least as large a share warm as
-  cold, and GPT-6 Luna went from 10 of 14 cold to 48 of 49 warm.
-
-Some GPT-6.1 Sol sequences hit a provider rate limit and are left out. Open-weight models are
-being run.
-<!-- results:end -->
-
-These are pilot numbers from five to nine sequences per system, each run once, with two cold
-runs per ticket. Read them as large or small effects, not precise ones.
+The pilot sequence, `atlas-commerce`, is one small e-commerce backend on a local AWS emulator
+that needs no cloud account, with seven tickets that mix deploying infrastructure, writing
+code, repairing a production fault and tightening an access policy. Its construction, checks
+and limits are in [sequences/atlas-commerce/README.md](sequences/atlas-commerce/README.md).
 
 ## Run it
 
@@ -118,9 +88,8 @@ uv run python -m odyssey.cli analyze jobs/atlas/segments.csv --metric sdc_usd   
 This is an early pilot, built in a few days with heavy use of AI agents.
 
 - No human has yet reviewed every ticket, grader and trajectory.
-- Each model runs in its vendor's own agent at default settings, so differences between
-  vendors are not model differences alone.
-- Frontier models solve most of these tickets cold, so the signal is efficiency, not pass rate.
+- Each model runs in its vendor's own agent at default settings; model and harness are
+  measured as one unit.
 - The agent has root in the container that grades it and the task has no network restriction
   yet, so results rely on agents not trying to cheat.
 
@@ -128,7 +97,7 @@ This is an early pilot, built in a few days with heavy use of AI agents.
 
 | Path | What |
 |---|---|
-| `sequences/atlas-commerce/` | the current task |
+| `sequences/atlas-commerce/` | the pilot sequence |
 | `scripts/atlas/` | compile, validate and clean-up tools for it |
 | `odyssey/` | shared tooling: compile sequences to Harbor tasks, validate, account, analyse |
 | `docs/SPEC.md` | the contract every sequence follows |

@@ -1,0 +1,98 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1000' height='440' viewBox='0 0 1000 440' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
+<rect width='1000' height='440' rx='12' fill='#FBFBF8'/>
+<text x='40' y='44' font-size='17' font-weight='600' fill='#14213D'>One sequence, two conditions</text>
+<text x='40' y='92' font-size='13' fill='#6A7179'>cold</text>
+<text x='40' y='214' font-size='13' fill='#6A7179'>warm</text>
+<rect x='100' y='70' width='48' height='32' rx='6' fill='#E4EDF5' stroke='#2F6690'/>
+<text x='124.0' y='91' font-size='12' text-anchor='middle' fill='#14213D'>T1</text>
+<circle cx='124.0' cy='124' r='7' fill='#2F6690'/>
+<text x='124.0' y='147' font-size='10' text-anchor='middle' fill='#6A7179'>fresh</text>
+<rect x='100' y='192' width='48' height='32' rx='6' fill='#F8E6DC' stroke='#B8501F'/>
+<text x='124.0' y='213' font-size='12' text-anchor='middle' fill='#14213D'>T1</text>
+<path d='M149,208 L157,208' stroke='#B8501F' stroke-width='2' marker-end='url(#a)'/>
+<rect x='158' y='70' width='48' height='32' rx='6' fill='#E4EDF5' stroke='#2F6690'/>
+<text x='182.0' y='91' font-size='12' text-anchor='middle' fill='#14213D'>T2</text>
+<circle cx='182.0' cy='124' r='7' fill='#2F6690'/>
+<text x='182.0' y='147' font-size='10' text-anchor='middle' fill='#6A7179'>fresh</text>
+<rect x='158' y='192' width='48' height='32' rx='6' fill='#F8E6DC' stroke='#B8501F'/>
+<text x='182.0' y='213' font-size='12' text-anchor='middle' fill='#14213D'>T2</text>
+<path d='M207,208 L215,208' stroke='#B8501F' stroke-width='2' marker-end='url(#a)'/>
+<rect x='216' y='70' width='48' height='32' rx='6' fill='#E4EDF5' stroke='#2F6690'/>
+<text x='240.0' y='91' font-size='12' text-anchor='middle' fill='#14213D'>T3</text>
+<circle cx='240.0' cy='124' r='7' fill='#2F6690'/>
+<text x='240.0' y='147' font-size='10' text-anchor='middle' fill='#6A7179'>fresh</text>
+<rect x='216' y='192' width='48' height='32' rx='6' fill='#F8E6DC' stroke='#B8501F'/>
+<text x='240.0' y='213' font-size='12' text-anchor='middle' fill='#14213D'>T3</text>
+<path d='M265,208 L273,208' stroke='#B8501F' stroke-width='2' marker-end='url(#a)'/>
+<rect x='274' y='70' width='48' height='32' rx='6' fill='#E4EDF5' stroke='#2F6690'/>
+<text x='298.0' y='91' font-size='12' text-anchor='middle' fill='#14213D'>T4</text>
+<circle cx='298.0' cy='124' r='7' fill='#2F6690'/>
+<text x='298.0' y='147' font-size='10' text-anchor='middle' fill='#6A7179'>fresh</text>
+<rect x='274' y='192' width='48' height='32' rx='6' fill='#F8E6DC' stroke='#B8501F'/>
+<text x='298.0' y='213' font-size='12' text-anchor='middle' fill='#14213D'>T4</text>
+<path d='M323,208 L331,208' stroke='#B8501F' stroke-width='2' marker-end='url(#a)'/>
+<rect x='332' y='70' width='48' height='32' rx='6' fill='#E4EDF5' stroke='#2F6690'/>
+<text x='356.0' y='91' font-size='12' text-anchor='middle' fill='#14213D'>T5</text>
+<circle cx='356.0' cy='124' r='7' fill='#2F6690'/>
+<text x='356.0' y='147' font-size='10' text-anchor='middle' fill='#6A7179'>fresh</text>
+<rect x='332' y='192' width='48' height='32' rx='6' fill='#F8E6DC' stroke='#B8501F'/>
+<text x='356.0' y='213' font-size='12' text-anchor='middle' fill='#14213D'>T5</text>
+<path d='M381,208 L389,208' stroke='#B8501F' stroke-width='2' marker-end='url(#a)'/>
+<rect x='390' y='70' width='48' height='32' rx='6' fill='#E4EDF5' stroke='#2F6690'/>
+<text x='414.0' y='91' font-size='12' text-anchor='middle' fill='#14213D'>T6</text>
+<circle cx='414.0' cy='124' r='7' fill='#2F6690'/>
+<text x='414.0' y='147' font-size='10' text-anchor='middle' fill='#6A7179'>fresh</text>
+<rect x='390' y='192' width='48' height='32' rx='6' fill='#F8E6DC' stroke='#B8501F'/>
+<text x='414.0' y='213' font-size='12' text-anchor='middle' fill='#14213D'>T6</text>
+<path d='M439,208 L447,208' stroke='#B8501F' stroke-width='2' marker-end='url(#a)'/>
+<rect x='448' y='70' width='48' height='32' rx='6' fill='#E4EDF5' stroke='#2F6690'/>
+<text x='472.0' y='91' font-size='12' text-anchor='middle' fill='#14213D'>T7</text>
+<circle cx='472.0' cy='124' r='7' fill='#2F6690'/>
+<text x='472.0' y='147' font-size='10' text-anchor='middle' fill='#6A7179'>fresh</text>
+<rect x='448' y='192' width='48' height='32' rx='6' fill='#F8E6DC' stroke='#B8501F'/>
+<text x='472.0' y='213' font-size='12' text-anchor='middle' fill='#14213D'>T7</text>
+<defs><marker id='a' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 Z' fill='#B8501F'/></marker></defs>
+<path d='M124.0,246 L472.0,246' stroke='#B8501F' stroke-width='3'/>
+<text x='100' y='268' font-size='11' fill='#B8501F'>one agent, session resumed between tickets</text>
+<text x='100' y='288' font-size='11' fill='#6A7179'>system reset to base + reference fixes before each ticket</text>
+<text x='100' y='306' font-size='11' fill='#6A7179'>ticket order rotated across sequences</text>
+<text x='40' y='350' font-size='13' fill='#14213D'>Result per ticket: <tspan font-weight='600'>warm ÷ cold</tspan> on steps, new work, time and dollars.</text>
+<text x='40' y='372' font-size='13' fill='#6A7179'>Below 1: experience helped. 1: nothing carried. Above 1: history got in the way.</text>
+<line x1='520' y1='40' x2='520' y2='400' stroke='#E3E1D9'/>
+<text x='560' y='44' font-size='17' font-weight='600' fill='#14213D'>Warm ÷ cold by position, pooled over all systems run</text>
+<line x1='560' y1='270.1' x2='960' y2='270.1' stroke='#E3E1D9' stroke-dasharray='0'/>
+<text x='552' y='274.1' font-size='11' text-anchor='end' fill='#6A7179'>0.25</text>
+<line x1='560' y1='188.8' x2='960' y2='188.8' stroke='#E3E1D9' stroke-dasharray='0'/>
+<text x='552' y='192.8' font-size='11' text-anchor='end' fill='#6A7179'>0.5</text>
+<line x1='560' y1='107.5' x2='960' y2='107.5' stroke='#9AA0A8' stroke-dasharray='5,4'/>
+<text x='552' y='111.5' font-size='11' text-anchor='end' fill='#6A7179'>1</text>
+<text x='560.0' y='348' font-size='11' text-anchor='middle' fill='#6A7179'>1</text>
+<text x='626.7' y='348' font-size='11' text-anchor='middle' fill='#6A7179'>2</text>
+<text x='693.3' y='348' font-size='11' text-anchor='middle' fill='#6A7179'>3</text>
+<text x='760.0' y='348' font-size='11' text-anchor='middle' fill='#6A7179'>4</text>
+<text x='826.7' y='348' font-size='11' text-anchor='middle' fill='#6A7179'>5</text>
+<text x='893.3' y='348' font-size='11' text-anchor='middle' fill='#6A7179'>6</text>
+<text x='960.0' y='348' font-size='11' text-anchor='middle' fill='#6A7179'>7</text>
+<text x='760.0' y='368' font-size='12' text-anchor='middle' fill='#6A7179'>position of the ticket in the sequence</text>
+<path d='M560.0,94.3 L626.7,112.3 L693.3,83.3 L760.0,118.6 L826.7,112.3 L893.3,112.3 L960.0,81.4 L960.0,290.5 L893.3,302.3 L826.7,198.6 L760.0,184.2 L693.3,182.0 L626.7,167.4 L560.0,128.0 Z' fill='#2F6690' fill-opacity='0.12'/>
+<path d='M560.0,112.4 L626.7,135.0 L693.3,131.6 L760.0,144.5 L826.7,146.7 L893.3,170.5 L960.0,159.6' fill='none' stroke='#2F6690' stroke-width='2.5'/>
+<path d='M560.0,117.4 L626.7,146.9 L693.3,143.3 L760.0,152.0 L826.7,152.4 L893.3,153.4 L960.0,147.8' fill='none' stroke='#B8501F' stroke-width='2.5' stroke-dasharray='6,4'/>
+<circle cx='560.0' cy='112.4' r='4' fill='#2F6690'/>
+<circle cx='626.7' cy='135.0' r='4' fill='#2F6690'/>
+<circle cx='693.3' cy='131.6' r='4' fill='#2F6690'/>
+<circle cx='760.0' cy='144.5' r='4' fill='#2F6690'/>
+<circle cx='826.7' cy='146.7' r='4' fill='#2F6690'/>
+<circle cx='893.3' cy='170.5' r='4' fill='#2F6690'/>
+<circle cx='960.0' cy='159.6' r='4' fill='#2F6690'/>
+<circle cx='560.0' cy='117.4' r='4' fill='#B8501F'/>
+<circle cx='626.7' cy='146.9' r='4' fill='#B8501F'/>
+<circle cx='693.3' cy='143.3' r='4' fill='#B8501F'/>
+<circle cx='760.0' cy='152.0' r='4' fill='#B8501F'/>
+<circle cx='826.7' cy='152.4' r='4' fill='#B8501F'/>
+<circle cx='893.3' cy='153.4' r='4' fill='#B8501F'/>
+<circle cx='960.0' cy='147.8' r='4' fill='#B8501F'/>
+<text x='968.0' y='163.6' font-size='11' fill='#2F6690'>steps</text>
+<text x='968.0' y='151.8' font-size='11' fill='#B8501F'>new work</text>
+<text x='566.0' y='75.0' font-size='11' fill='#6A7179'>position 1 has no history,</text><text x='566.0' y='86.2' font-size='11' fill='#6A7179'>so it should sit at 1</text>
+<text x='560' y='418' font-size='11' fill='#6A7179'>Geometric mean over 7 systems on the pilot sequence; band = spread between systems (steps). Log scale.</text>
+</svg>
