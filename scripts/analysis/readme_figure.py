@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Draw docs/systems.svg: every system's warm ÷ cold ratio on the pilot sequence, with intervals.
+"""Draw docs/results.svg: every system's warm ÷ cold ratio on the pilot sequence, with intervals.
 
     python3 scripts/analysis/readme_figure.py   # reads jobs/poc-httrack/summary.json (from poc_ratios.py)
 
@@ -61,5 +61,5 @@ leg = "  ".join(f"<tspan fill='{c}'>●</tspan> {h}" for h, c in COLOR.items())
 svg.append(f"<text x='28' y='{H-30}' font-size='12' fill='#14213D'>{leg}</text>")
 svg.append(f"<text x='28' y='{H-12}' font-size='11' fill='#6A7179'>A row is one model inside its vendor's agent at default settings: a system, not a model. Sequences run once; two cold runs per ticket. seq = warm sequences; n/m = warm tickets solved.</text>")
 svg.append("</svg>")
-(REPO / "docs/systems.svg").write_text("\n".join(svg))
-print("docs/systems.svg:", len(rows), "systems")
+(REPO / "docs/results.svg").write_text("\n".join(svg))
+print("docs/results.svg:", len(rows), "systems")

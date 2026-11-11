@@ -37,7 +37,7 @@ Ticket order is rotated across sequences so that position is not confused with d
 
 ## How systems line up so far
 
-![Warm ÷ cold per ticket for every system run on the pilot sequence](docs/systems.svg)
+![Warm ÷ cold per ticket for every system run on the pilot sequence](docs/results.svg)
 
 Each row is one system (a model inside its vendor's agent) on the pilot sequence,
 `atlas-commerce`: one small e-commerce backend on a local AWS emulator, seven tickets that mix
