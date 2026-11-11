@@ -52,26 +52,40 @@ learned but not its own leftovers. Details are in
 ## Preliminary results
 
 <!-- results:start -->
-Warm ÷ cold for tickets 2 to 7, with 95% intervals from resampling whole sequences.
+Warm ÷ cold for tickets 2 to 7, with 95% intervals from resampling whole sequences. Below 1
+means experience helped.
 
 | System | Warm sequences | Solved cold | Solved warm | Steps | New work | Time | Dollars |
 |---|---|---|---|---|---|---|---|
 | Claude Code + Opus 5.5 | 5 | 11 of 14 | 32 of 35 | 0.74 (0.65–0.88) | 0.60 (0.55–0.66) | 1.00 (0.78–1.41) | 1.08 (0.90–1.41) |
+| Claude Code + Sonnet 5.5 | 7 | 12 of 14 | 45 of 49 | 0.63 (0.58–0.68) | 0.53 (0.50–0.57) | 0.86 (0.77–0.95) | 0.79 (0.75–0.82) |
+| Claude Code + Haiku 5.5 | 5 | 13 of 14 | 33 of 35 | 0.52 (0.45–0.62) | 0.48 (0.43–0.53) | 0.78 (0.65–0.98) | 2.39 (1.74–3.48) |
 | Codex + GPT-6.1 Sol | 9 | 12 of 14 | 56 of 63 | 0.76 (0.67–0.87) | 0.91 (0.82–1.02) | 1.74 (1.39–2.20) | 1.30 (1.09–1.54) |
+| Codex + GPT-6.1 Terra | 7 | 12 of 14 | 44 of 49 | 0.92 (0.80–1.08) | 0.83 (0.75–0.93) | 1.32 (1.14–1.54) | 1.37 (1.17–1.59) |
+| Codex + GPT-6 Luna | 7 | 10 of 14 | 48 of 49 | 1.04 (0.86–1.26) | 1.07 (0.92–1.24) | 1.26 (1.09–1.48) | 1.87 (1.53–2.29) |
 
-- **Both agents take about a quarter fewer steps** on a ticket once they have experience of
-  the system.
-- **Opus 5.5 also does about 40% less new work**; for GPT-6.1 Sol the drop is small and its
-  interval includes no change.
-- **Neither finishes sooner on the clock.** Each call in a long session is slower, which
-  cancels the saved steps for Opus 5.5 and outweighs them for GPT-6.1 Sol.
-- **Neither is cheaper**, because every call re-reads a longer history.
+- **The Claude Code systems learn.** With experience of the system they take 26–48% fewer
+  steps per ticket and do 40–52% less new work, starting from the second ticket.
+- **The Codex systems mostly do not.** GPT-6.1 Sol takes about a quarter fewer steps and
+  GPT-6.1 Terra does 17% less new work; their other intervals, and both of GPT-6 Luna's,
+  include no change. Model and harness differ together here, so this is not a comparison of
+  the models alone.
+- **No system is reliably quicker on the clock.** Each call in a long session is slower,
+  which cancels the saved steps for Claude Code and outweighs them for Codex. The time measure
+  also leans toward warm by 10–25% (a first ticket with no history comes out at 0.74–0.92, not
+  1), so a time ratio near 0.8 means no change.
+- **Only one system is cheaper.** Sonnet 5.5 pays 21% less; the rest pay the same or more,
+  because every call re-reads a longer history. Haiku 5.5 pays more than double because its
+  price rises once a prompt passes 100,000 tokens.
+- **Experience never hurt success.** Every system solved at least as large a share warm as
+  cold, and GPT-6 Luna went from 10 of 14 cold to 48 of 49 warm.
 
-More systems are being run.
+Some GPT-6.1 Sol sequences hit a provider rate limit and are left out. Open-weight models are
+being run.
 <!-- results:end -->
 
-These are pilot numbers from a handful of sequences, each run once. Read them as large or
-small effects, not precise ones.
+These are pilot numbers from five to nine sequences per system, each run once, with two cold
+runs per ticket. Read them as large or small effects, not precise ones.
 
 ## Run it
 

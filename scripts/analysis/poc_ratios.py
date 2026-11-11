@@ -34,6 +34,8 @@ POC = "jobs/poc-httrack/segments.csv"
 R2 = "jobs/r2-httrack/segments.csv"
 DUCK = "jobs/duck-paid/segments.csv"
 ATLAS = "jobs/atlas-paid/segments.csv"
+# open-weight model rows, with each model's three warm jobs (-warm-a/b/c) renamed to -warm
+ATLAS_KIMI = "jobs/atlas-kimi/segments.csv"
 ATLAS_TICKETS = ["ATL-%d" % i for i in range(1, 8)]
 DUCK_TICKETS = ["DDB-03", "DDB-04", "DDB-06", "DDB-07", "DDB-08", "DDB-10"]
 SYSTEMS = {
@@ -51,6 +53,9 @@ SYSTEMS = {
     "atlas: Claude Code + Haiku 5.5": {"tickets": ATLAS_TICKETS, "last": 7, "cold": [(ATLAS, "haiku55-cold1"), (ATLAS, "haiku55-cold2")], "warm": (ATLAS, "haiku55-warm")},
     "atlas: Codex + GPT-6.1 Terra": {"tickets": ATLAS_TICKETS, "last": 7, "cold": [(ATLAS, "terra61-cold1"), (ATLAS, "terra61-cold2")], "warm": (ATLAS, "terra61-warm")},
     "atlas: Codex + GPT-6 Luna": {"tickets": ATLAS_TICKETS, "last": 7, "cold": [(ATLAS, "luna6-cold1"), (ATLAS, "luna6-cold2")], "warm": (ATLAS, "luna6-warm")},
+    "atlas: DeepSeek Harness + Kimi K3": {"tickets": ATLAS_TICKETS, "last": 7, "cold": [(ATLAS_KIMI, "kimi-cold1"), (ATLAS_KIMI, "kimi-cold2")], "warm": (ATLAS_KIMI, "kimi-warm")},
+    "atlas: DeepSeek Harness + Kimi K3.1": {"tickets": ATLAS_TICKETS, "last": 7, "cold": [(ATLAS_KIMI, "kimi31-cold1"), (ATLAS_KIMI, "kimi31-cold2")], "warm": (ATLAS_KIMI, "kimi31-warm")},
+    "atlas: DeepSeek Harness + Qwen3 Coder Next": {"tickets": ATLAS_TICKETS, "last": 7, "cold": [(ATLAS_KIMI, "qwen-cold1"), (ATLAS_KIMI, "qwen-cold2")], "warm": (ATLAS_KIMI, "qwen-warm")},
     "duckdb: Codex + GPT-6.1 Sol (reset)": {"tickets": DUCK_TICKETS, "cold": [(DUCK, "gpt61sol-cold"), (DUCK, "gpt61sol-cold2")], "warm": (DUCK, "gpt61sol-warm")},
 }
 METRICS = ["it_delta_net", "sdc_usd", "n_llm_calls", "agent_seconds"]
