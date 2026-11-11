@@ -1,98 +1,77 @@
-<svg xmlns='http://www.w3.org/2000/svg' width='1000' height='440' viewBox='0 0 1000 440' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
-<rect width='1000' height='440' rx='12' fill='#FBFBF8'/>
-<text x='40' y='44' font-size='17' font-weight='600' fill='#14213D'>One sequence, two conditions</text>
-<text x='40' y='92' font-size='13' fill='#6A7179'>cold</text>
-<text x='40' y='214' font-size='13' fill='#6A7179'>warm</text>
-<rect x='100' y='70' width='48' height='32' rx='6' fill='#E4EDF5' stroke='#2F6690'/>
-<text x='124.0' y='91' font-size='12' text-anchor='middle' fill='#14213D'>T1</text>
-<circle cx='124.0' cy='124' r='7' fill='#2F6690'/>
-<text x='124.0' y='147' font-size='10' text-anchor='middle' fill='#6A7179'>fresh</text>
-<rect x='100' y='192' width='48' height='32' rx='6' fill='#F8E6DC' stroke='#B8501F'/>
-<text x='124.0' y='213' font-size='12' text-anchor='middle' fill='#14213D'>T1</text>
-<path d='M149,208 L157,208' stroke='#B8501F' stroke-width='2' marker-end='url(#a)'/>
-<rect x='158' y='70' width='48' height='32' rx='6' fill='#E4EDF5' stroke='#2F6690'/>
-<text x='182.0' y='91' font-size='12' text-anchor='middle' fill='#14213D'>T2</text>
-<circle cx='182.0' cy='124' r='7' fill='#2F6690'/>
-<text x='182.0' y='147' font-size='10' text-anchor='middle' fill='#6A7179'>fresh</text>
-<rect x='158' y='192' width='48' height='32' rx='6' fill='#F8E6DC' stroke='#B8501F'/>
-<text x='182.0' y='213' font-size='12' text-anchor='middle' fill='#14213D'>T2</text>
-<path d='M207,208 L215,208' stroke='#B8501F' stroke-width='2' marker-end='url(#a)'/>
-<rect x='216' y='70' width='48' height='32' rx='6' fill='#E4EDF5' stroke='#2F6690'/>
-<text x='240.0' y='91' font-size='12' text-anchor='middle' fill='#14213D'>T3</text>
-<circle cx='240.0' cy='124' r='7' fill='#2F6690'/>
-<text x='240.0' y='147' font-size='10' text-anchor='middle' fill='#6A7179'>fresh</text>
-<rect x='216' y='192' width='48' height='32' rx='6' fill='#F8E6DC' stroke='#B8501F'/>
-<text x='240.0' y='213' font-size='12' text-anchor='middle' fill='#14213D'>T3</text>
-<path d='M265,208 L273,208' stroke='#B8501F' stroke-width='2' marker-end='url(#a)'/>
-<rect x='274' y='70' width='48' height='32' rx='6' fill='#E4EDF5' stroke='#2F6690'/>
-<text x='298.0' y='91' font-size='12' text-anchor='middle' fill='#14213D'>T4</text>
-<circle cx='298.0' cy='124' r='7' fill='#2F6690'/>
-<text x='298.0' y='147' font-size='10' text-anchor='middle' fill='#6A7179'>fresh</text>
-<rect x='274' y='192' width='48' height='32' rx='6' fill='#F8E6DC' stroke='#B8501F'/>
-<text x='298.0' y='213' font-size='12' text-anchor='middle' fill='#14213D'>T4</text>
-<path d='M323,208 L331,208' stroke='#B8501F' stroke-width='2' marker-end='url(#a)'/>
-<rect x='332' y='70' width='48' height='32' rx='6' fill='#E4EDF5' stroke='#2F6690'/>
-<text x='356.0' y='91' font-size='12' text-anchor='middle' fill='#14213D'>T5</text>
-<circle cx='356.0' cy='124' r='7' fill='#2F6690'/>
-<text x='356.0' y='147' font-size='10' text-anchor='middle' fill='#6A7179'>fresh</text>
-<rect x='332' y='192' width='48' height='32' rx='6' fill='#F8E6DC' stroke='#B8501F'/>
-<text x='356.0' y='213' font-size='12' text-anchor='middle' fill='#14213D'>T5</text>
-<path d='M381,208 L389,208' stroke='#B8501F' stroke-width='2' marker-end='url(#a)'/>
-<rect x='390' y='70' width='48' height='32' rx='6' fill='#E4EDF5' stroke='#2F6690'/>
-<text x='414.0' y='91' font-size='12' text-anchor='middle' fill='#14213D'>T6</text>
-<circle cx='414.0' cy='124' r='7' fill='#2F6690'/>
-<text x='414.0' y='147' font-size='10' text-anchor='middle' fill='#6A7179'>fresh</text>
-<rect x='390' y='192' width='48' height='32' rx='6' fill='#F8E6DC' stroke='#B8501F'/>
-<text x='414.0' y='213' font-size='12' text-anchor='middle' fill='#14213D'>T6</text>
-<path d='M439,208 L447,208' stroke='#B8501F' stroke-width='2' marker-end='url(#a)'/>
-<rect x='448' y='70' width='48' height='32' rx='6' fill='#E4EDF5' stroke='#2F6690'/>
-<text x='472.0' y='91' font-size='12' text-anchor='middle' fill='#14213D'>T7</text>
-<circle cx='472.0' cy='124' r='7' fill='#2F6690'/>
-<text x='472.0' y='147' font-size='10' text-anchor='middle' fill='#6A7179'>fresh</text>
-<rect x='448' y='192' width='48' height='32' rx='6' fill='#F8E6DC' stroke='#B8501F'/>
-<text x='472.0' y='213' font-size='12' text-anchor='middle' fill='#14213D'>T7</text>
-<defs><marker id='a' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 Z' fill='#B8501F'/></marker></defs>
-<path d='M124.0,246 L472.0,246' stroke='#B8501F' stroke-width='3'/>
-<text x='100' y='268' font-size='11' fill='#B8501F'>one agent, session resumed between tickets</text>
-<text x='100' y='288' font-size='11' fill='#6A7179'>system reset to base + reference fixes before each ticket</text>
-<text x='100' y='306' font-size='11' fill='#6A7179'>ticket order rotated across sequences</text>
-<text x='40' y='350' font-size='13' fill='#14213D'>Result per ticket: <tspan font-weight='600'>warm ÷ cold</tspan> on steps, new work, time and dollars.</text>
-<text x='40' y='372' font-size='13' fill='#6A7179'>Below 1: experience helped. 1: nothing carried. Above 1: history got in the way.</text>
-<line x1='520' y1='40' x2='520' y2='400' stroke='#E3E1D9'/>
-<text x='560' y='44' font-size='17' font-weight='600' fill='#14213D'>Warm ÷ cold by position, pooled over all systems run</text>
-<line x1='560' y1='270.1' x2='960' y2='270.1' stroke='#E3E1D9' stroke-dasharray='0'/>
-<text x='552' y='274.1' font-size='11' text-anchor='end' fill='#6A7179'>0.25</text>
-<line x1='560' y1='188.8' x2='960' y2='188.8' stroke='#E3E1D9' stroke-dasharray='0'/>
-<text x='552' y='192.8' font-size='11' text-anchor='end' fill='#6A7179'>0.5</text>
-<line x1='560' y1='107.5' x2='960' y2='107.5' stroke='#9AA0A8' stroke-dasharray='5,4'/>
-<text x='552' y='111.5' font-size='11' text-anchor='end' fill='#6A7179'>1</text>
-<text x='560.0' y='348' font-size='11' text-anchor='middle' fill='#6A7179'>1</text>
-<text x='626.7' y='348' font-size='11' text-anchor='middle' fill='#6A7179'>2</text>
-<text x='693.3' y='348' font-size='11' text-anchor='middle' fill='#6A7179'>3</text>
-<text x='760.0' y='348' font-size='11' text-anchor='middle' fill='#6A7179'>4</text>
-<text x='826.7' y='348' font-size='11' text-anchor='middle' fill='#6A7179'>5</text>
-<text x='893.3' y='348' font-size='11' text-anchor='middle' fill='#6A7179'>6</text>
-<text x='960.0' y='348' font-size='11' text-anchor='middle' fill='#6A7179'>7</text>
-<text x='760.0' y='368' font-size='12' text-anchor='middle' fill='#6A7179'>position of the ticket in the sequence</text>
-<path d='M560.0,94.3 L626.7,112.3 L693.3,83.3 L760.0,118.6 L826.7,112.3 L893.3,112.3 L960.0,81.4 L960.0,290.5 L893.3,302.3 L826.7,198.6 L760.0,184.2 L693.3,182.0 L626.7,167.4 L560.0,128.0 Z' fill='#2F6690' fill-opacity='0.12'/>
-<path d='M560.0,112.4 L626.7,135.0 L693.3,131.6 L760.0,144.5 L826.7,146.7 L893.3,170.5 L960.0,159.6' fill='none' stroke='#2F6690' stroke-width='2.5'/>
-<path d='M560.0,117.4 L626.7,146.9 L693.3,143.3 L760.0,152.0 L826.7,152.4 L893.3,153.4 L960.0,147.8' fill='none' stroke='#B8501F' stroke-width='2.5' stroke-dasharray='6,4'/>
-<circle cx='560.0' cy='112.4' r='4' fill='#2F6690'/>
-<circle cx='626.7' cy='135.0' r='4' fill='#2F6690'/>
-<circle cx='693.3' cy='131.6' r='4' fill='#2F6690'/>
-<circle cx='760.0' cy='144.5' r='4' fill='#2F6690'/>
-<circle cx='826.7' cy='146.7' r='4' fill='#2F6690'/>
-<circle cx='893.3' cy='170.5' r='4' fill='#2F6690'/>
-<circle cx='960.0' cy='159.6' r='4' fill='#2F6690'/>
-<circle cx='560.0' cy='117.4' r='4' fill='#B8501F'/>
-<circle cx='626.7' cy='146.9' r='4' fill='#B8501F'/>
-<circle cx='693.3' cy='143.3' r='4' fill='#B8501F'/>
-<circle cx='760.0' cy='152.0' r='4' fill='#B8501F'/>
-<circle cx='826.7' cy='152.4' r='4' fill='#B8501F'/>
-<circle cx='893.3' cy='153.4' r='4' fill='#B8501F'/>
-<circle cx='960.0' cy='147.8' r='4' fill='#B8501F'/>
-<text x='968.0' y='163.6' font-size='11' fill='#2F6690'>steps</text>
-<text x='968.0' y='151.8' font-size='11' fill='#B8501F'>new work</text>
-<text x='566.0' y='75.0' font-size='11' fill='#6A7179'>position 1 has no history,</text><text x='566.0' y='86.2' font-size='11' fill='#6A7179'>so it should sit at 1</text>
-<text x='560' y='418' font-size='11' fill='#6A7179'>Geometric mean over 7 systems on the pilot sequence; band = spread between systems (steps). Log scale.</text>
+<svg xmlns='http://www.w3.org/2000/svg' width='1000' height='404' viewBox='0 0 1000 404' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
+<rect width='1000' height='404' rx='12' fill='#FBFBF8'/>
+<text x='28' y='36' font-size='18' font-weight='600' fill='#14213D'>Warm ÷ cold per ticket on the pilot sequence, tickets 2 onward</text>
+<text x='28' y='58' font-size='12' fill='#6A7179'>Below 1: the agent needed less for the same ticket once it had worked the earlier ones. Bars: 95% intervals from resampling sequences. Log scale.</text>
+<text x='300' y='82' font-size='13' font-weight='600' fill='#14213D'>steps per ticket</text>
+<line x1='300.0' y1='92' x2='300.0' y2='334' stroke='#E3E1D9' stroke-dasharray='0'/>
+<text x='300.0' y='352' font-size='11' text-anchor='middle' fill='#6A7179'>0.25</text>
+<line x1='420.7' y1='92' x2='420.7' y2='334' stroke='#E3E1D9' stroke-dasharray='0'/>
+<text x='420.7' y='352' font-size='11' text-anchor='middle' fill='#6A7179'>0.5</text>
+<line x1='541.4' y1='92' x2='541.4' y2='334' stroke='#9AA0A8' stroke-dasharray='5,4'/>
+<text x='541.4' y='352' font-size='11' text-anchor='middle' fill='#6A7179'>1</text>
+<text x='660' y='82' font-size='13' font-weight='600' fill='#14213D'>new work per ticket</text>
+<line x1='660.0' y1='92' x2='660.0' y2='334' stroke='#E3E1D9' stroke-dasharray='0'/>
+<text x='660.0' y='352' font-size='11' text-anchor='middle' fill='#6A7179'>0.25</text>
+<line x1='780.7' y1='92' x2='780.7' y2='334' stroke='#E3E1D9' stroke-dasharray='0'/>
+<text x='780.7' y='352' font-size='11' text-anchor='middle' fill='#6A7179'>0.5</text>
+<line x1='901.4' y1='92' x2='901.4' y2='334' stroke='#9AA0A8' stroke-dasharray='5,4'/>
+<text x='901.4' y='352' font-size='11' text-anchor='middle' fill='#6A7179'>1</text>
+<text x='28' y='117.0' font-size='13' fill='#14213D'>DeepSeek Harness · Kimi K3</text>
+<text x='288' y='117.0' font-size='11' text-anchor='end' fill='#6A7179'>5 seq · 29/35</text>
+<line x1='348.3' y1='113.0' x2='495.9' y2='113.0' stroke='#2E8B57' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='424.2' cy='113.0' r='5' fill='#2E8B57' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='610' y='117.0' font-size='12' fill='#14213D'>0.51</text>
+<line x1='812.5' y1='113.0' x2='849.0' y2='113.0' stroke='#2E8B57' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='831.7' cy='113.0' r='5' fill='#2E8B57' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='970' y='117.0' font-size='12' fill='#14213D'>0.67</text>
+<text x='28' y='151.0' font-size='13' fill='#14213D'>Claude Code · Haiku 5.5</text>
+<text x='288' y='151.0' font-size='11' text-anchor='end' fill='#6A7179'>5 seq · 33/35</text>
+<line x1='402.4' y1='147.0' x2='458.2' y2='147.0' stroke='#2F6690' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='427.5' cy='147.0' r='5' fill='#2F6690' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='610' y='151.0' font-size='12' fill='#14213D'>0.52</text>
+<line x1='754.4' y1='147.0' x2='790.9' y2='147.0' stroke='#2F6690' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='773.6' cy='147.0' r='5' fill='#2F6690' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='970' y='151.0' font-size='12' fill='#14213D'>0.48</text>
+<text x='28' y='185.0' font-size='13' fill='#14213D'>Claude Code · Sonnet 5.5</text>
+<text x='288' y='185.0' font-size='11' text-anchor='end' fill='#6A7179'>7 seq · 45/49</text>
+<line x1='446.5' y1='181.0' x2='474.2' y2='181.0' stroke='#2F6690' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='460.9' cy='181.0' r='5' fill='#2F6690' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='610' y='185.0' font-size='12' fill='#14213D'>0.63</text>
+<line x1='780.7' y1='181.0' x2='803.5' y2='181.0' stroke='#2F6690' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='790.9' cy='181.0' r='5' fill='#2F6690' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='970' y='185.0' font-size='12' fill='#14213D'>0.53</text>
+<text x='28' y='219.0' font-size='13' fill='#14213D'>Claude Code · Opus 5.5</text>
+<text x='288' y='219.0' font-size='11' text-anchor='end' fill='#6A7179'>5 seq · 32/35</text>
+<line x1='466.4' y1='215.0' x2='519.1' y2='215.0' stroke='#2F6690' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='489.0' cy='215.0' r='5' fill='#2F6690' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='610' y='219.0' font-size='12' fill='#14213D'>0.74</text>
+<line x1='797.3' y1='215.0' x2='829.0' y2='215.0' stroke='#2F6690' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='812.5' cy='215.0' r='5' fill='#2F6690' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='970' y='219.0' font-size='12' fill='#14213D'>0.60</text>
+<text x='28' y='253.0' font-size='13' fill='#14213D'>Codex · GPT-6.1 Sol</text>
+<text x='288' y='253.0' font-size='11' text-anchor='end' fill='#6A7179'>9 seq · 56/63</text>
+<line x1='471.7' y1='249.0' x2='517.2' y2='249.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='493.6' cy='249.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='610' y='253.0' font-size='12' fill='#14213D'>0.76</text>
+<line x1='866.8' y1='249.0' x2='904.9' y2='249.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='885.0' cy='249.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='970' y='253.0' font-size='12' fill='#14213D'>0.91</text>
+<text x='28' y='287.0' font-size='13' fill='#14213D'>Codex · GPT-6.1 Terra</text>
+<text x='288' y='287.0' font-size='11' text-anchor='end' fill='#6A7179'>7 seq · 44/49</text>
+<line x1='502.5' y1='283.0' x2='554.8' y2='283.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='526.9' cy='283.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='610' y='287.0' font-size='12' fill='#14213D'>0.92</text>
+<line x1='851.3' y1='283.0' x2='888.8' y2='283.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='869.0' cy='283.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='970' y='287.0' font-size='12' fill='#14213D'>0.83</text>
+<text x='28' y='321.0' font-size='13' fill='#14213D'>Codex · GPT-6 Luna</text>
+<text x='288' y='321.0' font-size='11' text-anchor='end' fill='#6A7179'>7 seq · 48/49</text>
+<line x1='515.1' y1='317.0' x2='581.7' y2='317.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='548.2' cy='317.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='610' y='321.0' font-size='12' fill='#14213D'>1.04</text>
+<line x1='886.9' y1='317.0' x2='938.9' y2='317.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='913.2' cy='317.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='970' y='321.0' font-size='12' fill='#14213D'>1.07</text>
+<text x='28' y='374' font-size='12' fill='#14213D'><tspan fill='#2F6690'>●</tspan> Claude Code  <tspan fill='#B8501F'>●</tspan> Codex  <tspan fill='#2E8B57'>●</tspan> DeepSeek Harness</text>
+<text x='28' y='392' font-size='11' fill='#6A7179'>A row is one model inside its vendor's agent at default settings: a system, not a model. Sequences run once; two cold runs per ticket. seq = warm sequences; n/m = warm tickets solved.</text>
 </svg>

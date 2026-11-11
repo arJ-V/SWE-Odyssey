@@ -38,24 +38,16 @@ history on every call, so an agent can learn, take fewer steps and still cost th
 
 Ticket order is rotated across sequences so that position is not confused with difficulty.
 
-## The picture
+## How systems line up so far
 
-![One sequence measured cold and warm, and the pooled warm ÷ cold ratio by position](docs/figure.svg)
+![Warm ÷ cold per ticket for every system run on the pilot sequence](docs/figure.svg)
 
-Left: the design. Each ticket is solved by a fresh agent (cold) and by one agent working the
-whole sequence with its session resumed (warm). Before each ticket the system is reset to its
-base state plus the reference fixes for the tickets already seen, so the agent keeps what it
-learned and nothing else, and ticket order is rotated so position is not difficulty.
-
-Right: what the measurement looks like on the pilot sequence, pooled over every system run so
-far. Position 1 has no history and sits at 1, as it should; the curve past it is the question
-the benchmark asks. Per-system numbers come out of `odyssey analyze` and are not summarised
-here.
-
-The pilot sequence, `atlas-commerce`, is one small e-commerce backend on a local AWS emulator
-that needs no cloud account, with seven tickets that mix deploying infrastructure, writing
-code, repairing a production fault and tightening an access policy. Its construction, checks
-and limits are in [sequences/atlas-commerce/README.md](sequences/atlas-commerce/README.md).
+Each row is one system (a model inside its vendor's agent) on the pilot sequence,
+`atlas-commerce`: one small e-commerce backend on a local AWS emulator, seven tickets that mix
+deploying infrastructure, writing code, repairing a production fault and tightening an access
+policy. Every ticket was run cold twice and warm in five to nine rotated orderings. The figure
+is regenerated from the run data by `scripts/analysis/readme_figure.py`; time and dollar ratios
+come out of `odyssey analyze`. More systems are being added as they finish.
 
 ## Run it
 
