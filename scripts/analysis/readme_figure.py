@@ -61,5 +61,13 @@ leg = "  ".join(f"<tspan fill='{c}'>●</tspan> {h}" for h, c in COLOR.items())
 svg.append(f"<text x='28' y='{H-30}' font-size='12' fill='#14213D'>{leg}</text>")
 svg.append(f"<text x='28' y='{H-12}' font-size='11' fill='#6A7179'>A row is one model inside its vendor's agent at default settings: a system, not a model. Sequences run once; two cold runs per ticket. seq = warm sequences; n/m = warm tickets solved.</text>")
 svg.append("</svg>")
-(REPO / "docs/results.svg").write_text("\n".join(svg))
-print("docs/results.svg:", len(rows), "systems")
+text = "\n".join(svg)
+# A content-hashed name, so GitHub's image cache never serves a stale copy of the figure.
+import hashlib, re as _re
+name = f"docs/results-{hashlib.sha256(text.encode()).hexdigest()[:8]}.svg"
+for old in REPO.glob("docs/results*.svg"):
+    old.unlink()
+(REPO / name).write_text(text)
+readme = REPO / "README.md"
+readme.write_text(_re.sub(r"\(docs/results[^)]*\.svg\)", f"({name})", readme.read_text()))
+print(name + ":", len(rows), "systems")
