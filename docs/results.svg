@@ -1,21 +1,21 @@
-<svg xmlns='http://www.w3.org/2000/svg' width='1000' height='472' viewBox='0 0 1000 472' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
-<rect width='1000' height='472' rx='12' fill='#FBFBF8'/>
+<svg xmlns='http://www.w3.org/2000/svg' width='1000' height='438' viewBox='0 0 1000 438' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
+<rect width='1000' height='438' rx='12' fill='#FBFBF8'/>
 <text x='28' y='36' font-size='18' font-weight='600' fill='#14213D'>Warm ÷ cold per ticket on the pilot sequence</text>
 <text x='28' y='58' font-size='12' fill='#6A7179'>Below 1: the agent needed less for the same ticket once it had worked the earlier ones. Bars: 95% intervals from resampling sequences. Log scale.</text>
 <text x='300' y='82' font-size='13' font-weight='600' fill='#14213D'>steps per ticket</text>
-<line x1='300.0' y1='92' x2='300.0' y2='402' stroke='#E3E1D9' stroke-dasharray='0'/>
-<text x='300.0' y='420' font-size='11' text-anchor='middle' fill='#6A7179'>0.25</text>
-<line x1='420.7' y1='92' x2='420.7' y2='402' stroke='#E3E1D9' stroke-dasharray='0'/>
-<text x='420.7' y='420' font-size='11' text-anchor='middle' fill='#6A7179'>0.5</text>
-<line x1='541.4' y1='92' x2='541.4' y2='402' stroke='#9AA0A8' stroke-dasharray='5,4'/>
-<text x='541.4' y='420' font-size='11' text-anchor='middle' fill='#6A7179'>1</text>
+<line x1='300.0' y1='92' x2='300.0' y2='368' stroke='#E3E1D9' stroke-dasharray='0'/>
+<text x='300.0' y='386' font-size='11' text-anchor='middle' fill='#6A7179'>0.25</text>
+<line x1='420.7' y1='92' x2='420.7' y2='368' stroke='#E3E1D9' stroke-dasharray='0'/>
+<text x='420.7' y='386' font-size='11' text-anchor='middle' fill='#6A7179'>0.5</text>
+<line x1='541.4' y1='92' x2='541.4' y2='368' stroke='#9AA0A8' stroke-dasharray='5,4'/>
+<text x='541.4' y='386' font-size='11' text-anchor='middle' fill='#6A7179'>1</text>
 <text x='660' y='82' font-size='13' font-weight='600' fill='#14213D'>new work per ticket</text>
-<line x1='660.0' y1='92' x2='660.0' y2='402' stroke='#E3E1D9' stroke-dasharray='0'/>
-<text x='660.0' y='420' font-size='11' text-anchor='middle' fill='#6A7179'>0.25</text>
-<line x1='780.7' y1='92' x2='780.7' y2='402' stroke='#E3E1D9' stroke-dasharray='0'/>
-<text x='780.7' y='420' font-size='11' text-anchor='middle' fill='#6A7179'>0.5</text>
-<line x1='901.4' y1='92' x2='901.4' y2='402' stroke='#9AA0A8' stroke-dasharray='5,4'/>
-<text x='901.4' y='420' font-size='11' text-anchor='middle' fill='#6A7179'>1</text>
+<line x1='660.0' y1='92' x2='660.0' y2='368' stroke='#E3E1D9' stroke-dasharray='0'/>
+<text x='660.0' y='386' font-size='11' text-anchor='middle' fill='#6A7179'>0.25</text>
+<line x1='780.7' y1='92' x2='780.7' y2='368' stroke='#E3E1D9' stroke-dasharray='0'/>
+<text x='780.7' y='386' font-size='11' text-anchor='middle' fill='#6A7179'>0.5</text>
+<line x1='901.4' y1='92' x2='901.4' y2='368' stroke='#9AA0A8' stroke-dasharray='5,4'/>
+<text x='901.4' y='386' font-size='11' text-anchor='middle' fill='#6A7179'>1</text>
 <text x='28' y='117.0' font-size='13' fill='#14213D'>DeepSeek Harness · Kimi K3</text>
 <text x='288' y='117.0' font-size='11' text-anchor='end' fill='#6A7179'>5 seq · 29/35</text>
 <line x1='348.3' y1='113.0' x2='495.9' y2='113.0' stroke='#2E8B57' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
@@ -48,46 +48,38 @@
 <line x1='797.3' y1='215.0' x2='829.0' y2='215.0' stroke='#2F6690' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
 <circle cx='812.5' cy='215.0' r='5' fill='#2F6690' stroke='#FBFBF8' stroke-width='1.5'/>
 <text x='970' y='219.0' font-size='12' fill='#14213D'>0.60</text>
-<text x='28' y='253.0' font-size='13' fill='#14213D'>DeepSeek Harness · DeepSeek V3.2 (reasoning off)</text>
-<text x='288' y='253.0' font-size='11' text-anchor='end' fill='#6A7179'>5 seq · 13/35</text>
-<line x1='449.5' y1='249.0' x2='521.1' y2='249.0' stroke='#2E8B57' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
-<circle cx='491.3' cy='249.0' r='5' fill='#2E8B57' stroke='#FBFBF8' stroke-width='1.5'/>
-<text x='610' y='253.0' font-size='12' fill='#14213D'>0.75</text>
-<line x1='885.0' y1='249.0' x2='960.0' y2='249.0' stroke='#2E8B57' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
-<circle cx='938.9' cy='249.0' r='5' fill='#2E8B57' stroke='#FBFBF8' stroke-width='1.5'/>
-<text x='970' y='253.0' font-size='12' fill='#14213D'>1.24</text>
-<text x='28' y='287.0' font-size='13' fill='#14213D'>Codex · GPT-6.1 Sol</text>
-<text x='288' y='287.0' font-size='11' text-anchor='end' fill='#6A7179'>9 seq · 56/63</text>
-<line x1='471.7' y1='283.0' x2='517.2' y2='283.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
-<circle cx='493.6' cy='283.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
-<text x='610' y='287.0' font-size='12' fill='#14213D'>0.76</text>
-<line x1='866.8' y1='283.0' x2='904.9' y2='283.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
-<circle cx='885.0' cy='283.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
-<text x='970' y='287.0' font-size='12' fill='#14213D'>0.91</text>
-<text x='28' y='321.0' font-size='13' fill='#14213D'>DeepSeek Harness · Kimi K3.1</text>
-<text x='288' y='321.0' font-size='11' text-anchor='end' fill='#6A7179'>5 seq · 34/35</text>
-<line x1='491.3' y1='317.0' x2='558.0' y2='317.0' stroke='#2E8B57' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
-<circle cx='521.1' cy='317.0' r='5' fill='#2E8B57' stroke='#FBFBF8' stroke-width='1.5'/>
-<text x='610' y='321.0' font-size='12' fill='#14213D'>0.89</text>
-<line x1='844.2' y1='317.0' x2='901.4' y2='317.0' stroke='#2E8B57' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
-<circle cx='869.0' cy='317.0' r='5' fill='#2E8B57' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='28' y='253.0' font-size='13' fill='#14213D'>Codex · GPT-6.1 Sol</text>
+<text x='288' y='253.0' font-size='11' text-anchor='end' fill='#6A7179'>9 seq · 56/63</text>
+<line x1='471.7' y1='249.0' x2='517.2' y2='249.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='493.6' cy='249.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='610' y='253.0' font-size='12' fill='#14213D'>0.76</text>
+<line x1='866.8' y1='249.0' x2='904.9' y2='249.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='885.0' cy='249.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='970' y='253.0' font-size='12' fill='#14213D'>0.91</text>
+<text x='28' y='287.0' font-size='13' fill='#14213D'>DeepSeek Harness · Kimi K3.1</text>
+<text x='288' y='287.0' font-size='11' text-anchor='end' fill='#6A7179'>5 seq · 34/35</text>
+<line x1='491.3' y1='283.0' x2='558.0' y2='283.0' stroke='#2E8B57' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='521.1' cy='283.0' r='5' fill='#2E8B57' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='610' y='287.0' font-size='12' fill='#14213D'>0.89</text>
+<line x1='844.2' y1='283.0' x2='901.4' y2='283.0' stroke='#2E8B57' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='869.0' cy='283.0' r='5' fill='#2E8B57' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='970' y='287.0' font-size='12' fill='#14213D'>0.83</text>
+<text x='28' y='321.0' font-size='13' fill='#14213D'>Codex · GPT-6.1 Terra</text>
+<text x='288' y='321.0' font-size='11' text-anchor='end' fill='#6A7179'>7 seq · 44/49</text>
+<line x1='502.5' y1='317.0' x2='554.8' y2='317.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='526.9' cy='317.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='610' y='321.0' font-size='12' fill='#14213D'>0.92</text>
+<line x1='851.3' y1='317.0' x2='888.8' y2='317.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='869.0' cy='317.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
 <text x='970' y='321.0' font-size='12' fill='#14213D'>0.83</text>
-<text x='28' y='355.0' font-size='13' fill='#14213D'>Codex · GPT-6.1 Terra</text>
-<text x='288' y='355.0' font-size='11' text-anchor='end' fill='#6A7179'>7 seq · 44/49</text>
-<line x1='502.5' y1='351.0' x2='554.8' y2='351.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
-<circle cx='526.9' cy='351.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
-<text x='610' y='355.0' font-size='12' fill='#14213D'>0.92</text>
-<line x1='851.3' y1='351.0' x2='888.8' y2='351.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
-<circle cx='869.0' cy='351.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
-<text x='970' y='355.0' font-size='12' fill='#14213D'>0.83</text>
-<text x='28' y='389.0' font-size='13' fill='#14213D'>Codex · GPT-6 Luna</text>
-<text x='288' y='389.0' font-size='11' text-anchor='end' fill='#6A7179'>7 seq · 48/49</text>
-<line x1='515.1' y1='385.0' x2='581.7' y2='385.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
-<circle cx='548.2' cy='385.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
-<text x='610' y='389.0' font-size='12' fill='#14213D'>1.04</text>
-<line x1='886.9' y1='385.0' x2='938.9' y2='385.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
-<circle cx='913.2' cy='385.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
-<text x='970' y='389.0' font-size='12' fill='#14213D'>1.07</text>
-<text x='28' y='442' font-size='12' fill='#14213D'><tspan fill='#2F6690'>●</tspan> Claude Code  <tspan fill='#B8501F'>●</tspan> Codex  <tspan fill='#2E8B57'>●</tspan> DeepSeek Harness</text>
-<text x='28' y='460' font-size='11' fill='#6A7179'>A row is one model inside its vendor's agent at default settings: a system, not a model. Sequences run once; two cold runs per ticket. seq = warm sequences; n/m = warm tickets solved.</text>
+<text x='28' y='355.0' font-size='13' fill='#14213D'>Codex · GPT-6 Luna</text>
+<text x='288' y='355.0' font-size='11' text-anchor='end' fill='#6A7179'>7 seq · 48/49</text>
+<line x1='515.1' y1='351.0' x2='581.7' y2='351.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='548.2' cy='351.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='610' y='355.0' font-size='12' fill='#14213D'>1.04</text>
+<line x1='886.9' y1='351.0' x2='938.9' y2='351.0' stroke='#B8501F' stroke-width='3' stroke-opacity='0.45' stroke-linecap='round'/>
+<circle cx='913.2' cy='351.0' r='5' fill='#B8501F' stroke='#FBFBF8' stroke-width='1.5'/>
+<text x='970' y='355.0' font-size='12' fill='#14213D'>1.07</text>
+<text x='28' y='408' font-size='12' fill='#14213D'><tspan fill='#2F6690'>●</tspan> Claude Code  <tspan fill='#B8501F'>●</tspan> Codex  <tspan fill='#2E8B57'>●</tspan> DeepSeek Harness</text>
+<text x='28' y='426' font-size='11' fill='#6A7179'>A row is one model inside its vendor's agent at default settings: a system, not a model. Sequences run once; two cold runs per ticket. seq = warm sequences; n/m = warm tickets solved.</text>
 </svg>
